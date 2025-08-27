@@ -45,6 +45,13 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
 - Undo/Redo: `u` undo, `Ctrl+r` redo
 - Exit Insert mode: `Esc`
 
+##Challenge Mode
+The Challenge Mode is a fast-paced game designed to test and improve your Vim command recall under time pressure. 
+Users are presented with a series of command tasks to complete as quickly and accurately as possible. 
+Each correctly executed command scores points, while speed and precision determine the final score.
+This mode offers an engaging way to sharpen your Vim skills by combining rapid-fire challenges with real-time feedback, making learning Vim commands both fun and effective.
+Try to beat your highest score and see how quickly you can master essential Vim commands!
+
 ## How Validation Works
 - Each level defines a target cursor location, target text, or target content layout.
 - Validation is resilient to trailing spaces and blank lines where appropriate.
