@@ -74,6 +74,37 @@
         <h1 class="text-3xl font-bold text-center mb-4 text-gray-200">VIM Master</h1>
         <p id="instructions" class="text-lg text-center mb-6 text-gray-400">Welcome! Let's learn VIM.</p>
 
+        <!-- Challenge Mode Toggle -->
+        <div class="flex justify-center mb-6">
+            <button id="challenge-toggle" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+                🚀 Challenge Mode
+            </button>
+        </div>
+
+        <!-- Challenge Mode Container -->
+        <div id="challenge-container" class="hidden mb-6">
+            <div class="bg-blue-900 rounded-lg p-4 border border-blue-700">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-blue-200">Speed Challenge</h3>
+                    <div class="text-right">
+                        <div class="text-2xl font-mono text-yellow-400" id="timer">00:30</div>
+                        <div class="text-sm text-blue-300">Time Remaining</div>
+                    </div>
+                </div>
+                <div id="challenge-instructions" class="text-blue-200 mb-4">
+                    Complete the challenge as fast as possible!
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="text-blue-200">
+                        <span id="challenge-progress">0</span>/<span id="challenge-total">3</span> completed
+                    </div>
+                    <div class="text-blue-200">
+                        Score: <span id="challenge-score" class="text-yellow-400">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="editor-container" class="bg-[#1e1e1e] rounded-lg shadow-2xl p-4 border border-gray-700 relative">
             <div id="vim-editor-display" class="vim-editor text-lg"></div>
             <textarea id="vim-editor-input" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-default" spellcheck="false"></textarea>
@@ -117,6 +148,13 @@
         const modalMessage = document.getElementById('modal-message');
         const nextLevelBtn = document.getElementById('next-level-btn');
         const levelSelectionContainer = document.getElementById('level-selection');
+        const challengeToggleBtn = document.getElementById('challenge-toggle');
+        const challengeContainer = document.getElementById('challenge-container');
+        const challengeInstructions = document.getElementById('challenge-instructions');
+        const challengeTimer = document.getElementById('timer');
+        const challengeProgress = document.getElementById('challenge-progress');
+        const challengeTotal = document.getElementById('challenge-total');
+        const challengeScore = document.getElementById('challenge-score');
 
         // Game State
         let content = [];
@@ -133,6 +171,99 @@
         let level12Undo = false;
         let level12RedoAfterUndo = false;
         let lastExCommand = null;
+
+        // Challenge Mode State
+        let challengeMode = false;
+        let currentChallenge = null;
+        let challengeTimerInterval = null;
+        let challengeStartTime = null;
+        let challengeScoreValue = 0;
+        let challengeProgressValue = 0;
+        let currentTaskIndex = 0;
+
+        // Challenge Definitions
+        const challenges = [
+            {
+                name: "Speed Navigation",
+                description: "Navigate to the target using the fastest route!",
+                timeLimit: 30,
+                tasks: [
+                    {
+                        instruction: "Move to the word 'target' using 3w",
+                        validation: () => cursor.row === 0 && cursor.col === 14,
+                        hint: "Use 3w to jump 3 words forward"
+                    },
+                    {
+                        instruction: "Jump to the end of the line with $",
+                        validation: () => cursor.col === 23,
+                        hint: "Use $ to jump to end of line"
+                    },
+                    {
+                        instruction: "Go to the first line with gg",
+                        validation: () => cursor.row === 0 && cursor.col === 0,
+                        hint: "Use gg to jump to first line"
+                    }
+                ],
+                initialContent: [
+                    "one two three target here at end",
+                    "second line for practice"
+                ]
+            },
+            {
+                name: "Quick Deletion",
+                description: "Delete and modify text rapidly!",
+                timeLimit: 45,
+                tasks: [
+                    {
+                        instruction: "Position cursor on 'r' of 'remove' and delete the word with dw",
+                        validation: () => content[0].includes("delete this line") && !content[0].includes("remove"),
+                        hint: "Use h/l to move to 'r' of 'remove', then dw"
+                    },
+                    {
+                        instruction: "Go to second line and delete the entire line with dd",
+                        validation: () => content.length === 2,
+                        hint: "Use j to go down, then dd to delete line"
+                    },
+                    {
+                        instruction: "Go to third line, position cursor on 'B' of 'BAD' and change to 'GOOD' with cw",
+                        validation: () => content[1].includes("GOOD") && !content[1].includes("BAD"),
+                        hint: "Use j to go down, position cursor on 'B', use cw then type 'GOOD'"
+                    }
+                ],
+                initialContent: [
+                    "delete this remove line",
+                    "delete this line too",
+                    "This is BAD text"
+                ]
+            },
+            {
+                name: "Advanced Moves",
+                description: "Master complex command combinations!",
+                timeLimit: 60,
+                tasks: [
+                    {
+                        instruction: "Yank the first line 'first line to copy' with yy",
+                        validation: () => yankedLine === "first line to copy",
+                        hint: "Use yy to yank the current line"
+                    },
+                    {
+                        instruction: "Go to the third line (empty line) and paste with p",
+                        validation: () => content.length === 3 && content[2] === "first line to copy",
+                        hint: "Use j to go down 2 lines, then p to paste"
+                    },
+                    {
+                        instruction: "Go to second line, position cursor on 'x' and replace with '!' using r",
+                        validation: () => content[1].includes("!") && !content[1].includes("x"),
+                        hint: "Use k to go up, position cursor on 'x', use r then !"
+                    }
+                ],
+                initialContent: [
+                    "first line to copy",
+                    "replace this x",
+                    ""
+                ]
+            }
+        ];
 
         const cloneState = () => ({
             content: [...content],
@@ -835,9 +966,145 @@
             }
         });
 
+        challengeToggleBtn.addEventListener('click', () => {
+            challengeMode = !challengeMode;
+            if (challengeMode) {
+                challengeContainer.classList.remove('hidden');
+                startChallenge();
+            } else {
+                challengeContainer.classList.add('hidden');
+                // If in challenge mode, return to current level
+                loadLevel(currentLevel);
+                editorInput.focus();
+            }
+        });
+
         // --- INITIAL LOAD ---
         loadLevel(currentLevel);
         editorInput.focus();
+
+        // --- CHALLENGE FUNCTIONS ---
+        function startChallenge() {
+            if (currentChallenge) return;
+            
+            // Select a random challenge
+            const challengeIndex = Math.floor(Math.random() * challenges.length);
+            currentChallenge = challenges[challengeIndex];
+            currentTaskIndex = 0;
+            challengeScoreValue = 0;
+            challengeProgressValue = 0;
+            challengeStartTime = Date.now();
+            
+            // Update UI
+            challengeInstructions.textContent = `${currentChallenge.description} (Editor is focused - commands ready!)`;
+            challengeTotal.textContent = currentChallenge.tasks.length;
+            challengeProgress.textContent = '0';
+            challengeScore.textContent = '0';
+            
+            // Load challenge content
+            content = [...currentChallenge.initialContent];
+            cursor = { row: 0, col: 0 };
+            mode = 'NORMAL';
+            renderEditor();
+            
+            // Start timer
+            const timeLeft = currentChallenge.timeLimit;
+            challengeTimer.textContent = `${Math.floor(timeLeft / 60)}:${(timeLeft % 60).toString().padStart(2, '0')}`;
+            
+            challengeTimerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - challengeStartTime) / 1000);
+                const remaining = currentChallenge.timeLimit - elapsed;
+                
+                if (remaining <= 0) {
+                    endChallenge(false);
+                    return;
+                }
+                
+                const minutes = Math.floor(remaining / 60);
+                const seconds = remaining % 60;
+                challengeTimer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+            
+            // Show first task
+            showCurrentTask();
+            
+            // Focus the editor so commands work immediately
+            editorInput.focus();
+        }
+
+        function showCurrentTask() {
+            if (!currentChallenge || currentTaskIndex >= currentChallenge.tasks.length) return;
+            
+            const task = currentChallenge.tasks[currentTaskIndex];
+            challengeInstructions.textContent = `Task ${currentTaskIndex + 1}: ${task.instruction}`;
+        }
+
+        function checkChallengeTask() {
+            if (!currentChallenge || currentTaskIndex >= currentChallenge.tasks.length) return;
+            
+            const task = currentChallenge.tasks[currentTaskIndex];
+            if (task.validation()) {
+                // Task completed
+                challengeProgressValue++;
+                challengeProgress.textContent = challengeProgressValue;
+                
+                // Calculate score based on time
+                const elapsed = Math.floor((Date.now() - challengeStartTime) / 1000);
+                const timeBonus = Math.max(0, currentChallenge.timeLimit - elapsed);
+                const taskScore = 100 + timeBonus;
+                challengeScoreValue += taskScore;
+                challengeScore.textContent = challengeScoreValue;
+                
+                currentTaskIndex++;
+                
+                if (currentTaskIndex >= currentChallenge.tasks.length) {
+                    // All tasks completed
+                    endChallenge(true);
+                } else {
+                    // Show next task
+                    showCurrentTask();
+                }
+            }
+        }
+
+        function endChallenge(success) {
+            if (challengeTimerInterval) {
+                clearInterval(challengeTimerInterval);
+                challengeTimerInterval = null;
+            }
+            
+            if (success) {
+                const elapsed = Math.floor((Date.now() - challengeStartTime) / 1000);
+                const finalScore = challengeScoreValue + Math.max(0, currentChallenge.timeLimit - elapsed) * 10;
+                
+                alert(`Challenge Complete!\nFinal Score: ${finalScore}\nTime: ${elapsed}s\nGreat job!`);
+            } else {
+                alert('Time\'s up! Challenge failed. Try again!');
+            }
+            
+            // Reset challenge state
+            challengeMode = false;
+            currentChallenge = null;
+            currentTaskIndex = 0;
+            challengeScoreValue = 0;
+            challengeProgressValue = 0;
+            
+            // Hide challenge container
+            challengeContainer.classList.add('hidden');
+            
+            // Return to current level
+            loadLevel(currentLevel);
+            editorInput.focus();
+        }
+
+        // Add challenge task checking to win condition
+        const originalCheckWinCondition = checkWinCondition;
+        checkWinCondition = function() {
+            if (challengeMode && currentChallenge) {
+                checkChallengeTask();
+            }
+            return originalCheckWinCondition.call(this);
+        };
     </script>
 </body>
 </html>
