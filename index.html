@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIM Master Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fira Code', monospace;
+            overscroll-behavior: none; /* Prevents pull-to-refresh on mobile */
+        }
+        .vim-editor {
+            white-space: pre;
+            line-height: 1.5;
+            caret-color: transparent;
+        }
+        .line-number {
+            color: #858585;
+            text-align: right;
+            padding-right: 1rem;
+            user-select: none;
+        }
+        .cursor {
+            background-color: #f2c55c;
+            color: #1e1e1e;
+            animation: blink 1s step-end infinite;
+            border-radius: 2px;
+        }
+        @keyframes blink {
+            50% {
+                background-color: transparent;
+                outline: 1px solid #f2c55c;
+                color: inherit;
+            }
+        }
+        .status-bar {
+            font-weight: 700;
+        }
+        .modal-bg {
+            background-color: rgba(0,0,0,0.7);
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+        .level-complete-flash {
+            animation: flash 0.5s ease-out;
+        }
+        @keyframes flash {
+            0% { box-shadow: 0 0 0 0 rgba(242, 197, 92, 0.7); }
+            100% { box-shadow: 0 0 0 20px rgba(242, 197, 92, 0); }
+        }
+        .ascii-logo {
+            line-height: 1.2;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-4xl mx-auto">
+        <pre class="text-yellow-400 text-center text-sm md:text-base ascii-logo">
+            _________ _______    _______  _______  _______ _________ _______  _______ 
+|\     /|\__   __/(       )  (       )(  ___  )(  ____ \\__   __/(  ____ \(  ____ )
+| )   ( |   ) (   | () () |  | () () || (   ) || (    \/   ) (   | (    \/| (    )|
+| |   | |   | |   | || || |  | || || || (___) || (_____    | |   | (__    | (____)|
+( (   ) )   | |   | |(_)| |  | |(_)| ||  ___  |(_____  )   | |   |  __)   |     __)
+ \ \_/ /    | |   | |   | |  | |   | || (   ) |      ) |   | |   | (      | (\ (   
+  \   /  ___) (___| )   ( |  | )   ( || )   ( |/\____) |   | |   | (____/\| ) \ \__
+   \_/   \_______/|/     \|  |/     \||/     \|\_______)   )_(   (_______/|/   \__/
+                                                                                   
+        </pre>
+        <h1 class="text-3xl font-bold text-center mb-4 text-gray-200">VIM Master</h1>
+        <p id="instructions" class="text-lg text-center mb-6 text-gray-400">Welcome! Let's learn VIM.</p>
+
+        <div id="editor-container" class="bg-[#1e1e1e] rounded-lg shadow-2xl p-4 border border-gray-700 relative">
+            <div id="vim-editor-display" class="vim-editor text-lg"></div>
+            <textarea id="vim-editor-input" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-default" spellcheck="false"></textarea>
+            <div class="flex justify-between items-center mt-4">
+                <div id="status-bar" class="status-bar px-2 py-1 bg-yellow-400 text-gray-900 rounded-md text-sm uppercase">-- NORMAL --</div>
+                <div id="command-log" class="text-gray-500 text-sm font-semibold"></div>
+            </div>
+        </div>
+
+        <div class="flex justify-center items-center mt-4 space-x-4">
+            <div id="level-indicator" class="text-gray-500 font-semibold"></div>
+            <button id="reset-btn" class="bg-gray-700 text-gray-300 hover:bg-gray-600 font-bold py-1 px-3 rounded-lg transition-colors text-sm">Reset Level</button>
+        </div>
+        <div id="level-selection" class="flex justify-center flex-wrap gap-2 mt-4">
+            <!-- Level selection buttons will be injected here -->
+        </div>
+    </div>
+
+    <!-- Modal for level completion -->
+    <div id="modal" class="fixed inset-0 flex items-center justify-center modal-bg opacity-0 pointer-events-none">
+        <div id="modal-content" class="bg-gray-800 text-white p-8 rounded-lg shadow-xl max-w-sm text-center transform scale-95">
+            <h2 id="modal-title" class="text-2xl font-bold mb-4">Level Complete!</h2>
+            <p id="modal-message" class="mb-6">Great job! You've mastered the basics of movement.</p>
+            <button id="next-level-btn" class="bg-yellow-400 text-gray-900 font-bold py-2 px-6 rounded-lg hover:bg-yellow-500 transition-colors">Next Level</button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const editorDisplay = document.getElementById('vim-editor-display');
+        const editorInput = document.getElementById('vim-editor-input');
+        const statusBar = document.getElementById('status-bar');
+        const instructionsEl = document.getElementById('instructions');
+        const levelIndicator = document.getElementById('level-indicator');
+        const commandLogEl = document.getElementById('command-log');
+        const editorContainer = document.getElementById('editor-container');
+        const resetBtn = document.getElementById('reset-btn');
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modal-content');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const nextLevelBtn = document.getElementById('next-level-btn');
+        const levelSelectionContainer = document.getElementById('level-selection');
+
+        // Game State
+        let content = [];
+        let cursor = { row: 0, col: 0 };
+        let mode = 'NORMAL';
+        let currentLevel = 0;
+        let commandHistory = '';
+        let commandLog = [];
+        let yankedLine = null;
+        let replacePending = false;
+
+        // Utils
+        const escapeHtml = (s) => s
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+
+        const levels = [
+            // Level 1: Basic Movement
+            {
+                name: "Basic Movement",
+                instructions: "Use h, j, k, l to move the cursor. Reach the target character '$'.",
+                initialContent: [
+                    "Move with h(left), j(down), k(up), l(right).",
+                    "Your cursor starts here.",
+                    "",
+                    "The goal is to navigate to the dollar sign.",
+                    "Practice moving around the text.",
+                    "Once you are comfortable, move to the '$'."
+                ],
+                target: { row: 5, col: 39 },
+                setup: () => { cursor = { row: 1, col: 5 }; }
+            },
+            // Level 2: Word Movement
+            {
+                name: "Word Movement",
+                instructions: "Use w (next word), b (back), e (end of word). Get to the end of the 'destination' word.",
+                initialContent: [
+                    "Jumping between words is much faster.",
+                    "Use 'w' to jump forwards to the start of the next word.",
+                    "Use 'b' to jump backwards to the start of the previous word.",
+                    "Use 'e' to jump to the end of the current word.",
+                    "Find the ultimate destination."
+                ],
+                target: { row: 4, col: 28 }, // Target is the 'n' in destination
+                setup: () => { cursor = { row: 0, col: 0 }; }
+            },
+            // Level 3: Line Jumps
+            {
+                name: "Line Jumps",
+                instructions: "Use gg to go to the first line, and G to go to the last line. Go to the last character of the last line.",
+                initialContent: [
+                    "This is the first line. Use 'gg' to come here.",
+                    "...",
+                    "...",
+                    "...",
+                    "This is the last line. Use 'G' to jump here.",
+                    "The target is on the word 'here'."
+                ],
+                target: { row: 5, col: 32 }, // Target is the '.' at the end of the line
+                setup: () => { cursor = { row: 2, col: 0 }; commandHistory = ''; }
+            },
+            // Level 4: Insert Mode
+            {
+                name: "Insert Mode",
+                instructions: "Press 'i' to enter INSERT mode. Type ' is awesome!' and press Esc to return to NORMAL mode.",
+                initialContent: [
+                    "VIM has multiple modes. You've been in NORMAL mode.",
+                    "Press 'i' to enter INSERT mode and start typing.",
+                    "When you're done, press 'Escape' to go back.",
+                    "Your task: complete the sentence below.",
+                    "Learning VIM"
+                ],
+                targetText: { line: 4, text: "Learning VIM is awesome!" },
+                setup: () => { cursor = { row: 4, col: 13 }; }
+            },
+             // Level 5: Delete Basics
+            {
+                name: "Delete Basics",
+                instructions: "Use dd to delete the full middle line. Then use dw to remove the word 'mistake' on the last line. You can use x to delete a single character if needed.",
+                initialContent: [
+                    "Keep this line.",
+                    "Delete this entire line.",
+                    "Fix this mistake here."
+                ],
+                targetContent: [
+                    "Keep this line.",
+                    "Fix this here."
+                ],
+                setup: () => { cursor = { row: 0, col: 0 }; commandHistory = ''; }
+            },
+            // Level 6: Yank & Put
+            {
+                name: "Yank & Put (Copy/Paste)",
+                instructions: "Use yy to yank (copy) a line and p to put (paste) it. Duplicate the second line.",
+                initialContent: [
+                    "Let's copy and paste.",
+                    "Yank this line!",
+                    "And put it below this line.",
+                    ""
+                ],
+                targetContent: [
+                    "Let's copy and paste.",
+                    "Yank this line!",
+                    "And put it below this line.",
+                    "Yank this line!",
+                ],
+                setup: () => { cursor = { row: 1, col: 0 }; commandHistory = ''; }
+            },
+            // Level 7: Line Start/End
+            {
+                name: "Line Bounds (0 and $)",
+                instructions: "Use 0 to jump to start of line and $ to jump to end. Move to the last character of the first line.",
+                initialContent: [
+                    "Jump to the start and end of this line.",
+                    "Practice makes perfect."
+                ],
+                // The first line length is 39, last character index is length - 1 = 38
+                target: { row: 0, col: 38 },
+                setup: () => { cursor = { row: 0, col: 0 }; }
+            },
+            // Level 8: Append and Open Lines
+            {
+                name: "Append and Open Lines",
+                instructions: "Use a to append after cursor. Use o to open a new line below, and O to open above. Add a new line between the two lines that reads 'Inserted here'.",
+                initialContent: [
+                    "First line.",
+                    "Second line."
+                ],
+                targetContent: [
+                    "First line.",
+                    "Inserted here",
+                    "Second line."
+                ],
+                setup: () => { cursor = { row: 0, col: 5 }; }
+            },
+            // Level 9: Change Word (cw)
+            {
+                name: "Change Word (cw)",
+                instructions: "Use cw to change the word 'bad' into 'good'. Press Esc when done.",
+                initialContent: [
+                    "This is a bad example."
+                ],
+                targetText: { line: 0, text: "This is a good example." },
+                setup: () => { cursor = { row: 0, col: 10 }; }
+            },
+            // Level 10: Delete to End (D) and Replace (r)
+            {
+                name: "Delete End & Replace",
+                instructions: "Use D to delete from cursor to end of line, then use r to replace the 'x' with '!'.",
+                initialContent: [
+                    "Keep this → remove from here to end",
+                    "Replace this x"
+                ],
+                targetContent: [
+                    "Keep this → ",
+                    "Replace this !"
+                ],
+                setup: () => { cursor = { row: 0, col: 12 }; }
+            }
+        ];
+
+        // --- RENDER FUNCTIONS ---
+        function renderEditor() {
+            let html = '';
+            content.forEach((line, rowIndex) => {
+                html += `<div class="flex"><span class="line-number w-10">${rowIndex + 1}</span><span class="flex-1">`;
+                for (let colIndex = 0; colIndex < line.length; colIndex++) {
+                    const char = line[colIndex];
+                    const safeChar = escapeHtml(char);
+                    if (rowIndex === cursor.row && colIndex === cursor.col && mode === 'NORMAL') {
+                        html += `<span class="cursor">${safeChar}</span>`;
+                    } else {
+                        html += safeChar;
+                    }
+                }
+                if (rowIndex === cursor.row && (cursor.col === line.length || line.length === 0)) {
+                     if (mode === 'NORMAL') {
+                        html += `<span class="cursor">&nbsp;</span>`;
+                     } else {
+                        html += `<span class="inline-block w-px h-6 bg-yellow-400 animate-pulse -mb-1"></span>`;
+                     }
+                }
+                html += `</span></div>`;
+            });
+            editorDisplay.innerHTML = html;
+        }
+
+        function updateStatusBar() {
+            statusBar.textContent = `-- ${mode.toUpperCase()} --`;
+            statusBar.className = `status-bar px-2 py-1 rounded-md text-sm uppercase ${mode === 'NORMAL' ? 'bg-yellow-400 text-gray-900' : 'bg-green-400 text-gray-900'}`;
+        }
+
+        function renderCommandLog() {
+            commandLogEl.textContent = commandLog.slice(-10).join('');
+        }
+
+        // --- GAME LOGIC ---
+        function checkWinCondition() {
+            const level = levels[currentLevel];
+            let won = false;
+            
+            if (level.target) {
+                if (cursor.row === level.target.row && cursor.col === level.target.col) won = true;
+            
+            } else if (level.targetText) {
+                if (content[level.targetText.line] === level.targetText.text && mode === 'NORMAL') won = true;
+            
+            } else if (level.targetContent) {
+                // Compare lines after trimming trailing whitespace and ignoring trailing blank lines
+                const trimLineEnd = (line) => line.replace(/\s+$/, '');
+                const stripTrailingBlankLines = (lines) => {
+                    const result = [...lines];
+                    while (result.length > 0 && trimLineEnd(result[result.length - 1]) === '') {
+                        result.pop();
+                    }
+                    return result;
+                };
+                const currentLines = stripTrailingBlankLines(content.map(trimLineEnd));
+                const targetLines = stripTrailingBlankLines(level.targetContent.map(trimLineEnd));
+                if (currentLines.length === targetLines.length && currentLines.every((l, i) => l === targetLines[i])) {
+                    won = true;
+                }
+            }
+
+            if (won) {
+                editorContainer.classList.add('level-complete-flash');
+                setTimeout(() => {
+                    showModal();
+                    editorContainer.classList.remove('level-complete-flash');
+                }, 500);
+            }
+        }
+
+        function showModal() {
+            modalTitle.textContent = `Level ${currentLevel + 1} Complete!`;
+            modalMessage.textContent = `You've mastered: ${levels[currentLevel].name}.`;
+            if (currentLevel === levels.length - 1) {
+                modalMessage.textContent = "Congratulations! You've completed all the levels.";
+                nextLevelBtn.textContent = "Play Again";
+            } else {
+                 nextLevelBtn.textContent = "Next Level";
+            }
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-95');
+
+            // Allow advancing with Enter key while modal is visible
+            const handleEnterAdvance = (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    // Advance level same as clicking next
+                    if (currentLevel === levels.length - 1) {
+                        currentLevel = 0;
+                    } else {
+                        currentLevel++;
+                    }
+                    loadLevel(currentLevel);
+                    hideModal();
+                    editorInput.focus();
+                    window.removeEventListener('keydown', handleEnterAdvance, true);
+                }
+            };
+            // Use capture to ensure we catch it even if focus is elsewhere
+            window.addEventListener('keydown', handleEnterAdvance, true);
+        }
+        
+        function hideModal() {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.add('scale-95');
+        }
+
+        function createLevelButtons() {
+            levelSelectionContainer.innerHTML = ''; // Clear existing buttons
+            levels.forEach((level, index) => {
+                const button = document.createElement('button');
+                button.textContent = `${index + 1}`;
+                button.dataset.level = index;
+                button.className = `w-8 h-8 flex items-center justify-center rounded-md transition-colors font-bold`;
+                if (index === currentLevel) {
+                    button.classList.add('bg-yellow-400', 'text-gray-900');
+                } else {
+                    button.classList.add('bg-gray-700', 'text-gray-300', 'hover:bg-gray-600');
+                }
+                levelSelectionContainer.appendChild(button);
+            });
+        }
+
+        function loadLevel(levelIndex) {
+            currentLevel = levelIndex;
+            if (levelIndex >= levels.length) {
+                currentLevel = 0;
+            }
+            const level = levels[currentLevel];
+            content = [...level.initialContent];
+            instructionsEl.textContent = level.instructions;
+            levelIndicator.textContent = `Level: ${currentLevel + 1} / ${levels.length}`;
+            level.setup();
+            mode = 'NORMAL';
+            commandHistory = '';
+            commandLog = [];
+            yankedLine = null;
+            updateStatusBar();
+            renderCommandLog();
+            renderEditor();
+            createLevelButtons();
+        }
+
+        // --- INPUT HANDLING ---
+        function handleNormalMode(e) {
+            e.preventDefault();
+            const key = e.key;
+            const isWordChar = (char) => /\w/.test(char);
+
+            // Start single-char replace immediately so it doesn't get logged in command history
+            if (key === 'r' && !replacePending) {
+                replacePending = true;
+                commandLog = [];
+                return;
+            }
+
+            // Handle pending single-char replace (r)
+            if (replacePending) {
+                // Ignore modifier keys while waiting for the actual replacement character
+                if (key === 'Shift' || key === 'Control' || key === 'Alt' || key === 'Meta') {
+                    return;
+                }
+                // Allow cancel with Escape
+                if (key === 'Escape') {
+                    replacePending = false;
+                    renderEditor();
+                    return;
+                }
+                if (key.length === 1) {
+                    let line = content[cursor.row];
+                    if (cursor.col < line.length) {
+                        content[cursor.row] = line.slice(0, cursor.col) + key + line.slice(cursor.col + 1);
+                    } else {
+                        // If at end, append
+                        content[cursor.row] = line + key;
+                    }
+                    replacePending = false;
+                    renderEditor();
+                    checkWinCondition();
+                    return;
+                }
+                // For other non-printable keys, do nothing but keep waiting
+                return;
+            }
+
+            if (key.length === 1 && key !== 'Shift' && key !== 'Control' && key !== 'Alt') {
+                commandLog.push(key);
+                commandHistory += key;
+                renderCommandLog();
+            }
+
+            // Movement
+            if (key === 'h' && cursor.col > 0) cursor.col--;
+            if (key === 'l' && cursor.col < content[cursor.row].length - 1) cursor.col++;
+            if (key === 'k' && cursor.row > 0) cursor.row--;
+            if (key === 'j' && cursor.row < content.length - 1) cursor.row++;
+            if (key === '0') { cursor.col = 0; }
+            if (key === '$') { const line = content[cursor.row]; cursor.col = Math.max(0, line.length - 1); }
+
+            // Word movement
+            // Avoid moving on 'w' when it's part of operators like 'dw' or 'cw'
+            if (key === 'w' && !(commandHistory.endsWith('dw') || commandHistory.endsWith('cw'))) {
+                const line = content[cursor.row];
+                const match = line.substring(cursor.col).match(/\s\S/);
+                if (match) {
+                    cursor.col += match.index + 1;
+                } else if (cursor.row < content.length - 1) {
+                    cursor.row++;
+                    cursor.col = 0;
+                }
+            }
+            if (key === 'b') {
+                const line = content[cursor.row];
+                const sub = line.substring(0, cursor.col).trimEnd();
+                const lastSpace = sub.lastIndexOf(' ');
+                cursor.col = lastSpace !== -1 ? lastSpace + 1 : 0;
+            }
+            if (key === 'e') {
+                const line = content[cursor.row];
+                let i = cursor.col;
+                if (i < line.length - 1) { i++; }
+                while (i < line.length && !isWordChar(line[i])) { i++; }
+                while (i < line.length - 1 && isWordChar(line[i + 1])) { i++; }
+                if (isWordChar(line[i])) { cursor.col = i; }
+            }
+
+            // Line jumps
+            if (commandHistory.endsWith('gg')) {
+                cursor.row = 0;
+                cursor.col = 0;
+                commandHistory = ''; commandLog = [];
+            }
+            if (key === 'G') {
+                cursor.row = content.length - 1;
+                cursor.col = 0;
+            }
+
+            // Mode change
+            if (key === 'i') {
+                mode = 'INSERT';
+                commandLog = [];
+            }
+            if (key === 'a') {
+                const line = content[cursor.row];
+                if (cursor.col < line.length) cursor.col++;
+                mode = 'INSERT';
+                commandLog = [];
+            }
+            if (key === 'o') {
+                cursor.row++;
+                content.splice(cursor.row, 0, "");
+                cursor.col = 0;
+                mode = 'INSERT';
+                commandLog = [];
+            }
+            if (key === 'O') {
+                content.splice(cursor.row, 0, "");
+                cursor.col = 0;
+                mode = 'INSERT';
+                commandLog = [];
+            }
+            
+            // Deletion
+            if (key === 'x') {
+                let line = content[cursor.row];
+                if (cursor.col < line.length) {
+                    content[cursor.row] = line.slice(0, cursor.col) + line.slice(cursor.col + 1);
+                }
+            }
+            if (commandHistory.endsWith('dw')) {
+                let line = content[cursor.row];
+                let start = cursor.col;
+                
+                let endOfWord = line.substring(start).search(/\s|$/);
+                if (endOfWord === -1) { endOfWord = line.length; } 
+                else { endOfWord += start; }
+                
+                let startOfNextWord = line.substring(endOfWord).search(/\S/);
+                if (startOfNextWord === -1) { startOfNextWord = line.length; } 
+                else { startOfNextWord += endOfWord; }
+                
+                content[cursor.row] = line.slice(0, start) + line.slice(startOfNextWord);
+                commandHistory = ''; commandLog = [];
+            }
+            if (commandHistory.endsWith('cw')) {
+                // Change word: delete to end of current word and enter insert mode
+                let line = content[cursor.row];
+                let start = cursor.col;
+                let endRel = line.substring(start).search(/\s|$/);
+                let end = endRel === -1 ? line.length : start + endRel;
+                content[cursor.row] = line.slice(0, start) + line.slice(end);
+                mode = 'INSERT';
+                commandHistory = ''; commandLog = [];
+            }
+            if (key === 'D') {
+                // Delete to end of line
+                let line = content[cursor.row];
+                content[cursor.row] = line.slice(0, cursor.col);
+                commandLog = [];
+            }
+            // 'r' handled above
+            if (commandHistory.endsWith('dd')) {
+                yankedLine = content.splice(cursor.row, 1)[0];
+                if (content.length === 0) content.push("");
+                if (cursor.row >= content.length) cursor.row = content.length - 1;
+                cursor.col = 0;
+                commandHistory = ''; commandLog = [];
+            }
+            
+            // Yank & Put
+            if (commandHistory.endsWith('yy')) {
+                yankedLine = content[cursor.row];
+                commandHistory = ''; commandLog = [];
+            }
+            if (key === 'p' && yankedLine !== null) {
+                content.splice(cursor.row + 1, 0, yankedLine);
+            }
+
+            // Clear operator combos when standalone keys are pressed
+
+            if (['h','j','k','l','w','b','e','G','i','a','o','O','x','p','0','$','D'].includes(key)) {
+                commandLog = [];
+            }
+
+            // Ensure cursor is within bounds
+            if (cursor.row >= content.length) cursor.row = content.length - 1;
+            if (cursor.col > content[cursor.row].length) cursor.col = content[cursor.row].length;
+            if (cursor.col < 0) cursor.col = 0;
+            if(mode === 'NORMAL' && cursor.col === content[cursor.row].length && content[cursor.row].length > 0) {
+                cursor.col--;
+            }
+
+            updateStatusBar();
+            renderEditor();
+            if (mode === 'NORMAL') checkWinCondition();
+        }
+
+        function handleInsertMode(e) {
+            e.preventDefault();
+            let line = content[cursor.row];
+            if (e.key === 'Escape') {
+                mode = 'NORMAL';
+                if (cursor.col > 0) cursor.col--;
+            } else if (e.key === 'Backspace') {
+                if (cursor.col > 0) {
+                    content[cursor.row] = line.slice(0, cursor.col - 1) + line.slice(cursor.col);
+                    cursor.col--;
+                }
+            } else if (e.key.length === 1) {
+                content[cursor.row] = line.slice(0, cursor.col) + e.key + line.slice(cursor.col);
+                cursor.col++;
+            }
+            updateStatusBar();
+            renderEditor();
+            if (mode === 'NORMAL') checkWinCondition();
+        }
+
+        // --- EVENT LISTENERS ---
+        editorInput.addEventListener('keydown', (e) => {
+            if (mode === 'NORMAL') {
+                handleNormalMode(e);
+            } else {
+                handleInsertMode(e);
+            }
+        });
+
+        editorContainer.addEventListener('click', () => editorInput.focus());
+        
+        nextLevelBtn.addEventListener('click', () => {
+             if (currentLevel === levels.length - 1) {
+                currentLevel = 0;
+            } else {
+                currentLevel++;
+            }
+            loadLevel(currentLevel);
+            hideModal();
+            editorInput.focus();
+        });
+
+        resetBtn.addEventListener('click', () => {
+            loadLevel(currentLevel);
+            editorInput.focus();
+        });
+
+        levelSelectionContainer.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const levelIndex = parseInt(e.target.dataset.level, 10);
+                if (levelIndex !== currentLevel) {
+                    loadLevel(levelIndex);
+                }
+                editorInput.focus();
+            }
+        });
+
+        // --- INITIAL LOAD ---
+        loadLevel(currentLevel);
+        editorInput.focus();
+    </script>
+</body>
+</html>
