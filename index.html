@@ -127,6 +127,23 @@
         let commandLog = [];
         let yankedLine = null;
         let replacePending = false;
+        let countBuffer = '';
+        let undoStack = [];
+        let redoStack = [];
+        let level12Undo = false;
+        let level12RedoAfterUndo = false;
+
+        const cloneState = () => ({
+            content: [...content],
+            cursor: { row: cursor.row, col: cursor.col },
+            mode,
+            yankedLine
+        });
+        const pushUndo = () => {
+            undoStack.push(cloneState());
+            if (undoStack.length > 200) undoStack.shift();
+            redoStack = [];
+        };
 
         // Utils
         const escapeHtml = (s) => s
@@ -278,6 +295,31 @@
                     "Replace this !"
                 ],
                 setup: () => { cursor = { row: 0, col: 12 }; }
+            },
+            // Level 11: Numeric Counts (3w)
+            {
+                name: "Counts: Move Faster",
+                instructions: "Use a count with motions. Press 3 then w to jump three words and land on 'target'.",
+                initialContent: [
+                    "one two three target here"
+                ],
+                target: { row: 0, col: 14 },
+                setup: () => { cursor = { row: 0, col: 0 }; }
+            },
+            // Level 12: Undo and Redo
+            {
+                name: "Undo / Redo",
+                instructions: "Delete the middle line with dd, undo it with u, then redo with Ctrl+r to finish with the line deleted.",
+                initialContent: [
+                    "Top line.",
+                    "Remove me.",
+                    "Bottom line."
+                ],
+                targetContent: [
+                    "Top line.",
+                    "Bottom line."
+                ],
+                setup: () => { cursor = { row: 1, col: 0 }; }
             }
         ];
 
@@ -340,7 +382,11 @@
                 const currentLines = stripTrailingBlankLines(content.map(trimLineEnd));
                 const targetLines = stripTrailingBlankLines(level.targetContent.map(trimLineEnd));
                 if (currentLines.length === targetLines.length && currentLines.every((l, i) => l === targetLines[i])) {
-                    won = true;
+                    if (level.name === 'Undo / Redo') {
+                        if (level12RedoAfterUndo) won = true;
+                    } else {
+                        won = true;
+                    }
                 }
             }
 
@@ -420,6 +466,8 @@
             commandHistory = '';
             commandLog = [];
             yankedLine = null;
+            level12Undo = false;
+            level12RedoAfterUndo = false;
             updateStatusBar();
             renderCommandLog();
             renderEditor();
@@ -431,6 +479,24 @@
             e.preventDefault();
             const key = e.key;
             const isWordChar = (char) => /\w/.test(char);
+
+            // Redo (Ctrl+r) should be handled before any other 'r' logic
+            if (key === 'r' && e.ctrlKey) {
+                const next = redoStack.pop();
+                if (next) {
+                    undoStack.push(cloneState());
+                    content = [...next.content];
+                    cursor = { ...next.cursor };
+                    mode = next.mode;
+                    yankedLine = next.yankedLine;
+                }
+                if (levels[currentLevel].name === 'Undo / Redo' && level12Undo) {
+                    level12RedoAfterUndo = true;
+                }
+                renderEditor();
+                checkWinCondition();
+                return;
+            }
 
             // Start single-char replace immediately so it doesn't get logged in command history
             if (key === 'r' && !replacePending) {
@@ -468,6 +534,15 @@
                 return;
             }
 
+            // Handle counts
+            if (/^[0-9]$/.test(key)) {
+                if (!(key === '0' && countBuffer === '')) {
+                    countBuffer += key;
+                    commandLog.push(key);
+                    renderCommandLog();
+                    return;
+                }
+            }
             if (key.length === 1 && key !== 'Shift' && key !== 'Control' && key !== 'Alt') {
                 commandLog.push(key);
                 commandHistory += key;
@@ -475,38 +550,46 @@
             }
 
             // Movement
-            if (key === 'h' && cursor.col > 0) cursor.col--;
-            if (key === 'l' && cursor.col < content[cursor.row].length - 1) cursor.col++;
-            if (key === 'k' && cursor.row > 0) cursor.row--;
-            if (key === 'j' && cursor.row < content.length - 1) cursor.row++;
+            const count = countBuffer ? Math.max(1, parseInt(countBuffer, 10)) : 1;
+            const repeat = (n, fn) => { for (let i = 0; i < n; i++) fn(i); };
+            if (key === 'h') repeat(count, () => { if (cursor.col > 0) cursor.col--; });
+            if (key === 'l') repeat(count, () => { if (cursor.col < content[cursor.row].length - 1) cursor.col++; });
+            if (key === 'k') repeat(count, () => { if (cursor.row > 0) cursor.row--; });
+            if (key === 'j') repeat(count, () => { if (cursor.row < content.length - 1) cursor.row++; });
             if (key === '0') { cursor.col = 0; }
             if (key === '$') { const line = content[cursor.row]; cursor.col = Math.max(0, line.length - 1); }
 
             // Word movement
             // Avoid moving on 'w' when it's part of operators like 'dw' or 'cw'
             if (key === 'w' && !(commandHistory.endsWith('dw') || commandHistory.endsWith('cw'))) {
-                const line = content[cursor.row];
-                const match = line.substring(cursor.col).match(/\s\S/);
-                if (match) {
-                    cursor.col += match.index + 1;
-                } else if (cursor.row < content.length - 1) {
-                    cursor.row++;
-                    cursor.col = 0;
-                }
+                repeat(count, () => {
+                    const line = content[cursor.row];
+                    const match = line.substring(cursor.col).match(/\s\S/);
+                    if (match) {
+                        cursor.col += match.index + 1;
+                    } else if (cursor.row < content.length - 1) {
+                        cursor.row++;
+                        cursor.col = 0;
+                    }
+                });
             }
             if (key === 'b') {
-                const line = content[cursor.row];
-                const sub = line.substring(0, cursor.col).trimEnd();
-                const lastSpace = sub.lastIndexOf(' ');
-                cursor.col = lastSpace !== -1 ? lastSpace + 1 : 0;
+                repeat(count, () => {
+                    const line = content[cursor.row];
+                    const sub = line.substring(0, cursor.col).trimEnd();
+                    const lastSpace = sub.lastIndexOf(' ');
+                    cursor.col = lastSpace !== -1 ? lastSpace + 1 : 0;
+                });
             }
             if (key === 'e') {
-                const line = content[cursor.row];
-                let i = cursor.col;
-                if (i < line.length - 1) { i++; }
-                while (i < line.length && !isWordChar(line[i])) { i++; }
-                while (i < line.length - 1 && isWordChar(line[i + 1])) { i++; }
-                if (isWordChar(line[i])) { cursor.col = i; }
+                repeat(count, () => {
+                    const line = content[cursor.row];
+                    let i = cursor.col;
+                    if (i < line.length - 1) { i++; }
+                    while (i < line.length && !isWordChar(line[i])) { i++; }
+                    while (i < line.length - 1 && isWordChar(line[i + 1])) { i++; }
+                    if (isWordChar(line[i])) { cursor.col = i; }
+                });
             }
 
             // Line jumps
@@ -516,8 +599,14 @@
                 commandHistory = ''; commandLog = [];
             }
             if (key === 'G') {
-                cursor.row = content.length - 1;
-                cursor.col = 0;
+                if (countBuffer) {
+                    const lineNum = Math.max(1, parseInt(countBuffer, 10));
+                    cursor.row = Math.min(content.length - 1, lineNum - 1);
+                    cursor.col = 0;
+                } else {
+                    cursor.row = content.length - 1;
+                    cursor.col = 0;
+                }
             }
 
             // Mode change
@@ -526,12 +615,14 @@
                 commandLog = [];
             }
             if (key === 'a') {
+                pushUndo();
                 const line = content[cursor.row];
                 if (cursor.col < line.length) cursor.col++;
                 mode = 'INSERT';
                 commandLog = [];
             }
             if (key === 'o') {
+                pushUndo();
                 cursor.row++;
                 content.splice(cursor.row, 0, "");
                 cursor.col = 0;
@@ -539,6 +630,7 @@
                 commandLog = [];
             }
             if (key === 'O') {
+                pushUndo();
                 content.splice(cursor.row, 0, "");
                 cursor.col = 0;
                 mode = 'INSERT';
@@ -547,27 +639,31 @@
             
             // Deletion
             if (key === 'x') {
-                let line = content[cursor.row];
-                if (cursor.col < line.length) {
-                    content[cursor.row] = line.slice(0, cursor.col) + line.slice(cursor.col + 1);
+                pushUndo();
+                const count = countBuffer ? Math.max(1, parseInt(countBuffer, 10)) : 1;
+                for (let i = 0; i < count; i++) {
+                    let line = content[cursor.row];
+                    if (cursor.col < line.length) {
+                        content[cursor.row] = line.slice(0, cursor.col) + line.slice(cursor.col + 1);
+                    }
                 }
             }
             if (commandHistory.endsWith('dw')) {
-                let line = content[cursor.row];
-                let start = cursor.col;
-                
-                let endOfWord = line.substring(start).search(/\s|$/);
-                if (endOfWord === -1) { endOfWord = line.length; } 
-                else { endOfWord += start; }
-                
-                let startOfNextWord = line.substring(endOfWord).search(/\S/);
-                if (startOfNextWord === -1) { startOfNextWord = line.length; } 
-                else { startOfNextWord += endOfWord; }
-                
-                content[cursor.row] = line.slice(0, start) + line.slice(startOfNextWord);
+                pushUndo();
+                const count = countBuffer ? Math.max(1, parseInt(countBuffer, 10)) : 1;
+                for (let i = 0; i < count; i++) {
+                    let line = content[cursor.row];
+                    let start = cursor.col;
+                    let endOfWord = line.substring(start).search(/\s|$/);
+                    if (endOfWord === -1) { endOfWord = line.length; } else { endOfWord += start; }
+                    let startOfNextWord = line.substring(endOfWord).search(/\S/);
+                    if (startOfNextWord === -1) { startOfNextWord = line.length; } else { startOfNextWord += endOfWord; }
+                    content[cursor.row] = line.slice(0, start) + line.slice(startOfNextWord);
+                }
                 commandHistory = ''; commandLog = [];
             }
             if (commandHistory.endsWith('cw')) {
+                pushUndo();
                 // Change word: delete to end of current word and enter insert mode
                 let line = content[cursor.row];
                 let start = cursor.col;
@@ -579,26 +675,36 @@
             }
             if (key === 'D') {
                 // Delete to end of line
+                pushUndo();
                 let line = content[cursor.row];
                 content[cursor.row] = line.slice(0, cursor.col);
                 commandLog = [];
             }
             // 'r' handled above
             if (commandHistory.endsWith('dd')) {
-                yankedLine = content.splice(cursor.row, 1)[0];
-                if (content.length === 0) content.push("");
-                if (cursor.row >= content.length) cursor.row = content.length - 1;
+                pushUndo();
+                const count = countBuffer ? Math.max(1, parseInt(countBuffer, 10)) : 1;
+                for (let i = 0; i < count; i++) {
+                    yankedLine = content.splice(cursor.row, 1)[0];
+                    if (content.length === 0) content.push("");
+                    if (cursor.row >= content.length) cursor.row = content.length - 1;
+                }
                 cursor.col = 0;
                 commandHistory = ''; commandLog = [];
             }
             
             // Yank & Put
             if (commandHistory.endsWith('yy')) {
-                yankedLine = content[cursor.row];
+                const count = countBuffer ? Math.max(1, parseInt(countBuffer, 10)) : 1;
+                yankedLine = content[Math.min(content.length - 1, cursor.row + count - 1)];
                 commandHistory = ''; commandLog = [];
             }
             if (key === 'p' && yankedLine !== null) {
-                content.splice(cursor.row + 1, 0, yankedLine);
+                pushUndo();
+                const count = countBuffer ? Math.max(1, parseInt(countBuffer, 10)) : 1;
+                for (let i = 0; i < count; i++) {
+                    content.splice(cursor.row + 1, 0, yankedLine);
+                }
             }
 
             // Clear operator combos when standalone keys are pressed
@@ -606,6 +712,28 @@
             if (['h','j','k','l','w','b','e','G','i','a','o','O','x','p','0','$','D'].includes(key)) {
                 commandLog = [];
             }
+
+            // Undo / Redo
+            if (key === 'u') {
+                const prev = undoStack.pop();
+                if (prev) {
+                    redoStack.push(cloneState());
+                    content = [...prev.content];
+                    cursor = { ...prev.cursor };
+                    mode = prev.mode;
+                    yankedLine = prev.yankedLine;
+                }
+                if (levels[currentLevel].name === 'Undo / Redo') {
+                    level12Undo = true;
+                    level12RedoAfterUndo = false;
+                }
+                renderEditor();
+                checkWinCondition();
+                return;
+            }
+
+            // Reset count when a non-digit key processed
+            if (!/^[0-9]$/.test(key)) countBuffer = '';
 
             // Ensure cursor is within bounds
             if (cursor.row >= content.length) cursor.row = content.length - 1;

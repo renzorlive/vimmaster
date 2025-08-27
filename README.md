@@ -6,11 +6,16 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
 - Open `index.html` directly in your browser.
 - Best viewed on desktop for full keyboard support.
 
+## Screenshot
+![VIM Master Screenshot](images/screenshot.png)
+
 ## Features
 - Normal/Insert modes with an on-screen status bar
 - Command log showing your keystrokes
 - Levels that validate your action outcomes (not just keystrokes)
 - Supports: `h j k l`, `w b e`, `gg G`, `0 $`, `x`, `dd`, `dw`, `yy`, `p`, `i`, `a`, `o/O`, `cw`, `D`, `r`
+- Numeric counts for motions/operators (e.g., `3w`, `2dd`, `5x`, `5G`)
+- Undo/redo support (`u`, `Ctrl+r`)
 - Completion modal with Enter to advance
 
 ## Levels
@@ -24,15 +29,19 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
 8. Append & Open Lines: `a`, `o`, `O`
 9. Change Word: `cw` (then type, `Esc`)
 10. Delete to End & Replace: `D`, `r`
+11. Counts: use `3w` to move multiple words
+12. Undo/Redo: `dd`, then `u`, then `Ctrl+r`
 
 ## Controls
 - Navigation: `h` left, `j` down, `k` up, `l` right
 - Words: `w` next, `b` back, `e` end
-- Lines: `0` start, `$` end, `gg` first line, `G` last line
+- Lines: `0` start, `$` end, `gg` first line, `G` last line (or `nG` to go to line n)
 - Insert: `i` insert at cursor, `a` append after cursor, `o` new line below, `O` new line above
 - Delete: `x` delete character, `dd` delete line, `dw` delete word, `D` delete to end of line
 - Change: `cw` change word (deletes word and enters Insert)
 - Replace: `r` then any printable character (supports symbols like `! @ # < > &`)
+- Counts: prefix a number before commands (e.g., `3w`, `2dd`, `5x`, `5G`)
+- Undo/Redo: `u` undo, `Ctrl+r` redo
 - Exit Insert mode: `Esc`
 
 ## How Validation Works
