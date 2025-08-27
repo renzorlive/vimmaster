@@ -132,6 +132,7 @@
         let redoStack = [];
         let level12Undo = false;
         let level12RedoAfterUndo = false;
+        let lastExCommand = null;
 
         const cloneState = () => ({
             content: [...content],
@@ -154,6 +155,18 @@
             .replace(/'/g, '&#39;');
 
         const levels = [
+            // Level 1: Exiting Vim (fun intro)
+            {
+                name: "How to Exit (Ex Commands)",
+                instructions: "Type :q to quit, or :wq to write and quit. Press Enter after the command.",
+                initialContent: [
+                    "Welcome to VIM Master!",
+                    "Most searched question: how to exit Vim?",
+                    "Try typing :q and press Enter (or :wq)."
+                ],
+                exCommands: ["q", "wq"],
+                setup: () => { cursor = { row: 0, col: 0 }; commandHistory = ''; }
+            },
             // Level 1: Basic Movement
             {
                 name: "Basic Movement",
@@ -201,16 +214,16 @@
             // Level 4: Insert Mode
             {
                 name: "Insert Mode",
-                instructions: "Press 'i' to enter INSERT mode. Type ' is awesome!' and press Esc to return to NORMAL mode.",
+                instructions: "Press 'a' to append after the cursor. Type ' is awesome!' and press Esc to return to NORMAL mode.",
                 initialContent: [
                     "VIM has multiple modes. You've been in NORMAL mode.",
-                    "Press 'i' to enter INSERT mode and start typing.",
+                    "Press 'a' to append after the cursor and start typing.",
                     "When you're done, press 'Escape' to go back.",
                     "Your task: complete the sentence below.",
                     "Learning VIM"
                 ],
                 targetText: { line: 4, text: "Learning VIM is awesome!" },
-                setup: () => { cursor = { row: 4, col: 13 }; }
+                setup: () => { cursor = { row: 4, col: 11 }; }
             },
              // Level 5: Delete Basics
             {
@@ -363,7 +376,9 @@
             const level = levels[currentLevel];
             let won = false;
             
-            if (level.target) {
+            if (level.exCommands) {
+                if (lastExCommand && level.exCommands.includes(lastExCommand)) won = true;
+            } else if (level.target) {
                 if (cursor.row === level.target.row && cursor.col === level.target.col) won = true;
             
             } else if (level.targetText) {
@@ -468,6 +483,7 @@
             yankedLine = null;
             level12Undo = false;
             level12RedoAfterUndo = false;
+            lastExCommand = null;
             updateStatusBar();
             renderCommandLog();
             renderEditor();
@@ -494,6 +510,20 @@
                     level12RedoAfterUndo = true;
                 }
                 renderEditor();
+                checkWinCondition();
+                return;
+            }
+
+            // Handle Ex commands on Enter: parse from last ':'
+            if (key === 'Enter') {
+                const idx = commandHistory.lastIndexOf(':');
+                if (idx !== -1) {
+                    const cmd = commandHistory.slice(idx + 1).trim();
+                    lastExCommand = cmd;
+                }
+                commandHistory = '';
+                commandLog = [];
+                renderCommandLog();
                 checkWinCondition();
                 return;
             }

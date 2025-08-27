@@ -13,24 +13,25 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
 - Normal/Insert modes with an on-screen status bar
 - Command log showing your keystrokes
 - Levels that validate your action outcomes (not just keystrokes)
-- Supports: `h j k l`, `w b e`, `gg G`, `0 $`, `x`, `dd`, `dw`, `yy`, `p`, `i`, `a`, `o/O`, `cw`, `D`, `r`
+- Supports: `h j k l`, `w b e`, `gg G`, `0 $`, `x`, `dd`, `dw`, `yy`, `p`, `i`, `a`, `o/O`, `cw`, `D`, `r`, ex-commands `:q`, `:wq`
 - Numeric counts for motions/operators (e.g., `3w`, `2dd`, `5x`, `5G`)
 - Undo/redo support (`u`, `Ctrl+r`)
 - Completion modal with Enter to advance
 
 ## Levels
-1. Basic Movement: `h j k l`
-2. Word Movement: `w b e`
-3. Line Jumps: `gg G`
-4. Insert Mode: `i` + typing + `Esc`
-5. Delete Basics: `dd`, `dw`, `x`
-6. Yank & Put: `yy`, `p`
-7. Line Bounds: `0`, `$`
-8. Append & Open Lines: `a`, `o`, `O`
-9. Change Word: `cw` (then type, `Esc`)
-10. Delete to End & Replace: `D`, `r`
-11. Counts: use `3w` to move multiple words
-12. Undo/Redo: `dd`, then `u`, then `Ctrl+r`
+1. How to Exit (Ex Commands): type `:q` or `:wq` then Enter
+2. Basic Movement: `h j k l`
+3. Word Movement: `w b e`
+4. Line Jumps: `gg G`
+5. Insert Mode: `a` + typing + `Esc`
+6. Delete Basics: `dd`, `dw`, `x`
+7. Yank & Put: `yy`, `p`
+8. Line Bounds: `0`, `$`
+9. Append & Open Lines: `a`, `o`, `O`
+10. Change Word: `cw` (then type, `Esc`)
+11. Delete to End & Replace: `D`, `r`
+12. Counts: use `3w` to move multiple words
+13. Undo/Redo: `dd`, then `u`, then `Ctrl+r`
 
 ## Controls
 - Navigation: `h` left, `j` down, `k` up, `l` right
