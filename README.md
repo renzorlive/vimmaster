@@ -7,7 +7,7 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
 - Best viewed on desktop for full keyboard support.
 
 ## Screenshot
-![VIM Master Screenshot](images/screenshot.png)
+![VIM Master Screenshot](images/vm.gif)
 
 ## Features
 - Normal/Insert modes with an on-screen status bar
