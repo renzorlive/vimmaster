@@ -21,6 +21,7 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
  - Vim-style search: `/` and `?`, with `n`/`N` navigation and match highlighting
  - Finish celebration: full-screen overlay with confetti and Play Again
  - Badge system: earn visual badges as you learn (Beginner, Search Master)
+ - Cheat Mode: in-game command cheat sheet with quick practice (Ctrl+/)
 
 ## Levels
 1. How to Exit (Ex Commands): type `:q` or `:wq` then Enter
@@ -61,6 +62,7 @@ Badges display in a bar under the title, and a toast appears when you earn one.
 - Undo/Redo: `u` undo, `Ctrl+r` redo
 - Exit Insert mode: `Esc` or `Ctrl-[`
  - Search: `/text` forward, `?text` backward; `n` next, `N` previous
+ - Cheat Mode: toggle with `Ctrl+/` (or button)
 
 ### Search Edge Cases
 - Empty search query does nothing.
@@ -73,6 +75,15 @@ Users are presented with a series of command tasks to complete as quickly and ac
 Each correctly executed command scores points, while speed and precision determine the final score.
 This mode offers an engaging way to sharpen your Vim skills by combining rapid-fire challenges with real-time feedback, making learning Vim commands both fun and effective.
 Try to beat your highest score and see how quickly you can master essential Vim commands!
+
+## Cheat Mode
+Open the built-in, interactive cheat sheet to explore and practice commands on demand.
+- Toggle: `Ctrl+/` or click the “Cheat Mode” button
+- Search/filter by name or description
+- Commands grouped by category (Movement, Editing, Search, Other)
+- Each entry shows keys, a short description, and an example
+- Click any command to launch a mini-practice; you’ll return to the cheat sheet after completing it
+- Practiced commands are highlighted in the list
 
 ## How Validation Works
 - Each level defines a target cursor location, target text, or target content layout.

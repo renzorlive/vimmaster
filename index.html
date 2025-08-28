@@ -167,6 +167,17 @@
     <!-- Badge Toast -->
     <div id="badge-toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-yellow-400 text-gray-900 font-bold py-2 px-4 rounded-md shadow-lg hidden z-50"></div>
 
+    <!-- Cheat Mode Panel -->
+    <div id="cheat-overlay" class="fixed inset-0 hidden z-40 bg-black/60"></div>
+    <div id="cheat-panel" class="fixed right-0 top-0 h-full w-full max-w-xl bg-gray-800 border-l border-gray-700 shadow-2xl transform translate-x-full transition-transform z-50 overflow-y-auto">
+        <div class="sticky top-0 bg-gray-800 border-b border-gray-700 p-4 flex items-center gap-3">
+            <h3 class="text-xl font-bold text-yellow-400">Cheat Mode</h3>
+            <input id="cheat-search" type="text" placeholder="Search commands... (Ctrl+/)" class="flex-1 bg-gray-900 text-gray-100 rounded-md px-3 py-2 border border-gray-700 focus:outline-none focus:border-yellow-400" />
+            <button id="cheat-close" class="bg-gray-700 hover:bg-gray-600 text-gray-200 font-bold px-3 py-2 rounded-md">Close</button>
+        </div>
+        <div id="cheat-content" class="p-4 space-y-6"></div>
+    </div>
+
     <script>
         // DOM Elements
         const editorDisplay = document.getElementById('vim-editor-display');
@@ -196,6 +207,11 @@
         const badgeBar = document.getElementById('badge-bar');
         const badgeCount = document.getElementById('badge-count');
         const badgeToast = document.getElementById('badge-toast');
+        const cheatPanel = document.getElementById('cheat-panel');
+        const cheatOverlay = document.getElementById('cheat-overlay');
+        const cheatCloseBtn = document.getElementById('cheat-close');
+        const cheatSearch = document.getElementById('cheat-search');
+        const cheatContent = document.getElementById('cheat-content');
 
         // Game State
         let content = [];
@@ -220,6 +236,8 @@
         let currentMatchIndex = -1;
         let usedSearchInLevel = false;
         let navCountSinceSearch = 0;
+        let badges = new Set();
+        let practicedCommands = new Set();
 
         // Challenge Mode State
         let challengeMode = false;
@@ -229,7 +247,6 @@
         let challengeScoreValue = 0;
         let challengeProgressValue = 0;
         let currentTaskIndex = 0;
-        let badges = new Set();
 
         // Challenge Definitions
         const challenges = [
@@ -637,6 +654,182 @@
                 el.innerHTML = `<span>${def.emoji}</span><span>${def.label}</span>`;
                 badgeBar.appendChild(el);
             });
+        }
+
+        // --- CHEAT MODE ---
+        const commandCatalog = [
+            {
+                category: 'Movement',
+                items: [
+                    { key: 'h / j / k / l', id: 'hjkL', desc: 'Move left/down/up/right', example: 'Navigate the cursor around the text.' },
+                    { key: 'w / b / e', id: 'wbe', desc: 'Word motions: next/back/end', example: 'Jump between words quickly.' },
+                    { key: 'gg / G', id: 'ggG', desc: 'Go to first/last line', example: 'Jump to file bounds.' },
+                    { key: '0 / $', id: '0$', desc: 'Line start / end', example: 'Move to start or end of line.' },
+                ]
+            },
+            {
+                category: 'Editing',
+                items: [
+                    { key: 'i / a', id: 'ia', desc: 'Insert/Append text', example: 'Enter insert mode to type.' },
+                    { key: 'x', id: 'x', desc: 'Delete character', example: 'Remove a single character.' },
+                    { key: 'dd', id: 'dd', desc: 'Delete line', example: 'Remove an entire line.' },
+                    { key: 'dw', id: 'dw', desc: 'Delete word', example: 'Remove word from cursor.' },
+                    { key: 'yy / p', id: 'yyp', desc: 'Yank and paste line', example: 'Copy and paste a line.' },
+                    { key: 'cw', id: 'cw', desc: 'Change word', example: 'Delete word and enter insert.' },
+                    { key: 'D', id: 'D', desc: 'Delete to end of line', example: 'Trim line from cursor to end.' },
+                    { key: 'r', id: 'r', desc: 'Replace one character', example: 'Replace character under cursor.' },
+                ]
+            },
+            {
+                category: 'Search',
+                items: [
+                    { key: '/text', id: 'search-forward', desc: 'Search forward for text', example: 'Use / then Enter to jump.' },
+                    { key: '?text', id: 'search-backward', desc: 'Search backward for text', example: 'Use ? then Enter to jump.' },
+                    { key: 'n / N', id: 'nN', desc: 'Next / Previous match', example: 'Navigate search results.' },
+                ]
+            },
+            {
+                category: 'Other',
+                items: [
+                    { key: 'u / Ctrl+r', id: 'undo-redo', desc: 'Undo / Redo changes', example: 'Revert or re-apply edits.' },
+                    { key: ':q / :wq', id: 'ex', desc: 'Quit / Write & Quit', example: 'Use ex-commands.' },
+                ]
+            }
+        ];
+
+        function renderCheatList(filter = '') {
+            const q = filter.trim().toLowerCase();
+            cheatContent.innerHTML = '';
+            commandCatalog.forEach(group => {
+                const matchedItems = group.items.filter(it => {
+                    if (!q) return true;
+                    return it.key.toLowerCase().includes(q) || it.desc.toLowerCase().includes(q);
+                });
+                if (matchedItems.length === 0) return;
+                const section = document.createElement('div');
+                section.innerHTML = `<div class="text-blue-300 font-bold mb-2">${group.category}</div>`;
+                const list = document.createElement('div');
+                list.className = 'grid grid-cols-1 gap-2';
+                matchedItems.forEach(it => {
+                    const tried = practicedCommands.has(it.id);
+                    const card = document.createElement('button');
+                    card.className = `text-left bg-gray-900 border ${tried ? 'border-green-600' : 'border-gray-700'} hover:border-yellow-500 rounded-md p-3 flex items-center justify-between`;
+                    card.innerHTML = `
+                        <div>
+                            <div class="text-yellow-300 font-mono">${it.key}</div>
+                            <div class="text-gray-300 text-sm">${it.desc}</div>
+                            <div class="text-gray-500 text-xs">${it.example}</div>
+                        </div>
+                        <div class="text-xs ${tried ? 'text-green-400' : 'text-blue-400'}">${tried ? 'Practiced' : 'Practice'}</div>
+                    `;
+                    card.addEventListener('click', () => startCheatPractice(it));
+                    list.appendChild(card);
+                });
+                section.appendChild(list);
+                cheatContent.appendChild(section);
+            });
+        }
+
+        function openCheat() {
+            cheatOverlay.classList.remove('hidden');
+            cheatPanel.classList.remove('translate-x-full');
+            cheatSearch.value = '';
+            renderCheatList('');
+            cheatSearch.focus();
+        }
+        function closeCheat() {
+            cheatOverlay.classList.add('hidden');
+            cheatPanel.classList.add('translate-x-full');
+            editorInput.focus();
+        }
+
+        function startCheatPractice(item) {
+            // Minimal practice: load a tiny buffer and set expectations based on command id
+            // Save current level context
+            const returnLevel = currentLevel;
+            const practiceLevels = {
+                'hjkL': {
+                    instructions: "Practice moving to '$' using h/j/k/l.",
+                    initialContent: ["move to the $"], target: { row: 0, col: 12 }
+                },
+                'wbe': {
+                    instructions: "Use w to jump to 'target'.", initialContent: ["one two three target"], target: { row: 0, col: 14 }
+                },
+                'ggG': {
+                    instructions: "Press G to go to last line.", initialContent: ["a","b","c"], target: { row: 2, col: 0 }
+                },
+                '0$': {
+                    instructions: "Press $ to go to end of line.", initialContent: ["line end here"], target: { row: 0, col: 12 }
+                },
+                'ia': {
+                    instructions: "Press a then type ! then Esc.", initialContent: ["Hello"], targetText: { line: 0, text: "Hello!" }
+                },
+                'x': {
+                    instructions: "Delete the x.", initialContent: ["ax"], targetText: { line: 0, text: "a" }
+                },
+                'dd': {
+                    instructions: "Delete the only line (buffer remains with empty line).", initialContent: ["remove me"], targetContent: [""]
+                },
+                'dw': {
+                    instructions: "Delete 'bad' using dw.", initialContent: ["good bad"], targetText: { line: 0, text: "good " }
+                },
+                'yyp': {
+                    instructions: "Yank then paste the line (yy then p).", initialContent: ["copy"], targetContent: ["copy","copy"]
+                },
+                'cw': {
+                    instructions: "Change 'bad' to 'good'.", initialContent: ["bad"], targetText: { line: 0, text: "good" }
+                },
+                'D': {
+                    instructions: "Delete to end from cursor.", initialContent: ["keep remove"], setup: () => { cursor = { row:0, col: 5 }; }, targetText: { line:0, text: "keep " }
+                },
+                'r': {
+                    instructions: "Replace x with ! using r.", initialContent: ["x"], targetText: { line:0, text: "!" }
+                },
+                'search-forward': {
+                    instructions: "Search /target Enter to jump to it.", initialContent: ["find target"], target: { row:0, col:5 }
+                },
+                'search-backward': {
+                    instructions: "Search ?alpha Enter to jump back.", initialContent: ["alpha","beta alpha"], setup: () => { cursor = { row:1, col: 4 }; }, target: { row:0, col:0 }
+                },
+                'nN': {
+                    instructions: "Search /foo then press n to reach the next.", initialContent: ["foo","bar foo"], target: { row:1, col:4 }
+                },
+                'undo-redo': {
+                    instructions: "Delete line with dd, undo with u, redo with Ctrl+r.", initialContent: ["x","y"], targetContent: ["y"], setup: () => { cursor={row:0,col:0}; }
+                },
+                'ex': {
+                    instructions: "Type :q then Enter.", initialContent: ["exit lesson"], exCommands: ["q"], setup: () => { cursor={row:0,col:0}; }
+                }
+            };
+            const pl = practiceLevels[item.id];
+            if (!pl) return;
+            closeCheat();
+            // Inject a temporary level definition at the end and load it
+            levels.push({
+                name: `Practice: ${item.key}`,
+                instructions: pl.instructions,
+                initialContent: pl.initialContent,
+                target: pl.target,
+                targetText: pl.targetText,
+                targetContent: pl.targetContent,
+                exCommands: pl.exCommands,
+                setup: pl.setup || (() => { cursor = { row:0, col:0 }; })
+            });
+            const practiceIndex = levels.length - 1;
+            loadLevel(practiceIndex);
+            // Hook into completion to return after win
+            const originalShowModal = showModal;
+            showModal = function() {
+                // mark practiced
+                practicedCommands.add(item.id);
+                renderCheatList(cheatSearch.value);
+                // restore and remove practice level, then return to previous level
+                levels.pop();
+                showModal = originalShowModal;
+                currentLevel = returnLevel;
+                loadLevel(currentLevel);
+                openCheat();
+            };
         }
 
         function showBadgeToast(message) {
@@ -1336,6 +1529,15 @@
                 e.preventDefault();
                 handleNormalMode(e);
             }
+            // Toggle Cheat Mode with Ctrl+/
+            if (e.ctrlKey && e.key === '/') {
+                e.preventDefault();
+                if (cheatPanel.classList.contains('translate-x-full')) {
+                    openCheat();
+                } else {
+                    closeCheat();
+                }
+            }
         }, true);
 
         challengeToggleBtn.addEventListener('click', () => {
@@ -1350,6 +1552,16 @@
                 editorInput.focus();
             }
         });
+
+        // Cheat panel controls
+        document.getElementById('challenge-toggle').insertAdjacentHTML('afterend', '<button id="cheat-toggle" class="ml-3 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">📘 Cheat Mode</button>');
+        const cheatToggleBtn = document.getElementById('cheat-toggle');
+        cheatToggleBtn.addEventListener('click', () => {
+            if (cheatPanel.classList.contains('translate-x-full')) openCheat(); else closeCheat();
+        });
+        cheatOverlay.addEventListener('click', closeCheat);
+        cheatCloseBtn.addEventListener('click', closeCheat);
+        cheatSearch.addEventListener('input', (e) => renderCheatList(e.target.value));
 
         // --- INITIAL LOAD ---
         loadLevel(currentLevel);
