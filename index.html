@@ -171,6 +171,14 @@
         let level12Undo = false;
         let level12RedoAfterUndo = false;
         let lastExCommand = null;
+        let searchMode = false;
+        let searchQuery = '';
+        let lastSearchQuery = null;
+        let lastSearchDirection = 'forward'; // 'forward' | 'backward'
+        let searchMatches = []; // { row, start, end }
+        let currentMatchIndex = -1;
+        let usedSearchInLevel = false;
+        let navCountSinceSearch = 0;
 
         // Challenge Mode State
         let challengeMode = false;
@@ -284,6 +292,9 @@
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;');
+
+        // Treat Ctrl-[ as Escape (common Vim alias). Avoid Shift/Alt/Meta to not clash with other combos
+        const isEscapeKey = (e) => e.key === 'Escape' || (e.key === '[' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey);
 
         const levels = [
             // Level 1: Exiting Vim (fun intro)
@@ -465,11 +476,60 @@
                 ],
                 setup: () => { cursor = { row: 1, col: 0 }; }
             }
+            ,
+            // Level 13: Forward Search
+            {
+                name: "Search Forward (/)",
+                instructions: "Press / then type 'target' and Enter, then press n once to jump to the next occurrence.",
+                initialContent: [
+                    "find the target here",
+                    "another target and another target",
+                    "no match on this line"
+                ],
+                // second 'target' on line 2 (index 27)
+                target: { row: 1, col: 27 },
+                setup: () => { cursor = { row: 2, col: 0 }; }
+            }
+            ,
+            // Level 14: Backward Search
+            {
+                name: "Search Backward (?)",
+                instructions: "Press ? then type 'alpha' and Enter, then press N once to jump to the previous occurrence.",
+                initialContent: [
+                    "alpha beta gamma",
+                    "delta epsilon alpha",
+                    "zeta eta theta"
+                ],
+                // require moving to the earlier 'alpha' on line 1 (row 0, col 0) using N
+                target: { row: 0, col: 0 },
+                setup: () => { cursor = { row: 2, col: 5 }; }
+            }
+            ,
+            // Level 15: Search Navigation (n/N)
+            {
+                name: "Search Navigation (n/N)",
+                instructions: "Search for 'foo' with /foo then press n twice to reach the third occurrence.",
+                initialContent: [
+                    "foo bar baz",
+                    "qux foo quux",
+                    "corge grault foo"
+                ],
+                // third 'foo' starts at col 13 in line 2 (0-based)
+                target: { row: 2, col: 13 },
+                setup: () => { cursor = { row: 0, col: 0 }; }
+            }
         ];
 
         // --- RENDER FUNCTIONS ---
         function renderEditor() {
             let html = '';
+            const isInMatch = (row, col) => {
+                for (let i = 0; i < searchMatches.length; i++) {
+                    const m = searchMatches[i];
+                    if (m.row === row && col >= m.start && col < m.end) return true;
+                }
+                return false;
+            };
             content.forEach((line, rowIndex) => {
                 html += `<div class="flex"><span class="line-number w-10">${rowIndex + 1}</span><span class="flex-1">`;
                 for (let colIndex = 0; colIndex < line.length; colIndex++) {
@@ -478,7 +538,11 @@
                     if (rowIndex === cursor.row && colIndex === cursor.col && mode === 'NORMAL') {
                         html += `<span class="cursor">${safeChar}</span>`;
                     } else {
-                        html += safeChar;
+                        if (lastSearchQuery && isInMatch(rowIndex, colIndex)) {
+                            html += `<span class="bg-yellow-800/60">${safeChar}</span>`;
+                        } else {
+                            html += safeChar;
+                        }
                     }
                 }
                 if (rowIndex === cursor.row && (cursor.col === line.length || line.length === 0)) {
@@ -494,8 +558,18 @@
         }
 
         function updateStatusBar() {
-            statusBar.textContent = `-- ${mode.toUpperCase()} --`;
-            statusBar.className = `status-bar px-2 py-1 rounded-md text-sm uppercase ${mode === 'NORMAL' ? 'bg-yellow-400 text-gray-900' : 'bg-green-400 text-gray-900'}`;
+            let text = `-- ${mode.toUpperCase()} --`;
+            if (searchMode) {
+                const prefix = lastSearchDirection === 'backward' ? '?' : '/';
+                text += ` ${prefix}${searchQuery}`;
+            } else if (lastSearchQuery) {
+                const total = searchMatches.length;
+                const current = currentMatchIndex >= 0 ? currentMatchIndex + 1 : 0;
+                const dir = lastSearchDirection === 'backward' ? '?' : '/';
+                text += ` ${dir}${lastSearchQuery} ${current}/${total}`;
+            }
+            statusBar.textContent = text;
+            statusBar.className = `status-bar px-2 py-1 rounded-md text-sm ${mode === 'NORMAL' ? 'bg-yellow-400 text-gray-900' : 'bg-green-400 text-gray-900'}`;
         }
 
         function renderCommandLog() {
@@ -510,7 +584,29 @@
             if (level.exCommands) {
                 if (lastExCommand && level.exCommands.includes(lastExCommand)) won = true;
             } else if (level.target) {
-                if (cursor.row === level.target.row && cursor.col === level.target.col) won = true;
+                // For search-focused levels, require actual search usage
+                const searchLevelNames = ['Search Forward (/)','Search Backward (?)','Search Navigation (n/N)'];
+                const isSearchLevel = searchLevelNames.includes(level.name);
+                if (cursor.row === level.target.row && cursor.col === level.target.col) {
+                    if (!isSearchLevel) {
+                        won = true;
+                    } else {
+                        if (level.name === 'Search Navigation (n/N)') {
+                            // Require at least two 'n' presses after search to reach 3rd occurrence
+                            if (usedSearchInLevel && navCountSinceSearch >= 2 && lastSearchQuery && lastSearchQuery.toLowerCase() === 'foo' && lastSearchDirection === 'forward') won = true;
+                        } else if (level.name === 'Search Forward (/)') {
+                            // Now require one 'n' after search to reach second occurrence
+                            if (usedSearchInLevel && lastSearchDirection === 'forward' && lastSearchQuery && lastSearchQuery.toLowerCase() === 'target' && navCountSinceSearch >= 1) {
+                                won = true;
+                            }
+                        } else if (level.name === 'Search Backward (?)') {
+                            // Require one 'N' after search to reach previous occurrence
+                            if (usedSearchInLevel && lastSearchDirection === 'backward' && lastSearchQuery && lastSearchQuery.toLowerCase() === 'alpha' && navCountSinceSearch >= 1) {
+                                won = true;
+                            }
+                        }
+                    }
+                }
             
             } else if (level.targetText) {
                 if (content[level.targetText.line] === level.targetText.text && mode === 'NORMAL') won = true;
@@ -615,6 +711,14 @@
             level12Undo = false;
             level12RedoAfterUndo = false;
             lastExCommand = null;
+            searchMode = false;
+            searchQuery = '';
+            lastSearchQuery = null;
+            lastSearchDirection = 'forward';
+            searchMatches = [];
+            currentMatchIndex = -1;
+            usedSearchInLevel = false;
+            navCountSinceSearch = 0;
             updateStatusBar();
             renderCommandLog();
             renderEditor();
@@ -626,6 +730,38 @@
             e.preventDefault();
             const key = e.key;
             const isWordChar = (char) => /\w/.test(char);
+            // Enter search mode
+            if (key === '/' || key === '?') {
+                searchMode = true;
+                searchQuery = '';
+                lastSearchDirection = key === '?' ? 'backward' : 'forward';
+                mode = 'NORMAL';
+                updateStatusBar();
+                return;
+            }
+
+            // n / N navigation for last search
+            if ((key === 'n' || key === 'N') && lastSearchQuery) {
+                const forward = (key === 'n') ? (lastSearchDirection === 'forward') : (lastSearchDirection === 'backward');
+                if (searchMatches.length === 0) {
+                    updateStatusBar();
+                    return;
+                }
+                if (currentMatchIndex === -1) currentMatchIndex = 0;
+                if (forward) {
+                    currentMatchIndex = (currentMatchIndex + 1) % searchMatches.length;
+                } else {
+                    currentMatchIndex = (currentMatchIndex - 1 + searchMatches.length) % searchMatches.length;
+                }
+                const m = searchMatches[currentMatchIndex];
+                cursor.row = m.row;
+                cursor.col = Math.max(0, m.start);
+                navCountSinceSearch++;
+                updateStatusBar();
+                renderEditor();
+                checkWinCondition();
+                return;
+            }
 
             // Redo (Ctrl+r) should be handled before any other 'r' logic
             if (key === 'r' && e.ctrlKey) {
@@ -673,7 +809,7 @@
                     return;
                 }
                 // Allow cancel with Escape
-                if (key === 'Escape') {
+                if (isEscapeKey(e)) {
                     replacePending = false;
                     renderEditor();
                     return;
@@ -909,10 +1045,90 @@
             if (mode === 'NORMAL') checkWinCondition();
         }
 
+        function recomputeSearchMatches() {
+            searchMatches = [];
+            if (!lastSearchQuery || lastSearchQuery.length === 0) return;
+            const needle = lastSearchQuery.toLowerCase();
+            for (let r = 0; r < content.length; r++) {
+                const line = content[r];
+                const lineLower = line.toLowerCase();
+                let idx = 0;
+                while (true) {
+                    const found = lineLower.indexOf(needle, idx);
+                    if (found === -1) break;
+                    searchMatches.push({ row: r, start: found, end: found + needle.length });
+                    idx = found + (needle.length > 0 ? Math.max(1, needle.length) : 1);
+                }
+            }
+        }
+
+        function jumpToFirstMatchFromCursor() {
+            if (searchMatches.length === 0) { currentMatchIndex = -1; return; }
+            const startRow = cursor.row;
+            const startCol = cursor.col;
+            let bestIndex = -1;
+            if (lastSearchDirection === 'forward') {
+                // first match at or after cursor position scanning forward through lines
+                for (let i = 0; i < searchMatches.length; i++) {
+                    const m = searchMatches[i];
+                    if (m.row < startRow) continue;
+                    if (m.row === startRow && m.start < startCol) continue;
+                    bestIndex = i; break;
+                }
+                if (bestIndex === -1) bestIndex = 0; // wrap
+            } else {
+                // first match at or before cursor scanning backward
+                for (let i = searchMatches.length - 1; i >= 0; i--) {
+                    const m = searchMatches[i];
+                    if (m.row > startRow) continue;
+                    if (m.row === startRow && m.start > startCol) continue;
+                    bestIndex = i; break;
+                }
+                if (bestIndex === -1) bestIndex = searchMatches.length - 1; // wrap
+            }
+            currentMatchIndex = bestIndex;
+            const m = searchMatches[currentMatchIndex];
+            cursor.row = m.row;
+            cursor.col = Math.max(0, m.start);
+        }
+
+        function handleSearchMode(e) {
+            e.preventDefault();
+            const key = e.key;
+            if (isEscapeKey(e)) {
+                searchMode = false;
+                searchQuery = '';
+                updateStatusBar();
+                return;
+            }
+            if (key === 'Backspace') {
+                searchQuery = searchQuery.slice(0, -1);
+                updateStatusBar();
+                return;
+            }
+            if (key === 'Enter') {
+                lastSearchQuery = searchQuery;
+                usedSearchInLevel = true;
+                searchMode = false;
+                currentMatchIndex = -1;
+                recomputeSearchMatches();
+                jumpToFirstMatchFromCursor();
+                navCountSinceSearch = 0;
+                updateStatusBar();
+                renderEditor();
+                checkWinCondition();
+                return;
+            }
+            if (key.length === 1) {
+                searchQuery += key;
+                updateStatusBar();
+            }
+        }
+
         function handleInsertMode(e) {
             e.preventDefault();
             let line = content[cursor.row];
-            if (e.key === 'Escape') {
+            if (isEscapeKey(e)) {
                 mode = 'NORMAL';
                 if (cursor.col > 0) cursor.col--;
             } else if (e.key === 'Backspace') {
@@ -931,6 +1147,10 @@
 
         // --- EVENT LISTENERS ---
         editorInput.addEventListener('keydown', (e) => {
+            if (searchMode) {
+                handleSearchMode(e);
+                return;
+            }
             if (mode === 'NORMAL') {
                 handleNormalMode(e);
             } else {
@@ -966,6 +1186,14 @@
             }
         });
 
+        // Ensure Ctrl+R redo is not swallowed by browser reload even if focus drifts
+        window.addEventListener('keydown', (e) => {
+            if (mode === 'NORMAL' && e.key === 'r' && e.ctrlKey) {
+                e.preventDefault();
+                handleNormalMode(e);
+            }
+        }, true);
+
         challengeToggleBtn.addEventListener('click', () => {
             challengeMode = !challengeMode;
             if (challengeMode) {
@@ -984,6 +1212,41 @@
         editorInput.focus();
 
         // --- CHALLENGE FUNCTIONS ---
+
+        // --- DEV TESTING UTILITIES ---
+        // Simple input simulation to verify Ctrl-[ behaves like Escape
+        window.simulateEscapeEquivalence = () => {
+            // Prepare a tiny scenario: enter insert, type 'x', then exit with Esc and with Ctrl-[ and compare states
+            const snapshotState = () => ({
+                content: [...content],
+                cursor: { ...cursor },
+                mode
+            });
+
+            // Baseline: reset level and go to insert
+            const original = cloneState();
+            mode = 'INSERT';
+            const beforeEsc = snapshotState();
+            // Simulate Escape
+            handleInsertMode({ key: 'Escape', preventDefault: () => {} });
+            const afterEsc = snapshotState();
+
+            // Restore and simulate Ctrl-[
+            content = [...original.content];
+            cursor = { ...original.cursor };
+            mode = 'INSERT';
+            const beforeCtrl = snapshotState();
+            handleInsertMode({ key: '[', ctrlKey: true, shiftKey: false, altKey: false, metaKey: false, preventDefault: () => {} });
+            const afterCtrl = snapshotState();
+
+            return {
+                beforeEsc,
+                afterEsc,
+                beforeCtrl,
+                afterCtrl,
+                equal: JSON.stringify(afterEsc) === JSON.stringify(afterCtrl)
+            };
+        };
         function startChallenge() {
             if (currentChallenge) return;
             

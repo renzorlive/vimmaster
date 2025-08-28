@@ -17,6 +17,8 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
 - Numeric counts for motions/operators (e.g., `3w`, `2dd`, `5x`, `5G`)
 - Undo/redo support (`u`, `Ctrl+r`)
 - Completion modal with Enter to advance
+ - Ctrl-[ mapped to Escape (exit insert/replace)
+ - Vim-style search: `/` and `?`, with `n`/`N` navigation and match highlighting
 
 ## Levels
 1. How to Exit (Ex Commands): type `:q` or `:wq` then Enter
@@ -32,6 +34,9 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
 11. Delete to End & Replace: `D`, `r`
 12. Counts: use `3w` to move multiple words
 13. Undo/Redo: `dd`, then `u`, then `Ctrl+r`
+14. Search Forward: `/target` then Enter; use `n`
+15. Search Backward: `?alpha` then Enter; use `N`
+16. Search Navigation: reach the 3rd occurrence with `n`
 
 ## Controls
 - Navigation: `h` left, `j` down, `k` up, `l` right
@@ -43,7 +48,13 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
 - Replace: `r` then any printable character (supports symbols like `! @ # < > &`)
 - Counts: prefix a number before commands (e.g., `3w`, `2dd`, `5x`, `5G`)
 - Undo/Redo: `u` undo, `Ctrl+r` redo
-- Exit Insert mode: `Esc`
+- Exit Insert mode: `Esc` or `Ctrl-[`
+ - Search: `/text` forward, `?text` backward; `n` next, `N` previous
+
+### Search Edge Cases
+- Empty search query does nothing.
+- No matches: status shows `0/0`; `n`/`N` do nothing.
+- Wrapping: `n`/`N` wrap around the buffer when reaching the ends.
 
 ## Challenge Mode
 The Challenge Mode is a fast-paced game designed to test and improve your Vim command recall under time pressure. 
