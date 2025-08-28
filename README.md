@@ -20,6 +20,7 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
  - Ctrl-[ mapped to Escape (exit insert/replace)
  - Vim-style search: `/` and `?`, with `n`/`N` navigation and match highlighting
  - Finish celebration: full-screen overlay with confetti and Play Again
+ - Badge system: earn visual badges as you learn (Beginner, Search Master)
 
 ## Levels
 1. How to Exit (Ex Commands): type `:q` or `:wq` then Enter
@@ -41,6 +42,12 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
 
 ### Finish Celebration
 After completing the final level, a centered full-screen celebration overlay appears with a confetti animation and a Play Again button. Press Enter or click Play Again to restart at level 1.
+
+### Badges
+Earn badges as you progress:
+- Beginner Badge (🟢): complete the early movement lessons.
+- Search Master Badge (🔎): successfully use search commands (`/`, `?`, `n`, `N`).
+Badges display in a bar under the title, and a toast appears when you earn one.
 
 ## Controls
 - Navigation: `h` left, `j` down, `k` up, `l` right

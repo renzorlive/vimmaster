@@ -65,6 +65,9 @@
         @keyframes glow { 0% { text-shadow: 0 0 10px rgba(250,204,21,.6) } 100% { text-shadow: 0 0 30px rgba(250,204,21,1) } }
         .confetti { position: fixed; top: -10px; font-size: 18px; animation: fall linear forwards; pointer-events: none; }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: .9 } }
+        /* Badges */
+        .badge-card { box-shadow: 0 6px 18px rgba(30, 64, 175, 0.25); }
+        .badge-card:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(30, 64, 175, 0.4); }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200 flex items-center justify-center min-h-screen p-4">
@@ -115,6 +118,15 @@
             </div>
         </div>
 
+        <!-- Achievements / Badges -->
+        <div id="badge-section" class="mb-4 hidden">
+            <div class="flex items-center justify-center gap-2 mb-2">
+                <span class="text-yellow-400 text-lg font-extrabold">🏆 Achievements</span>
+                <span id="badge-count" class="text-blue-300 text-sm"></span>
+            </div>
+            <div id="badge-bar" class="flex justify-center gap-3 flex-wrap"></div>
+        </div>
+
         <div id="editor-container" class="bg-[#1e1e1e] rounded-lg shadow-2xl p-4 border border-gray-700 relative">
             <div id="vim-editor-display" class="vim-editor text-lg"></div>
             <textarea id="vim-editor-input" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-default" spellcheck="false"></textarea>
@@ -151,6 +163,8 @@
             <button id="celebration-restart" class="bg-yellow-400 text-gray-900 font-bold py-2 px-6 rounded-lg hover:bg-yellow-500 transition-colors">Play Again</button>
         </div>
     </div>
+    <!-- Badge Toast -->
+    <div id="badge-toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-yellow-400 text-gray-900 font-bold py-2 px-4 rounded-md shadow-lg hidden z-50"></div>
 
     <script>
         // DOM Elements
@@ -177,6 +191,10 @@
         const challengeProgress = document.getElementById('challenge-progress');
         const challengeTotal = document.getElementById('challenge-total');
         const challengeScore = document.getElementById('challenge-score');
+        const badgeSection = document.getElementById('badge-section');
+        const badgeBar = document.getElementById('badge-bar');
+        const badgeCount = document.getElementById('badge-count');
+        const badgeToast = document.getElementById('badge-toast');
 
         // Game State
         let content = [];
@@ -210,6 +228,7 @@
         let challengeScoreValue = 0;
         let challengeProgressValue = 0;
         let currentTaskIndex = 0;
+        let badges = new Set();
 
         // Challenge Definitions
         const challenges = [
@@ -594,6 +613,53 @@
             statusBar.className = `status-bar px-2 py-1 rounded-md text-sm ${mode === 'NORMAL' ? 'bg-yellow-400 text-gray-900' : 'bg-green-400 text-gray-900'}`;
         }
 
+        // --- BADGES ---
+        function renderBadges() {
+            badgeBar.innerHTML = '';
+            const badgeDefs = {
+                beginner: { label: 'Beginner', emoji: '🟢', title: 'Completed basic movement lessons' },
+                searchmaster: { label: 'Search Master', emoji: '🔎', title: 'Used / ? n N to search' }
+            };
+            const earned = Array.from(badges);
+            if (earned.length === 0) {
+                badgeSection.classList.add('hidden');
+                return;
+            }
+            badgeSection.classList.remove('hidden');
+            badgeCount.textContent = `(${earned.length} earned)`;
+            earned.forEach((key) => {
+                const def = badgeDefs[key];
+                if (!def) return;
+                const el = document.createElement('div');
+                el.className = 'badge-card bg-blue-900/70 border border-blue-700 text-blue-100 px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-transform';
+                el.title = def.title;
+                el.innerHTML = `<span>${def.emoji}</span><span>${def.label}</span>`;
+                badgeBar.appendChild(el);
+            });
+        }
+
+        function showBadgeToast(message) {
+            badgeToast.textContent = message;
+            badgeToast.classList.remove('hidden');
+            setTimeout(() => badgeToast.classList.add('hidden'), 2200);
+        }
+
+        function maybeAwardBadges() {
+            // Beginner: after finishing levels up to basic movement group (1-3)
+            if (!badges.has('beginner') && currentLevel >= 2) {
+                badges.add('beginner');
+                renderBadges();
+                showBadgeToast('🟢 Beginner Badge earned!');
+            }
+            // Search Master: after completing any of the search levels while using search
+            const searchNames = ['Search Forward (/)','Search Backward (?)','Search Navigation (n/N)'];
+            if (!badges.has('searchmaster') && searchNames.includes(levels[currentLevel].name) && usedSearchInLevel) {
+                badges.add('searchmaster');
+                renderBadges();
+                showBadgeToast('🔎 Search Master Badge earned!');
+            }
+        }
+
         function renderCommandLog() {
             commandLogEl.textContent = commandLog.slice(-10).join('');
         }
@@ -657,6 +723,7 @@
             if (won) {
                 editorContainer.classList.add('level-complete-flash');
                 setTimeout(() => {
+                    maybeAwardBadges();
                     showModal();
                     editorContainer.classList.remove('level-complete-flash');
                 }, 500);
@@ -784,18 +851,19 @@
             level12Undo = false;
             level12RedoAfterUndo = false;
             lastExCommand = null;
+            usedSearchInLevel = false;
             searchMode = false;
             searchQuery = '';
             lastSearchQuery = null;
             lastSearchDirection = 'forward';
             searchMatches = [];
             currentMatchIndex = -1;
-            usedSearchInLevel = false;
             navCountSinceSearch = 0;
             updateStatusBar();
             renderCommandLog();
             renderEditor();
             createLevelButtons();
+            renderBadges();
         }
 
         // --- INPUT HANDLING ---
