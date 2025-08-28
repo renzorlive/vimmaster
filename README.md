@@ -19,6 +19,7 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
 - Completion modal with Enter to advance
  - Ctrl-[ mapped to Escape (exit insert/replace)
  - Vim-style search: `/` and `?`, with `n`/`N` navigation and match highlighting
+ - Finish celebration: full-screen overlay with confetti and Play Again
 
 ## Levels
 1. How to Exit (Ex Commands): type `:q` or `:wq` then Enter
@@ -37,6 +38,9 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
 14. Search Forward: `/target` then Enter; use `n`
 15. Search Backward: `?alpha` then Enter; use `N`
 16. Search Navigation: reach the 3rd occurrence with `n`
+
+### Finish Celebration
+After completing the final level, a centered full-screen celebration overlay appears with a confetti animation and a Play Again button. Press Enter or click Play Again to restart at level 1.
 
 ## Controls
 - Navigation: `h` left, `j` down, `k` up, `l` right
@@ -72,8 +76,8 @@ Try to beat your highest score and see how quickly you can master essential Vim 
 - No build step. Just clone and open the file:
 
 ```bash
-# Clone your fork
-git clone https://github.com/<your-username>/vimmaster.git
+# Clone repository
+git clone https://github.com/renzorlive/vimmaster.git
 cd vimmaster
 
 # Open directly in a browser (double-click on Windows)

@@ -55,6 +55,16 @@
         .ascii-logo {
             line-height: 1.2;
         }
+        /* Celebration styles */
+        .celebration-bg { background: radial-gradient( circle at center, rgba(34,197,94,0.2), rgba(30,58,138,0.85) ); }
+        .celebration-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.72); backdrop-filter: blur(3px); }
+        .celebration-text {
+            animation: pop 1s ease-out forwards, glow 2.5s ease-in-out infinite alternate;
+        }
+        @keyframes pop { 0% { transform: scale(0.8); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
+        @keyframes glow { 0% { text-shadow: 0 0 10px rgba(250,204,21,.6) } 100% { text-shadow: 0 0 30px rgba(250,204,21,1) } }
+        .confetti { position: fixed; top: -10px; font-size: 18px; animation: fall linear forwards; pointer-events: none; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: .9 } }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200 flex items-center justify-center min-h-screen p-4">
@@ -132,6 +142,16 @@
         </div>
     </div>
 
+    <!-- Celebration Overlay -->
+    <div id="celebration" class="fixed inset-0 hidden celebration-bg z-50 flex items-center justify-center w-screen h-screen">
+        <div class="celebration-overlay"></div>
+        <div class="text-center px-6 relative z-10">
+            <div class="text-4xl md:text-6xl font-extrabold text-yellow-300 celebration-text mb-4">COOL! 🎉</div>
+            <div class="text-xl md:text-2xl text-blue-100 mb-6">You mastered the Vim basics — you're faster now!</div>
+            <button id="celebration-restart" class="bg-yellow-400 text-gray-900 font-bold py-2 px-6 rounded-lg hover:bg-yellow-500 transition-colors">Play Again</button>
+        </div>
+    </div>
+
     <script>
         // DOM Elements
         const editorDisplay = document.getElementById('vim-editor-display');
@@ -147,6 +167,8 @@
         const modalTitle = document.getElementById('modal-title');
         const modalMessage = document.getElementById('modal-message');
         const nextLevelBtn = document.getElementById('next-level-btn');
+        const celebration = document.getElementById('celebration');
+        const celebrationRestartBtn = document.getElementById('celebration-restart');
         const levelSelectionContainer = document.getElementById('level-selection');
         const challengeToggleBtn = document.getElementById('challenge-toggle');
         const challengeContainer = document.getElementById('challenge-container');
@@ -642,14 +664,13 @@
         }
 
         function showModal() {
+            if (currentLevel === levels.length - 1) {
+                showCelebration();
+                return;
+            }
             modalTitle.textContent = `Level ${currentLevel + 1} Complete!`;
             modalMessage.textContent = `You've mastered: ${levels[currentLevel].name}.`;
-            if (currentLevel === levels.length - 1) {
-                modalMessage.textContent = "Congratulations! You've completed all the levels.";
-                nextLevelBtn.textContent = "Play Again";
-            } else {
-                 nextLevelBtn.textContent = "Next Level";
-            }
+            nextLevelBtn.textContent = "Next Level";
             modal.classList.remove('opacity-0', 'pointer-events-none');
             modalContent.classList.remove('scale-95');
 
@@ -676,6 +697,58 @@
         function hideModal() {
             modal.classList.add('opacity-0', 'pointer-events-none');
             modalContent.classList.add('scale-95');
+        }
+
+        // Celebration helpers
+        function spawnConfettiOnce() {
+            // clear previous
+            celebration.querySelectorAll('.confetti').forEach(n => n.remove());
+            const emojis = ['🎉','✨','🎊','⭐','💥','🔥'];
+            const pieces = 60;
+            for (let i = 0; i < pieces; i++) {
+                const span = document.createElement('span');
+                span.className = 'confetti';
+                span.textContent = emojis[i % emojis.length];
+                span.style.left = Math.random() * 100 + 'vw';
+                span.style.animationDuration = (5 + Math.random() * 3).toFixed(2) + 's';
+                span.style.animationDelay = (Math.random() * 1.5).toFixed(2) + 's';
+                span.style.transform = `translateY(${Math.random()*-40}vh)`;
+                celebration.appendChild(span);
+            }
+        }
+
+        function showCelebration() {
+            celebration.classList.remove('hidden');
+            // force layout to center on current viewport
+            celebration.style.left = '0';
+            celebration.style.top = '0';
+            celebration.style.right = '0';
+            celebration.style.bottom = '0';
+            spawnConfettiOnce();
+            const handleEnterRestart = (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    restartFromCelebration();
+                    window.removeEventListener('keydown', handleEnterRestart, true);
+                }
+            };
+            window.addEventListener('keydown', handleEnterRestart, true);
+        }
+
+        function hideCelebration() {
+            celebration.classList.add('hidden');
+            celebration.style.left = '';
+            celebration.style.top = '';
+            celebration.style.right = '';
+            celebration.style.bottom = '';
+            celebration.querySelectorAll('.confetti').forEach(n => n.remove());
+        }
+
+        function restartFromCelebration() {
+            currentLevel = 0;
+            loadLevel(currentLevel);
+            hideCelebration();
+            editorInput.focus();
         }
 
         function createLevelButtons() {
@@ -1161,15 +1234,17 @@
         editorContainer.addEventListener('click', () => editorInput.focus());
         
         nextLevelBtn.addEventListener('click', () => {
-             if (currentLevel === levels.length - 1) {
-                currentLevel = 0;
+            if (currentLevel === levels.length - 1) {
+                showCelebration();
             } else {
                 currentLevel++;
+                loadLevel(currentLevel);
+                hideModal();
+                editorInput.focus();
             }
-            loadLevel(currentLevel);
-            hideModal();
-            editorInput.focus();
         });
+
+        celebrationRestartBtn.addEventListener('click', restartFromCelebration);
 
         resetBtn.addEventListener('click', () => {
             loadLevel(currentLevel);
