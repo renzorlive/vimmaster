@@ -62,7 +62,7 @@ Try to beat your highest score and see how quickly you can master essential Vim 
 
 ```bash
 # Clone your fork
-git clone https://github.com/<your-username>/vimmaster.git
+git clone https://github.com/renzorlive/vimmaster.git
 cd vimmaster
 
 # Open directly in a browser (double-click on Windows)
