@@ -117,6 +117,33 @@ npx serve .  # then visit the printed URL
 - Tailwind CDN for styling
 - No dependencies, no frameworks
 
+## 🎰 Coming Soon: Chapter 2, Vim Command Slot Machine & Credits System! 🎉
+
+Get ready to level up your Vim skills with the upcoming **Chapter 2** featuring advanced visual mode commands and more complex editing workflows!
+
+Plus, spin your way to mastery with our brand new **Vim Command Slot Machine** mini-game! Unlocked after completing Chapters 1 & 2, this exciting casino-style challenge lets you:
+
+- Spin the reels to get randomized Vim command sequences (command **names only!**)  
+- Prove your skills by executing the **correct Vim commands** in real time on the text editor  
+- Win points, multipliers, jackpots, and unlock cool badges!  
+- Bet your earned credits for bigger rewards in a thrilling risk-and-reward gameplay loop  
+- Enjoy dazzling animations, sound effects, and progressive unlockable power-ups!  
+- Compete on leaderboards and show off your Vim prowess to the world  
+
+Earn credits by conquering lessons in the main game, then take a chance on the slot machine to level up your skills and multiply your rewards!
+
+---
+
+![Vim Command Slot Machine Preview](images/vimslots.gif)
+
+Stay tuned for this fun and addictive way to sharpen your Vim command recall like never before — only in **VIM Master!**
+
+---
+
+🙏 **Thank you to everyone who has starred the GitHub repository and supported this project!** Your encouragement and enthusiasm keep the Vim Master journey going strong.
+
+*This update also comes with a new modular codebase for faster improvements and smoother gameplay. Big things are coming! 🚀*
+
 ## Contributing
 Issues and PRs are welcome!
 - File: `index.html` contains all the logic and level definitions.
