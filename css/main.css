@@ -3,12 +3,14 @@
 body {
     font-family: 'Fira Code', monospace;
     overscroll-behavior: none; /* Prevents pull-to-refresh on mobile */
+    background-attachment: fixed;
 }
 
 .vim-editor {
     white-space: pre;
     line-height: 1.5;
     caret-color: transparent;
+    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
 }
 
 .line-number {
@@ -23,6 +25,7 @@ body {
     color: #1e1e1e;
     animation: blink 1s step-end infinite;
     border-radius: 2px;
+    box-shadow: 0 0 8px rgba(242, 197, 92, 0.6);
 }
 
 @keyframes blink {
@@ -30,20 +33,23 @@ body {
         background-color: transparent;
         outline: 1px solid #f2c55c;
         color: inherit;
+        box-shadow: 0 0 4px rgba(242, 197, 92, 0.3);
     }
 }
 
 .status-bar {
     font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 .modal-bg {
     background-color: rgba(0,0,0,0.7);
     transition: opacity 0.3s ease;
+    backdrop-filter: blur(4px);
 }
 
 .modal-content {
-    transition: transform 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .level-complete-flash {
@@ -57,6 +63,13 @@ body {
 
 .ascii-logo {
     line-height: 1.2;
+    filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.3));
+    animation: logoGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes logoGlow {
+    0% { filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.3)); }
+    100% { filter: drop-shadow(0 0 16px rgba(250, 204, 21, 0.6)); }
 }
 
 /* Celebration styles */
@@ -98,11 +111,152 @@ body {
 }
 
 /* Badges */
-.badge-card { 
-    box-shadow: 0 6px 18px rgba(30, 64, 175, 0.25); 
+.badge {
+    transition: all 0.3s ease;
+    transform: scale(1);
 }
 
-.badge-card:hover { 
-    transform: translateY(-1px); 
-    box-shadow: 0 10px 28px rgba(30, 64, 175, 0.4); 
+.badge:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+}
+
+/* Button hover effects */
+button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+/* Level selection buttons */
+.level-btn {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.level-btn:hover {
+    border-color: #f2c55c;
+    box-shadow: 0 0 12px rgba(242, 197, 92, 0.4);
+}
+
+.level-btn.current {
+    border-color: #f2c55c;
+    box-shadow: 0 0 16px rgba(242, 197, 92, 0.6);
+}
+
+.level-btn.completed {
+    border-color: #10b981;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+/* Challenge mode improvements */
+#challenge-container {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Cheat mode improvements */
+#cheat-panel {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#cheat-panel.translate-x-full {
+    transform: translateX(100%);
+}
+
+#cheat-panel:not(.translate-x-full) {
+    transform: translateX(0);
+}
+
+/* Input focus effects */
+input:focus {
+    box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.1);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(55, 65, 81, 0.5);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(156, 163, 175, 0.8);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(156, 163, 175, 1);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .ascii-logo {
+        font-size: 0.5rem;
+    }
+    
+    #challenge-container {
+        margin: 1rem 0;
+    }
+    
+    .modal-content {
+        margin: 1rem;
+        max-width: calc(100vw - 2rem);
+    }
+}
+
+/* Animation utilities */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.slide-up {
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Enhanced cursor animations */
+.cursor.insert {
+    background-color: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.cursor.visual {
+    background-color: #8b5cf6;
+    box-shadow: 0 0 8px rgba(139, 92, 244, 0.6);
+}
+
+.cursor.search {
+    background-color: #f59e0b;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
 }

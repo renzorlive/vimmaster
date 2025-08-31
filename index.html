@@ -5,91 +5,138 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIM Master Game</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/main.css">
 </head>
-<body class="bg-gray-900 text-gray-200 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-gray-200 min-h-screen p-4">
 
-    <div class="w-full max-w-4xl mx-auto">
-        <pre class="text-yellow-400 text-center text-sm md:text-base ascii-logo">
-            _________ _______    _______  _______  _______ _________ _______  _______ 
-|\     /|\__   __/(       )  (       )(  ___  )(  ____ \\__   __/(  ____ \(  ____ )
-| )   ( |   ) (   | () () |  | () () || (   ) || (    \/   ) (   | (    \/| (    )|
-| |   | |   | |   | || || |  | || || || (___) || (_____    | |   | (__    | (____)|
-( (   ) )   | |   | |(_)| |  | |(_)| ||  ___  |(_____  )   | |   |  __)   |     __)
- \ \_/ /    | |   | |   | |  | |   | || (   ) |      ) |   | |   | (      | (\ (   
-  \   /  ___) (___| )   ( |  | )   ( || )   ( |/\____) |   | |   | (____/\| ) \ \__
-   \_/   \_______/|/     \|  |/     \||/     \|\_______)   )_(   (_______/|/   \__/
-                                                                                   
-        </pre>
-        <h1 class="text-3xl font-bold text-center mb-4 text-gray-200">VIM Master</h1>
-        <p id="instructions" class="text-lg text-center mb-6 text-gray-400">Welcome! Let's learn VIM.</p>
+    <div class="w-full max-w-5xl mx-auto">
+        <!-- Header Section with New ASCII Logo -->
+        <div class="text-center mb-8">
+            <pre class="text-yellow-400 text-center text-xs md:text-sm font-mono ascii-logo mb-4">
+██╗   ██╗██╗███╗   ███╗    ███╗   ███╗ █████╗ ███████╗████████╗███████╗██████╗ 
+██║   ██║██║████╗ ████║    ████╗ ████║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
+██║   ██║██║██╔████╔██║    ██╔████╔██║███████║███████╗   ██║   █████╗  ██████╔╝
+╚██╗ ██╔╝██║██║╚██╔╝██║    ██║╚██╔╝██║██╔══██║╚════██║   ██║   ██╔══╝  ██╔══██╗
+ ╚████╔╝ ██║██║ ╚═╝ ██║    ██║ ╚═╝ ██║██║  ██║███████║   ██║   ███████╗██║  ██║
+  ╚═══╝  ╚═╝╚═╝     ╚═╝    ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
+            </pre>
+        </div>
 
-        <!-- Challenge Mode Toggle -->
-        <div class="flex justify-center mb-6">
-            <button id="challenge-toggle" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+        <!-- Welcome Message -->
+        <div class="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-6 mb-8 border border-blue-700/50 backdrop-blur-sm">
+            <p id="instructions" class="text-xl text-center text-blue-100 font-medium">Welcome! Let's learn VIM together.</p>
+        </div>
+
+        <!-- Game Controls Section -->
+        <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-8">
+            <button id="challenge-toggle" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                 🚀 Challenge Mode
             </button>
+            <div class="text-gray-400 text-sm text-center md:text-left">
+                <div>Press <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">Ctrl+/</kbd> for cheat mode</div>
+                <div>Use <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">Enter</kbd> to advance levels</div>
+            </div>
         </div>
 
         <!-- Challenge Mode Container -->
-        <div id="challenge-container" class="hidden mb-6">
-            <div class="bg-blue-900 rounded-lg p-4 border border-blue-700">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-blue-200">Speed Challenge</h3>
-                    <div class="text-right">
-                        <div class="text-2xl font-mono text-yellow-400" id="timer">00:30</div>
+        <div id="challenge-container" class="hidden mb-8">
+            <div class="bg-gradient-to-r from-blue-900/80 to-purple-900/80 rounded-xl p-6 border border-blue-600/50 backdrop-blur-sm shadow-2xl">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                    <div class="text-center md:text-left mb-4 md:mb-0">
+                        <h3 class="text-2xl font-bold text-blue-100 mb-2">Speed Challenge</h3>
+                        <div id="challenge-instructions" class="text-blue-200">
+                            Complete the challenge as fast as possible!
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-mono text-yellow-400 font-bold" id="timer">00:30</div>
                         <div class="text-sm text-blue-300">Time Remaining</div>
                     </div>
                 </div>
-                <div id="challenge-instructions" class="text-blue-200 mb-4">
-                    Complete the challenge as fast as possible!
-                </div>
-                <div class="flex justify-between items-center">
-                    <div class="text-blue-200">
-                        <span id="challenge-progress">0</span>/<span id="challenge-total">3</span> completed
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="text-blue-200 mb-2 md:mb-0">
+                        <span class="text-lg font-semibold">
+                            <span id="challenge-progress" class="text-yellow-400">0</span>/<span id="challenge-total">3</span>
+                        </span> tasks completed
                     </div>
                     <div class="text-blue-200">
-                        Score: <span id="challenge-score" class="text-yellow-400">0</span>
+                        Score: <span id="challenge-score" class="text-yellow-400 text-xl font-bold">0</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Achievements / Badges -->
-        <div id="badge-section" class="mb-4 hidden">
-            <div class="flex items-center justify-center gap-2 mb-2">
-                <span class="text-yellow-400 text-lg font-extrabold">🏆 Achievements</span>
-                <span id="badge-count" class="text-blue-300 text-sm"></span>
+        <div id="badge-section" class="mb-6 hidden">
+            <div class="bg-gradient-to-r from-yellow-900/50 to-orange-900/50 rounded-xl p-4 border border-yellow-600/50 backdrop-blur-sm">
+                <div class="flex items-center justify-center gap-3 mb-3">
+                    <span class="text-yellow-400 text-xl font-extrabold">🏆 Achievements</span>
+                    <span id="badge-count" class="text-yellow-300 text-sm bg-yellow-900/50 px-3 py-1 rounded-full"></span>
+                </div>
+                <div id="badge-bar" class="flex justify-center gap-3 flex-wrap"></div>
             </div>
-            <div id="badge-bar" class="flex justify-center gap-3 flex-wrap"></div>
         </div>
 
-        <div id="editor-container" class="bg-[#1e1e1e] rounded-lg shadow-2xl p-4 border border-gray-700 relative">
-            <div id="vim-editor-display" class="vim-editor text-lg"></div>
+        <!-- Main Editor Container -->
+        <div id="editor-container" class="bg-gradient-to-br from-[#1a1a1a] to-[#2d2d2d] rounded-xl shadow-2xl p-6 border border-gray-600/50 relative backdrop-blur-sm">
+            <div class="flex items-center justify-between mb-4">
+                <div class="text-gray-400 text-sm font-medium">VIM Editor</div>
+                <div class="text-gray-500 text-xs">Press <kbd class="bg-gray-700 px-2 py-1 rounded">Esc</kbd> for Normal mode</div>
+            </div>
+            <div id="vim-editor-display" class="vim-editor text-lg min-h-[200px] bg-[#1e1e1e] rounded-lg p-4 border border-gray-700/50"></div>
             <textarea id="vim-editor-input" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-default" spellcheck="false"></textarea>
-            <div class="flex justify-between items-center mt-4">
-                <div id="status-bar" class="status-bar px-2 py-1 bg-yellow-400 text-gray-900 rounded-md text-sm uppercase">-- NORMAL --</div>
-                <div id="command-log" class="text-gray-500 text-sm font-semibold"></div>
+            
+            <!-- Status Bar -->
+            <div class="flex flex-col md:flex-row justify-between items-center mt-4 gap-2">
+                <div id="status-bar" class="status-bar px-4 py-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 rounded-lg text-sm uppercase font-bold shadow-lg">
+                    -- NORMAL --
+                </div>
+                <div id="command-log" class="text-gray-400 text-sm font-mono bg-gray-800/50 px-3 py-2 rounded-lg border border-gray-700/50"></div>
             </div>
         </div>
 
-        <div class="flex justify-center items-center mt-4 space-x-4">
-            <div id="level-indicator" class="text-gray-500 font-semibold"></div>
-            <button id="reset-btn" class="bg-gray-700 text-gray-300 hover:bg-gray-600 font-bold py-1 px-3 rounded-lg transition-colors text-sm">Reset Level</button>
+        <!-- Level Controls -->
+        <div class="flex flex-col md:flex-row justify-center items-center mt-6 gap-4">
+            <div id="level-indicator" class="text-gray-400 font-semibold text-lg"></div>
+            <button id="reset-btn" class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-gray-200 hover:text-white font-bold py-2 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                🔄 Reset Level
+            </button>
         </div>
-        <div id="level-selection" class="flex justify-center flex-wrap gap-2 mt-4">
+        
+        <!-- Level Selection -->
+        <div id="level-selection" class="flex justify-center flex-wrap gap-3 mt-6 mb-6">
             <!-- Level selection buttons will be injected here -->
+        </div>
+
+        <!-- Title and Subtitle - Moved Below Level Selection -->
+        <div class="text-center mb-6">
+            <h1 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 mb-2">
+                VIM Master
+            </h1>
+            <p class="text-lg text-gray-400 mb-2">Master the Art of Text Editing</p>
+        </div>
+
+        <!-- Feature List - Moved Below Level Selection -->
+        <div class="flex justify-center items-center gap-2 text-sm text-gray-500 mb-6">
+            <span>🚀</span>
+            <span>Interactive Learning</span>
+            <span>•</span>
+            <span>🎯</span>
+            <span>15 Progressive Levels</span>
+            <span>•</span>
+            <span>⚡</span>
+            <span>Speed Challenges</span>
         </div>
     </div>
 
     <!-- Modal for level completion -->
-    <div id="modal" class="fixed inset-0 flex items-center justify-center modal-bg opacity-0 pointer-events-none">
-        <div id="modal-content" class="bg-gray-800 text-white p-8 rounded-lg shadow-xl max-w-sm text-center transform scale-95">
-            <h2 id="modal-title" class="text-2xl font-bold mb-4">Level Complete!</h2>
-                            <div id="modal-message" class="mb-6">Great job! You've mastered the basics of movement.</div>
-            <button id="next-level-btn" class="bg-yellow-400 text-gray-900 font-bold py-2 px-6 rounded-lg hover:bg-yellow-500 transition-colors">Next Level</button>
+    <div id="modal" class="fixed inset-0 flex items-center justify-center modal-bg opacity-0 pointer-events-none z-50">
+        <div id="modal-content" class="bg-gradient-to-br from-gray-800 to-gray-900 text-white p-8 rounded-2xl shadow-2xl max-w-md text-center transform scale-95 border border-gray-600/50 backdrop-blur-sm">
+            <h2 id="modal-title" class="text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">Level Complete!</h2>
+            <div id="modal-message" class="mb-6 text-gray-300">Great job! You've mastered the basics of movement.</div>
+            <button id="next-level-btn" class="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-gray-900 font-bold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                Next Level →
+            </button>
         </div>
     </div>
 
@@ -97,24 +144,30 @@
     <div id="celebration" class="fixed inset-0 hidden celebration-bg z-50 flex items-center justify-center w-screen h-screen">
         <div class="celebration-overlay"></div>
         <div class="text-center px-6 relative z-10">
-            <div class="text-4xl md:text-6xl font-extrabold text-yellow-300 celebration-text mb-4">COOL! 🎉</div>
-            <div class="text-xl md:text-2xl text-blue-100 mb-6">You mastered the Vim basics — you're faster now!</div>
-            <button id="celebration-restart" class="bg-yellow-400 text-gray-900 font-bold py-2 px-6 rounded-lg hover:bg-yellow-500 transition-colors">Play Again</button>
+            <div class="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 celebration-text mb-6">
+                🎉 MASTERED! 🎉
+            </div>
+            <div class="text-xl md:text-3xl text-blue-100 mb-8 font-medium">You've conquered all Vim basics — you're unstoppable now!</div>
+            <button id="celebration-restart" class="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-gray-900 font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-2xl text-lg">
+                🚀 Play Again
+            </button>
         </div>
     </div>
     
     <!-- Badge Toast -->
-    <div id="badge-toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-yellow-400 text-gray-900 font-bold py-2 px-4 rounded-md shadow-lg hidden z-50"></div>
+    <div id="badge-toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 font-bold py-3 px-6 rounded-xl shadow-2xl hidden z-50 transform hover:scale-105 transition-all duration-300"></div>
 
     <!-- Cheat Mode Panel -->
-    <div id="cheat-overlay" class="fixed inset-0 hidden z-40 bg-black/60"></div>
-    <div id="cheat-panel" class="fixed right-0 top-0 h-full w-full max-w-xl bg-gray-800 border-l border-gray-700 shadow-2xl transform translate-x-full transition-transform z-50 overflow-y-auto">
-        <div class="sticky top-0 bg-gray-800 border-b border-gray-700 p-4 flex items-center gap-3">
-            <h3 class="text-xl font-bold text-yellow-400">Cheat Mode</h3>
-            <input id="cheat-search" type="text" placeholder="Search commands... (Ctrl+/)" class="flex-1 bg-gray-900 text-gray-100 rounded-md px-3 py-2 border border-gray-700 focus:outline-none focus:border-yellow-400" />
-            <button id="cheat-close" class="bg-gray-700 hover:bg-gray-600 text-gray-200 font-bold px-3 py-2 rounded-md">Close</button>
+    <div id="cheat-overlay" class="fixed inset-0 hidden z-40 bg-black/60 backdrop-blur-sm"></div>
+    <div id="cheat-panel" class="fixed right-0 top-0 h-full w-full max-w-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-l border-gray-600/50 shadow-2xl transform translate-x-full transition-all duration-300 z-50 overflow-y-auto backdrop-blur-sm">
+        <div class="sticky top-0 bg-gradient-to-r from-gray-800 to-gray-900 border-b border-gray-600/50 p-6 flex items-center gap-4">
+            <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">📚 Cheat Mode</h3>
+            <input id="cheat-search" type="text" placeholder="Search Vim commands... (Ctrl+/)" class="flex-1 bg-gray-700/50 text-gray-100 rounded-lg px-4 py-3 border border-gray-600/50 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 transition-all duration-300" />
+            <button id="cheat-close" class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-gray-200 hover:text-white font-bold px-4 py-3 rounded-lg transition-all duration-300 transform hover:scale-105">
+                ✕ Close
+            </button>
         </div>
-        <div id="cheat-content" class="p-4 space-y-6"></div>
+        <div id="cheat-content" class="p-6 space-y-6"></div>
     </div>
 
     <!-- Load all JavaScript modules -->
