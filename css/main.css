@@ -1,0 +1,108 @@
+/* VIM Master Game - Main Styles */
+
+body {
+    font-family: 'Fira Code', monospace;
+    overscroll-behavior: none; /* Prevents pull-to-refresh on mobile */
+}
+
+.vim-editor {
+    white-space: pre;
+    line-height: 1.5;
+    caret-color: transparent;
+}
+
+.line-number {
+    color: #858585;
+    text-align: right;
+    padding-right: 1rem;
+    user-select: none;
+}
+
+.cursor {
+    background-color: #f2c55c;
+    color: #1e1e1e;
+    animation: blink 1s step-end infinite;
+    border-radius: 2px;
+}
+
+@keyframes blink {
+    50% {
+        background-color: transparent;
+        outline: 1px solid #f2c55c;
+        color: inherit;
+    }
+}
+
+.status-bar {
+    font-weight: 700;
+}
+
+.modal-bg {
+    background-color: rgba(0,0,0,0.7);
+    transition: opacity 0.3s ease;
+}
+
+.modal-content {
+    transition: transform 0.3s ease;
+}
+
+.level-complete-flash {
+    animation: flash 0.5s ease-out;
+}
+
+@keyframes flash {
+    0% { box-shadow: 0 0 0 0 rgba(242, 197, 92, 0.7); }
+    100% { box-shadow: 0 0 0 20px rgba(242, 197, 92, 0); }
+}
+
+.ascii-logo {
+    line-height: 1.2;
+}
+
+/* Celebration styles */
+.celebration-bg { 
+    background: radial-gradient( circle at center, rgba(34,197,94,0.2), rgba(30,58,138,0.85) ); 
+}
+
+.celebration-overlay { 
+    position: absolute; 
+    inset: 0; 
+    background: rgba(0,0,0,0.72); 
+    backdrop-filter: blur(3px); 
+}
+
+.celebration-text {
+    animation: pop 1s ease-out forwards, glow 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes pop { 
+    0% { transform: scale(0.8); opacity: 0 } 
+    100% { transform: scale(1); opacity: 1 } 
+}
+
+@keyframes glow { 
+    0% { text-shadow: 0 0 10px rgba(250,204,21,.6) } 
+    100% { text-shadow: 0 0 30px rgba(250,204,21,1) } 
+}
+
+.confetti { 
+    position: fixed; 
+    top: -10px; 
+    font-size: 18px; 
+    animation: fall linear forwards; 
+    pointer-events: none; 
+}
+
+@keyframes fall { 
+    to { transform: translateY(110vh) rotate(360deg); opacity: .9 } 
+}
+
+/* Badges */
+.badge-card { 
+    box-shadow: 0 6px 18px rgba(30, 64, 175, 0.25); 
+}
+
+.badge-card:hover { 
+    transform: translateY(-1px); 
+    box-shadow: 0 10px 28px rgba(30, 64, 175, 0.4); 
+}
