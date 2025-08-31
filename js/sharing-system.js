@@ -17,7 +17,8 @@ class VimMasterSharingSystem {
     getGameData() {
         return {
             level: getCurrentLevel() + 1,
-            totalLevels: 16,
+            totalLevels: 15, // Total available levels
+            levelsCompleted: getCurrentLevel() + 1, // Actual levels completed
             badges: Array.from(getBadges()),
             commandsPracticed: getPracticedCommands().size,
             progressCode: exportProgress(),
@@ -534,8 +535,8 @@ class VimMasterSharingSystem {
                         backdrop-filter: blur(15px);
                         border: 1px solid rgba(255,255,255,0.2);
                     ">
-                        <div style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;">${gameData.totalLevels}</div>
-                        <div style="font-size: 1rem; opacity: 0.9;">Total Levels</div>
+                        <div style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;">${gameData.level}</div>
+                        <div style="font-size: 1rem; opacity: 0.9;">Levels Completed</div>
                     </div>
                 </div>
                 

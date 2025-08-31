@@ -14,7 +14,8 @@ import {
     setLastSearchQuery, setLastSearchDirection, setSearchMatches, setCurrentMatchIndex,
     setUsedSearchInLevel, setNavCountSinceSearch, setLevel12Undo, setLevel12RedoAfterUndo,
     setLastExCommand, setChallengeMode, setCurrentChallenge, setChallengeTimerInterval,
-    setChallengeStartTime, setChallengeScoreValue, setChallengeProgressValue, setCurrentTaskIndex
+    setChallengeStartTime, setChallengeScoreValue, setChallengeProgressValue, setCurrentTaskIndex,
+    setBadges, setPracticedCommands
 } from './game-state.js';
 
 import { levels, loadLevel, getLevelCount, isLastLevel } from './levels.js';
@@ -262,7 +263,18 @@ function setupEventListeners() {
     // Celebration restart button
     if (celebrationRestartBtn) {
         celebrationRestartBtn.addEventListener('click', () => {
+            // Save current progress before resetting
+            const currentBadges = getBadges();
+            const currentPracticedCommands = getPracticedCommands();
+            
+            // Reset game state but preserve progress
             resetGameState();
+            
+            // Restore progress
+            setBadges(currentBadges);
+            setPracticedCommands(currentPracticedCommands);
+            
+            // Restart game
             setCurrentLevel(0);
             loadLevel(0);
             updateUI();
@@ -270,6 +282,15 @@ function setupEventListeners() {
             createLevelButtons(levels, 0);
             hideCelebration();
             if (editorInput) editorInput.focus();
+            
+            // Auto-save progress after restart
+            import('./progress-system.js').then(({ autoSaveProgress }) => {
+                autoSaveProgress();
+                // Update progress summary display
+                updateProgressSummary();
+            }).catch(error => {
+                console.log('Auto-save after restart failed:', error);
+            });
         });
     }
 
