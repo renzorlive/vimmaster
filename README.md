@@ -117,26 +117,20 @@ npx serve .  # then visit the printed URL
 - Tailwind CDN for styling
 - No dependencies, no frameworks
 
-## 🎰 Coming Soon: Chapter 2, Vim Command Slot Machine & Credits System! 🎉
+## About the Refactored Version
 
-Get ready to level up your Vim skills with the upcoming **Chapter 2** featuring advanced visual mode commands and more complex editing workflows!
+The VIM Master game has undergone a major refactor moving from a single-file codebase to a clean, modular architecture based on ES6 modules for improved maintainability, performance, and developer experience.
 
-Plus, spin your way to mastery with our brand new **Vim Command Slot Machine** mini-game! Unlocked after completing Chapters 1 & 2, this exciting casino-style challenge lets you:
+The refactored version:
+- Updated UI & UX, kept functionality and lessons
+- Fixes numerous bugs and improves Challenge and Cheat modes
+- Improves code organization for easier feature development and testing
+- Enables faster iteration and collaboration among developers
 
-- Spin the reels to get randomized Vim command sequences (command **names only!**)  
-- Prove your skills by executing the **correct Vim commands** in real time on the text editor  
-- Win points, multipliers, jackpots, and unlock cool badges!  
-- Bet your earned credits for bigger rewards in a thrilling risk-and-reward gameplay loop  
-- Enjoy dazzling animations, sound effects, and progressive unlockable power-ups!  
-- Compete on leaderboards and show off your Vim prowess to the world  
+You can explore the refactored version on the `advanced-testing` branch or [Demo deployed on Netlify](https://vimmaster.netlify.app/) and provide feedback. We recommend trying the refactored codebase for the best experience and future updates.
 
-Earn credits by conquering lessons in the main game, then take a chance on the slot machine to level up your skills and multiply your rewards!
-
----
-
-![Vim Command Slot Machine Preview](images/vimslots.gif)
-
-Stay tuned for this fun and addictive way to sharpen your Vim command recall like never before — only in **VIM Master!**
+For full details, see the [advanced-testing branch README](https://github.com/renzorlive/vimmaster/blob/advanced-testing/README.md) or project documentation.
+![Refactor SS](images/vmrf.png)
 
 ---
 
