@@ -10,7 +10,7 @@
 <body class="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-gray-200 min-h-screen p-4">
 
     <div class="w-full max-w-5xl mx-auto">
-        <!-- Header Section with New ASCII Logo -->
+        <!-- Header Section with ASCII Logo Only -->
         <div class="text-center mb-8">
             <pre class="text-yellow-400 text-center text-xs md:text-sm font-mono ascii-logo mb-4">
 ██╗   ██╗██╗███╗   ███╗    ███╗   ███╗ █████╗ ███████╗████████╗███████╗██████╗ 
@@ -22,13 +22,8 @@
             </pre>
         </div>
 
-        <!-- Welcome Message -->
-        <div class="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-6 mb-8 border border-blue-700/50 backdrop-blur-sm">
-            <p id="instructions" class="text-xl text-center text-blue-100 font-medium">Welcome! Let's learn VIM together.</p>
-        </div>
-
-        <!-- Game Controls Section -->
-        <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-8">
+        <!-- Game Controls Section - Under Logo -->
+        <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-6">
             <button id="challenge-toggle" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                 🚀 Challenge Mode
             </button>
@@ -36,6 +31,11 @@
                 <div>Press <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">Ctrl+/</kbd> for cheat mode</div>
                 <div>Use <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">Enter</kbd> to advance levels</div>
             </div>
+        </div>
+
+        <!-- Welcome Message / Instructions - Under Buttons -->
+        <div class="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-6 mb-6 border border-blue-700/50 backdrop-blur-sm">
+            <p id="instructions" class="text-xl text-center text-blue-100 font-medium">Welcome! Let's learn VIM together.</p>
         </div>
 
         <!-- Challenge Mode Container -->
