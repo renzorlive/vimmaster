@@ -227,6 +227,8 @@
         let redoStack = [];
         let level12Undo = false;
         let level12RedoAfterUndo = false;
+        let cheatModeOtherUndo = false;
+        let cheatModeOtherRedoAfterUndo = false;
         let lastExCommand = null;
         let searchMode = false;
         let searchQuery = '';
@@ -908,7 +910,11 @@
                 if (currentLines.length === targetLines.length && currentLines.every((l, i) => l === targetLines[i])) {
                     if (level.name === 'Undo / Redo') {
                         if (level12RedoAfterUndo) won = true;
-                    } else {
+                    } 
+                    else if (level.name === 'Practice: u / Ctrl+r'){
+                        if (cheatModeOtherUndo && cheatModeOtherRedoAfterUndo) won = true;
+                    }
+                    else {
                         won = true;
                     }
                 }
@@ -1110,6 +1116,9 @@
                 }
                 if (levels[currentLevel].name === 'Undo / Redo' && level12Undo) {
                     level12RedoAfterUndo = true;
+                }
+                if(levels[currentLevel].name === 'Practice: u / Ctrl+r') {
+                    cheatModeOtherRedoAfterUndo = true;
                 }
                 renderEditor();
                 checkWinCondition();
@@ -1358,6 +1367,10 @@
                 if (levels[currentLevel].name === 'Undo / Redo') {
                     level12Undo = true;
                     level12RedoAfterUndo = false;
+                }
+                if(levels[currentLevel].name === 'Practice: u / Ctrl+r') {
+                    cheatModeOtherUndo = true;
+                    cheatModeOtherRedoAfterUndo = false;
                 }
                 renderEditor();
                 checkWinCondition();
