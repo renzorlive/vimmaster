@@ -6,6 +6,11 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
 - Open `index.html` directly in your browser.
 - Best viewed on desktop for full keyboard support.
 
+## Try the Online Demo
+[![Demo Online](https://img.shields.io/badge/demo-online-brightgreen?logo=github&style=for-the-badge)](https://renzorlive.github.io/vimmaster/)
+
+> 💡 **Tip:** For the best experience, use a desktop/laptop (full keyboard support).
+
 ## Screenshot
 ![VIM Master Screenshot](images/vm.gif)
 
