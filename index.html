@@ -27,6 +27,9 @@
             <button id="challenge-toggle" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                 🚀 Challenge Mode
             </button>
+            <a href="profile.html" class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                👤 View Profile
+            </a>
             <div class="text-gray-400 text-sm text-center md:text-left">
                 <div>Press <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">Ctrl+/</kbd> for cheat mode</div>
                 <div>Use <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">Enter</kbd> to advance levels</div>
@@ -41,7 +44,10 @@
                     <span id="progress-summary" class="text-gray-200">Level 1 • 0 badges • 0 commands practiced</span>
                     <span class="text-xs text-gray-400">• Last saved: <span id="last-saved-time">Never</span></span>
                 </div>
-                <span class="text-gray-400 text-xs">Click to expand ▼</span>
+                <div class="flex items-center gap-3">
+                    <a href="profile.html" class="text-blue-400 hover:text-blue-300 text-xs transition-colors">👤 Profile</a>
+                    <span class="text-gray-400 text-xs">Click to expand ▼</span>
+                </div>
             </div>
         </div>
         
@@ -227,6 +233,16 @@
         </div>
         <div id="cheat-content" class="p-6 space-y-6"></div>
     </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 border-t border-gray-600/30">
+        <p class="text-gray-400">
+            Made with ❤️ for my son Zeni and the VIM community | 
+            <a href="https://github.com/renzorlive/vimmaster" target="_blank" class="text-blue-400 hover:text-blue-300 transition-colors">
+                View Source
+            </a>
+        </p>
+    </footer>
 
     <!-- Load all JavaScript modules -->
     <script type="module" src="js/main.js"></script>
