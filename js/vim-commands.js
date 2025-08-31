@@ -12,7 +12,7 @@ import {
     setLastSearchQuery, setLastSearchDirection, setSearchQuery, updateContentLine,
     removeContentLine, insertContentLine, addContentLine, appendCommandHistory,
     appendCommandLog, clearCommandHistory, clearCommandLog, popUndo, pushRedo,
-    setCountBuffer, setCountBufferAppend, setLastExCommand
+    setCountBuffer, setCountBufferAppend, setLastExCommand, addPracticedCommand
 } from './game-state.js';
 
 import { levels } from './levels.js';
@@ -75,6 +75,7 @@ export function handleNormalMode(e) {
         setSearchQuery('');
         setLastSearchDirection(key === '?' ? 'backward' : 'forward');
         setMode('NORMAL');
+        addPracticedCommand(key === '?' ? 'search_backward' : 'search_forward');
         return;
     }
 
@@ -94,6 +95,7 @@ export function handleNormalMode(e) {
         setCursorRow(m.row);
         setCursorCol(Math.max(0, m.start));
         setNavCountSinceSearch(navCountSinceSearch + 1);
+        addPracticedCommand(key === 'n' ? 'search_next' : 'search_previous');
         return;
     }
 
@@ -206,28 +208,41 @@ export function handleNormalMode(e) {
     const count = countBufferValue ? Math.max(1, parseInt(countBufferValue, 10)) : 1;
     
     // Movement
-    if (key === 'h') repeat(count, () => { 
-        const currentCursor = getCursor();
-        if (currentCursor.col > 0) setCursorCol(currentCursor.col - 1); 
-    });
-    if (key === 'l') repeat(count, () => { 
-        const currentCursor = getCursor();
-        if (currentCursor.col < content[currentCursor.row].length - 1) setCursorCol(currentCursor.col + 1); 
-    });
-    if (key === 'k') repeat(count, () => { 
-        const currentCursor = getCursor();
-        if (currentCursor.row > 0) setCursorRow(currentCursor.row - 1); 
-    });
-    if (key === 'j') repeat(count, () => { 
-        const currentCursor = getCursor();
-        if (currentCursor.row < content.length - 1) setCursorRow(currentCursor.row + 1); 
-    });
+    if (key === 'h') {
+        addPracticedCommand('h_left');
+        repeat(count, () => { 
+            const currentCursor = getCursor();
+            if (currentCursor.col > 0) setCursorCol(currentCursor.col - 1); 
+        });
+    }
+    if (key === 'l') {
+        addPracticedCommand('l_right');
+        repeat(count, () => { 
+            const currentCursor = getCursor();
+            if (currentCursor.col < content[currentCursor.row].length - 1) setCursorCol(currentCursor.col + 1); 
+        });
+    }
+    if (key === 'k') {
+        addPracticedCommand('k_up');
+        repeat(count, () => { 
+            const currentCursor = getCursor();
+            if (currentCursor.row > 0) setCursorRow(currentCursor.row - 1); 
+        });
+    }
+    if (key === 'j') {
+        addPracticedCommand('j_down');
+        repeat(count, () => { 
+            const currentCursor = getCursor();
+            if (currentCursor.row < content.length - 1) setCursorRow(currentCursor.row + 1); 
+        });
+    }
     if (key === '0') { setCursorCol(0); }
     if (key === '$') { const line = content[cursor.row]; setCursorCol(Math.max(0, line.length - 1)); }
 
     // Word movement
     // Avoid moving on 'w' when it's part of operators like 'dw' or 'cw'
     if (key === 'w' && !(freshCommandHistory.endsWith('dw') || freshCommandHistory.endsWith('cw'))) {
+        addPracticedCommand('w_word_forward');
         repeat(count, () => {
             // Get FRESH cursor position for each iteration
             const currentCursor = getCursor();
@@ -242,6 +257,7 @@ export function handleNormalMode(e) {
         });
     }
     if (key === 'b') {
+        addPracticedCommand('b_word_backward');
         repeat(count, () => {
             const currentCursor = getCursor();
             const line = content[currentCursor.row];
@@ -282,6 +298,7 @@ export function handleNormalMode(e) {
 
     // Mode change
     if (key === 'i') {
+        addPracticedCommand('i_insert_mode');
         setMode('INSERT');
         clearCommandHistory(); // Clear command history for standalone 'i'
         clearCommandLog();

@@ -121,6 +121,157 @@ body {
     filter: brightness(1.2);
 }
 
+/* Badges */
+.badge-card { box-shadow: 0 6px 18px rgba(30, 64, 175, 0.25); }
+.badge-card:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(30, 64, 175, 0.4); }
+
+/* Progress Management System */
+.progress-message {
+    transition: all 0.3s ease;
+}
+
+.progress-message.success {
+    color: #4ade80;
+    animation: fadeInUp 0.3s ease;
+}
+
+.progress-message.error {
+    color: #f87171;
+    animation: fadeInUp 0.3s ease;
+}
+
+.progress-message.info {
+    color: #60a5fa;
+    animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Progress Code Input Styling */
+#export-code, #import-code {
+    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+    transition: all 0.3s ease;
+}
+
+#export-code:focus, #import-code:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+/* Progress Management Container Animations */
+#export-code-container, #import-code-container {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#export-code-container.hidden, #import-code-container.hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
+
+/* Compact Progress Management Styling */
+#progress-summary {
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Progress Toggle Styling */
+#progress-toggle {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+#progress-toggle:hover {
+    background: linear-gradient(to right, rgba(75, 85, 99, 0.8), rgba(55, 65, 81, 0.8));
+    border-color: rgba(156, 163, 175, 0.5);
+    transform: translateY(-1px);
+}
+
+#progress-details {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Compact Badge Styling */
+#badge-section .badge {
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+}
+
+#badge-section .badge:hover {
+    transform: scale(1.15);
+    filter: brightness(1.3);
+}
+
+/* Achievements Section Positioning */
+#badge-section {
+    transition: all 0.3s ease;
+}
+
+#badge-section:not(.hidden) {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+/* Compact Challenge Styling */
+#challenge-container {
+    transition: all 0.3s ease;
+}
+
+#challenge-container.hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
+
+/* Responsive Design for Compact Layout */
+@media (max-width: 768px) {
+    #progress-summary {
+        font-size: 0.875rem;
+    }
+    
+    #badge-section .badge {
+        font-size: 1rem;
+    }
+    
+    #challenge-container .text-2xl {
+        font-size: 1.25rem;
+    }
+    
+    #challenge-container .text-lg {
+        font-size: 1rem;
+    }
+}
+
+/* Progress Summary Styling */
+#progress-summary {
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+#last-saved-time {
+    font-style: italic;
+    opacity: 0.8;
+}
+
 /* Button hover effects */
 button {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

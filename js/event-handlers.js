@@ -15,7 +15,7 @@ import {
     setCurrentMatchIndex, setUsedSearchInLevel, setNavCountSinceSearch, setLevel12Undo,
     setLevel12RedoAfterUndo, setLastExCommand, setCurrentChallenge, setCurrentTaskIndex,
     setChallengeScoreValue, setChallengeProgressValue, setChallengeStartTime,
-    setChallengeTimerInterval
+    setChallengeTimerInterval, addBadge
 } from './game-state.js';
 
 import { levels, loadLevel, getCurrentLevelFromGameState, getLevelCount, isLastLevel } from './levels.js';
@@ -191,18 +191,46 @@ export function checkWinCondition() {
 }
 
 export function maybeAwardBadges() {
+    let badgesAwarded = false;
+    
     // Beginner: after finishing levels up to basic movement group (1-3)
     if (!getBadges().has('beginner') && getCurrentLevel() >= 2) {
-        // Add badge logic here
+        // Add badge to game state
+        addBadge('beginner');
         renderBadges(getBadges());
         showBadgeToast('🟢 Beginner Badge earned!');
+        badgesAwarded = true;
     }
     // Search Master: after completing any of the search levels while using search
     const searchNames = ['Search Forward (/)','Search Backward (?)','Search Navigation (n/N)'];
     if (!getBadges().has('searchmaster') && searchNames.includes(levels[getCurrentLevel()].name) && getUsedSearchInLevel()) {
-        // Add badge logic here
+        // Add badge to game state
+        addBadge('searchmaster');
         renderBadges(getBadges());
         showBadgeToast('🔎 Search Master Badge earned!');
+        badgesAwarded = true;
+    }
+    
+    // Auto-save progress if badges were awarded
+    if (badgesAwarded) {
+        // Import progress system if available
+        try {
+            import('./progress-system.js').then(({ autoSaveProgress, getProgressSummary }) => {
+                setTimeout(() => {
+                    autoSaveProgress();
+                    // Update progress summary display
+                    const progressSummary = document.getElementById('progress-summary');
+                    const lastSavedTime = document.getElementById('last-saved-time');
+                    if (progressSummary && lastSavedTime) {
+                        const summary = getProgressSummary();
+                        progressSummary.textContent = `Level ${summary.currentLevel + 1} • ${summary.badgesEarned} badges • ${summary.commandsPracticed} commands practiced`;
+                        lastSavedTime.textContent = summary.lastSaved;
+                    }
+                }, 1000);
+            });
+        } catch (error) {
+            // Progress system not available, continue without auto-save
+        }
     }
 }
 

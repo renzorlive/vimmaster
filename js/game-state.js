@@ -236,6 +236,10 @@ export const resetGameState = () => {
     _currentMatchIndex = -1;
     _usedSearchInLevel = false;
     _navCountSinceSearch = 0;
+    
+    // Also clear badges and practiced commands
+    _badges = new Set();
+    _practicedCommands = new Set();
 };
 
 export const resetChallengeState = () => {
@@ -322,6 +326,18 @@ export const addBadge = (badge) => {
 
 export const hasBadge = (badge) => {
     return _badges.has(badge);
+};
+
+export const setBadges = (badges) => {
+    _badges = new Set(badges);
+};
+
+export const setPracticedCommands = (commands) => {
+    _practicedCommands = new Set(commands);
+};
+
+export const addPracticedCommand = (command) => {
+    _practicedCommands.add(command);
 };
 
 // Undo/Redo manipulation

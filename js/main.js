@@ -31,6 +31,10 @@ import {
     checkWinCondition, maybeAwardBadges, nextLevel, previousLevel, resetLevel,
     toggleChallengeMode, updateUI
 } from './event-handlers.js';
+import { 
+    progressSystem, exportProgress, importProgress, autoLoadProgress, 
+    autoSaveProgress, clearProgress, getProgressSummary 
+} from './progress-system.js';
 
 // setChallengeMode is already imported above
 
@@ -39,11 +43,23 @@ function initializeGame() {
     // Initialize DOM references
     initializeDOMReferences();
     
+    // Auto-load progress if available
+    const progressLoaded = autoLoadProgress();
+    if (progressLoaded) {
+        console.log('Progress loaded from localStorage');
+    }
+    
     // Load first level
     loadLevel(0);
     
     // Initial UI update
     updateUI();
+    
+    // Update progress summary
+    updateProgressSummary();
+    
+    // Setup auto-save
+    setupAutoSave();
 }
 
 // Setup event listeners
@@ -61,6 +77,108 @@ function setupEventListeners() {
     const cheatSearch = document.getElementById('cheat-search');
     const cheatContent = document.getElementById('cheat-content');
     const cheatPanel = document.getElementById('cheat-panel');
+
+    // Progress System Event Listeners
+    const progressToggle = document.getElementById('progress-toggle');
+    const progressDetails = document.getElementById('progress-details');
+    const exportProgressBtn = document.getElementById('export-progress-btn');
+    const importProgressBtn = document.getElementById('import-progress-btn');
+    const clearProgressBtn = document.getElementById('clear-progress-btn');
+    const exportCodeContainer = document.getElementById('export-code-container');
+    const importCodeContainer = document.getElementById('import-code-container');
+    const exportCode = document.getElementById('export-code');
+    const importCode = document.getElementById('import-code');
+    const copyExportBtn = document.getElementById('copy-export-btn');
+    const confirmImportBtn = document.getElementById('confirm-import-btn');
+    const progressMessage = document.getElementById('progress-message');
+
+    // Progress Toggle Functionality
+    if (progressToggle && progressDetails) {
+        progressToggle.addEventListener('click', () => {
+            const isHidden = progressDetails.classList.contains('hidden');
+            if (isHidden) {
+                progressDetails.classList.remove('hidden');
+                progressToggle.querySelector('span:last-child').textContent = 'Click to collapse ▲';
+            } else {
+                progressDetails.classList.add('hidden');
+                progressToggle.querySelector('span:last-child').textContent = 'Click to expand ▼';
+            }
+        });
+    }
+
+    // Export Progress
+    if (exportProgressBtn) {
+        exportProgressBtn.addEventListener('click', () => {
+            try {
+                const progressCode = exportProgress();
+                exportCode.value = progressCode;
+                exportCodeContainer.classList.remove('hidden');
+                importCodeContainer.classList.add('hidden');
+                hideProgressMessage();
+            } catch (error) {
+                showProgressMessage('Export failed: ' + error.message, 'error');
+            }
+        });
+    }
+
+    // Copy Export Code
+    if (copyExportBtn) {
+        copyExportBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(exportCode.value);
+                showProgressMessage('Progress code copied to clipboard!', 'success');
+            } catch (error) {
+                showProgressMessage('Failed to copy code', 'error');
+            }
+        });
+    }
+
+    // Import Progress
+    if (importProgressBtn) {
+        importProgressBtn.addEventListener('click', () => {
+            importCodeContainer.classList.remove('hidden');
+            exportCodeContainer.classList.add('hidden');
+            hideProgressMessage();
+            importCode.focus();
+        });
+    }
+
+    // Confirm Import
+    if (confirmImportBtn) {
+        confirmImportBtn.addEventListener('click', () => {
+            handleImportProgress();
+        });
+    }
+
+    // Import field Enter key support
+    if (importCode) {
+        importCode.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleImportProgress();
+            }
+        });
+    }
+
+    // Clear Progress
+    if (clearProgressBtn) {
+        clearProgressBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all progress? This cannot be undone.')) {
+                const result = clearProgress();
+                if (result.success) {
+                    showProgressMessage(result.message, 'success');
+                    updateProgressSummary();
+                    
+                    // Reset game state
+                    resetGameState();
+                    loadLevel(0);
+                    updateUI();
+                } else {
+                    showProgressMessage(result.message, 'error');
+                }
+            }
+        });
+    }
 
     // Editor input handling
     if (editorInput) {
@@ -227,6 +345,97 @@ function setupEventListeners() {
             }
         });
     }
+}
+
+// Progress System Helper Functions
+function handleImportProgress() {
+    const importCode = document.getElementById('import-code');
+    if (!importCode) return;
+    
+    const code = importCode.value.trim();
+    if (!code) {
+        showProgressMessage('Please enter a progress code', 'error');
+        return;
+    }
+
+    const result = importProgress(code);
+    if (result.success) {
+        showProgressMessage(result.message, 'success');
+        const importCodeContainer = document.getElementById('import-code-container');
+        if (importCodeContainer) {
+            importCodeContainer.classList.add('hidden');
+        }
+        importCode.value = '';
+        
+        // Reload level and update UI
+        loadLevel(getCurrentLevel());
+        updateUI();
+        updateProgressSummary();
+    } else {
+        showProgressMessage(result.message, 'error');
+    }
+}
+
+function updateProgressSummary() {
+    const progressSummary = document.getElementById('progress-summary');
+    const lastSavedTime = document.getElementById('last-saved-time');
+    
+    if (progressSummary && lastSavedTime) {
+        const summary = getProgressSummary();
+        progressSummary.textContent = `Level ${summary.currentLevel + 1} • ${summary.badgesEarned} badges • ${summary.commandsPracticed} commands practiced`;
+        lastSavedTime.textContent = summary.lastSaved;
+    }
+}
+
+function showProgressMessage(message, type = 'info') {
+    const progressMessage = document.getElementById('progress-message');
+    if (progressMessage) {
+        progressMessage.textContent = message;
+        progressMessage.className = `mt-3 text-center text-sm ${type === 'success' ? 'text-green-400' : type === 'error' ? 'text-red-400' : 'text-blue-400'}`;
+        progressMessage.classList.remove('hidden');
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            hideProgressMessage();
+        }, 5000);
+    }
+}
+
+function hideProgressMessage() {
+    const progressMessage = document.getElementById('progress-message');
+    if (progressMessage) {
+        progressMessage.classList.add('hidden');
+    }
+}
+
+// Auto-save progress when significant changes occur
+function setupAutoSave() {
+    // Auto-save every 30 seconds and update progress summary
+    setInterval(() => {
+        autoSaveProgress();
+        updateProgressSummary();
+    }, 30000);
+    
+    // Auto-save on level completion
+    const originalCheckWinCondition = window.checkWinCondition;
+    if (originalCheckWinCondition) {
+        window.checkWinCondition = function() {
+            const result = originalCheckWinCondition();
+            if (result) {
+                // Progress was made, auto-save
+                setTimeout(() => {
+                    autoSaveProgress();
+                    updateProgressSummary();
+                }, 1000);
+            }
+            return result;
+        };
+    }
+    
+    // Update progress summary more frequently for real-time updates
+    setInterval(() => {
+        updateProgressSummary();
+    }, 5000); // Update every 5 seconds
 }
 
 // Initialize when DOM is loaded
