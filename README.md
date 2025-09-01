@@ -1,12 +1,11 @@
 # VIM Master
 
-VIM Master is a lightweight in-browser game that teaches core Vim motions and editing commands through short, focused levels. No installs required—just open `index.html` and start practicing.
+VIM Master -- in-browser game that teaches core Vim motions and editing commands through short, focused levels. 
 
+## Try the Online Demo
+[![Demo Online](https://img.shields.io/badge/demo-online-brightgreen?logo=github&style=for-the-badge)](https://renzorlive.github.io/vimmaster/)
 
-
-## Demo
-- Open `index.html` directly in your browser.
-- Best viewed on desktop for full keyboard support.
+> 💡 **Tip:** For the best experience, use a desktop/laptop (full keyboard support).
 
 ## Screenshot
 ![VIM Master Screenshot](images/vm.gif)
@@ -209,26 +208,20 @@ npx serve .  # then visit the printed URL
 - **Web Share API** - Native social media sharing
 - **No dependencies** - Lightweight and fast
 
-## 🎰 Coming Soon: Chapter 2, Vim Command Slot Machine & Credits System! 🎉
+## About the Refactored Version
 
-Get ready to level up your Vim skills with the upcoming **Chapter 2** featuring advanced visual mode commands and more complex editing workflows!
+The VIM Master game has undergone a major refactor moving from a single-file codebase to a clean, modular architecture based on ES6 modules for improved maintainability, performance, and developer experience.
 
-Plus, spin your way to mastery with our brand new **Vim Command Slot Machine** mini-game! Unlocked after completing Chapters 1 & 2, this exciting casino-style challenge lets you:
+The refactored version:
+- Updated UI & UX, kept functionality and lessons
+- Fixes numerous bugs and improves Challenge and Cheat modes
+- Improves code organization for easier feature development and testing
+- Enables faster iteration and collaboration among developers
 
-- Spin the reels to get randomized Vim command sequences (command **names only!**)  
-- Prove your skills by executing the **correct Vim commands** in real time on the text editor  
-- Win points, multipliers, jackpots, and unlock cool badges!  
-- Bet your earned credits for bigger rewards in a thrilling risk-and-reward gameplay loop  
-- Enjoy dazzling animations, sound effects, and progressive unlockable power-ups!  
-- Compete on leaderboards and show off your Vim prowess to the world  
+You can explore the refactored version on the `advanced-testing` branch or [Demo deployed on Netlify](https://vimmaster.netlify.app/) and provide feedback. We recommend trying the refactored codebase for the best experience and future updates.
 
-Earn credits by conquering lessons in the main game, then take a chance on the slot machine to level up your skills and multiply your rewards!
-
----
-
-![Vim Command Slot Machine Preview](images/vimslots.gif)
-
-Stay tuned for this fun and addictive way to sharpen your Vim command recall like never before — only in **VIM Master!**
+For full details, see the [advanced-testing branch README](https://github.com/renzorlive/vimmaster/blob/advanced-testing/README.md) or project documentation.
+![Refactor SS](images/vmrf.png)
 
 ---
 
@@ -274,11 +267,6 @@ MIT
 - Inspired by Vim’s modal editing and motion/operator design.
 - ASCII logo included in the page for flair
 - Built with modern web technologies for the best user experience
-
-## BMAB
-- Warning: I will use this for beer and cigs
-
-[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/renzorlive)
 
 ## Architecture
 VIM Master uses a modular architecture for maintainability and performance:
@@ -549,3 +537,5 @@ The modular architecture makes it easy to:
 ✅ **Cross-browser**: Tested and working in modern browsers  
 
 The game is now ready for advanced testing and further development!
+
+[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/renzorlive)
