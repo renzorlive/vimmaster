@@ -1,8 +1,8 @@
 // VIM Master Game - Progress Save/Load System
 
 import { 
-    getBadges, getPracticedCommands, getCurrentLevel, getChallengeMode,
-    setBadges, setPracticedCommands, setCurrentLevel, setChallengeMode
+    getBadges, getPracticedCommands, getCurrentLevel, getChallengeMode, getChallengeScoreValue,
+    setBadges, setPracticedCommands, setCurrentLevel, setChallengeMode, setChallengeScoreValue
 } from './game-state.js';
 
 // Progress System Class
@@ -25,7 +25,8 @@ class ProgressSystem {
                 badges: Array.from(getBadges()),
                 practicedCommands: Array.from(getPracticedCommands()),
                 currentLevel: getCurrentLevel(),
-                challengeMode: getChallengeMode()
+                challengeMode: getChallengeMode(),
+                challengePoints: getChallengeScoreValue()
             };
 
             // Convert to JSON and encode
@@ -88,7 +89,7 @@ class ProgressSystem {
 
             return { 
                 success: true, 
-                message: `Progress imported successfully! Level ${progressData.currentLevel + 1}, ${progressData.badges.length} badges, ${progressData.practicedCommands.length} commands practiced.` 
+                message: `Progress imported successfully! Level ${progressData.currentLevel + 1}, ${progressData.badges.length} badges, ${progressData.practicedCommands.length} commands practiced, ${progressData.challengePoints} challenge points.` 
             };
 
         } catch (error) {
@@ -106,6 +107,12 @@ class ProgressSystem {
         // Check required fields
         if (!data.version || !data.timestamp || !data.badges || !data.practicedCommands || data.currentLevel === undefined) {
             return { valid: false, message: 'Invalid progress data structure' };
+        }
+        
+        // Handle challenge points - if not present, default to 0
+        if (data.challengePoints === undefined) {
+            console.log('🔍 DEBUG: Challenge points not found in progress data, defaulting to 0');
+            data.challengePoints = 0;
         }
 
         // Check version compatibility
@@ -137,6 +144,8 @@ class ProgressSystem {
      * @param {Object} data - Validated progress data
      */
     applyProgressData(data) {
+        console.log('🔍 DEBUG: applyProgressData - applying challenge points:', data.challengePoints);
+        
         // Apply badges
         setBadges(data.badges);
 
@@ -149,6 +158,11 @@ class ProgressSystem {
 
         // Apply challenge mode
         setChallengeMode(data.challengeMode);
+        
+        // Apply challenge points
+        setChallengeScoreValue(data.challengePoints || 0);
+        
+        console.log('🔍 DEBUG: applyProgressData - after setting, getChallengeScoreValue():', getChallengeScoreValue());
     }
 
     /**
@@ -185,11 +199,14 @@ class ProgressSystem {
     autoLoadProgress() {
         const storedProgress = this.loadFromLocalStorage();
         if (storedProgress) {
+            console.log('🔍 DEBUG: autoLoadProgress - stored progress:', storedProgress);
             const validation = this.validateProgressData(storedProgress);
             if (validation.valid) {
+                console.log('🔍 DEBUG: autoLoadProgress - applying progress data');
                 this.applyProgressData(storedProgress);
                 return true;
             } else {
+                console.log('🔍 DEBUG: autoLoadProgress - validation failed:', validation.message);
                 // Clear invalid stored data
                 localStorage.removeItem('vimMasterProgress');
             }
@@ -202,14 +219,19 @@ class ProgressSystem {
      */
     autoSaveProgress() {
         try {
+            const challengePoints = getChallengeScoreValue();
+            console.log('🔍 DEBUG: autoSaveProgress - challengePoints:', challengePoints);
+            
             const currentProgress = {
                 version: this.version,
                 timestamp: Date.now(),
                 badges: Array.from(getBadges()),
                 practicedCommands: Array.from(getPracticedCommands()),
                 currentLevel: getCurrentLevel(),
-                challengeMode: getChallengeMode()
+                challengeMode: getChallengeMode(),
+                challengePoints: challengePoints || 0
             };
+            console.log('🔍 DEBUG: autoSaveProgress - saving progress:', currentProgress);
             this.saveToLocalStorage(currentProgress);
         } catch (error) {
             console.warn('Auto-save failed:', error);
@@ -226,11 +248,12 @@ class ProgressSystem {
             // Also clear the game state
             try {
                 // Import game state functions to clear badges and practiced commands
-                import('./game-state.js').then(({ setBadges, setPracticedCommands, setCurrentLevel, setChallengeMode }) => {
+                import('./game-state.js').then(({ setBadges, setPracticedCommands, setCurrentLevel, setChallengeMode, setChallengeScoreValue }) => {
                     setBadges([]);
                     setPracticedCommands([]);
                     setCurrentLevel(0);
                     setChallengeMode(false);
+                    setChallengeScoreValue(0);
                 });
             } catch (error) {
                 console.warn('Failed to clear game state:', error);
@@ -247,13 +270,32 @@ class ProgressSystem {
      * @returns {Object} Progress summary
      */
     getProgressSummary() {
-        return {
+        console.log('🔍 DEBUG: ProgressSystem.getProgressSummary() called!');
+        console.log('🔍 DEBUG: getProgressSummary - getChallengeScoreValue function:', getChallengeScoreValue);
+        console.log('🔍 DEBUG: getProgressSummary - typeof getChallengeScoreValue:', typeof getChallengeScoreValue);
+        
+        const challengePoints = getChallengeScoreValue();
+        console.log('🔍 DEBUG: getProgressSummary - challengePoints:', challengePoints);
+        console.log('🔍 DEBUG: getProgressSummary - getChallengeScoreValue():', getChallengeScoreValue());
+        console.log('🔍 DEBUG: getProgressSummary - typeof challengePoints:', typeof challengePoints);
+        console.log('🔍 DEBUG: getProgressSummary - challengePoints === undefined:', challengePoints === undefined);
+        console.log('🔍 DEBUG: getProgressSummary - challengePoints === null:', challengePoints === null);
+        
+        // Ensure we always return a number
+        const safeChallengePoints = (challengePoints !== undefined && challengePoints !== null) ? challengePoints : 0;
+        console.log('🔍 DEBUG: getProgressSummary - safeChallengePoints:', safeChallengePoints);
+        
+        const result = {
             currentLevel: getCurrentLevel(),
             totalLevels: 15,
             badgesEarned: getBadges().size,
             commandsPracticed: getPracticedCommands().size,
+            challengePoints: safeChallengePoints,
             lastSaved: this.getLastSavedTime()
         };
+        
+        console.log('🔍 DEBUG: getProgressSummary - returning result:', result);
+        return result;
     }
 
     /**

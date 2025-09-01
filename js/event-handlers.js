@@ -19,6 +19,7 @@ import {
 } from './game-state.js';
 
 import { levels, loadLevel, getCurrentLevelFromGameState, getLevelCount, isLastLevel } from './levels.js';
+import { isInPracticeMode, getCurrentLessonSpec } from './cheat-mode.js';
 import { challenges, startChallenge, endChallenge, checkChallengeTask, getChallengeTimeRemaining, getChallengeProgress } from './challenges.js';
 import { handleNormalMode, handleInsertMode, handleSearchMode } from './vim-commands.js';
 import { 
@@ -47,18 +48,35 @@ export function checkWinCondition() {
                 getYankedLine: getYankedLine
             };
             
-            if (currentTask.validation(gameState)) {
+            console.log('🔍 DEBUG: Running challenge validation for task:', currentTask.instruction);
+            console.log('🔍 DEBUG: Current content:', getContent());
+            console.log('🔍 DEBUG: Current cursor:', getCursor());
+            
+            const validationResult = currentTask.validation(gameState);
+            console.log('🔍 DEBUG: Validation result:', validationResult);
+            
+            if (validationResult) {
                 console.log('🔍 Challenge task completed!');
                 
-                // Award points for completing task
-                const timeBonus = Math.max(0, Math.floor(getChallengeTimeRemaining({
-                    currentChallenge: challenge,
-                    challengeStartTime: getChallengeStartTime()
-                }) / 10)); // 1 point per 10 seconds remaining
-                const taskPoints = 10 + timeBonus;
-                setChallengeScoreValue(getChallengeScoreValue() + taskPoints);
-                
-                console.log('🔍 Task completed! Points awarded:', taskPoints, 'Total score:', getChallengeScoreValue());
+                                 // Award points for completing task
+                 const timeBonus = Math.max(0, Math.floor(getChallengeTimeRemaining({
+                     currentChallenge: challenge,
+                     challengeStartTime: getChallengeStartTime()
+                 }) / 10)); // 1 point per 10 seconds remaining
+                 const taskPoints = 10 + timeBonus;
+                 setChallengeScoreValue(getChallengeScoreValue() + taskPoints);
+                 
+                 console.log('🔍 Task completed! Points awarded:', taskPoints, 'Total score:', getChallengeScoreValue());
+                 
+                 // Auto-save progress to persist challenge points
+                 try {
+                     import('./progress-system.js').then(({ autoSaveProgress }) => {
+                         autoSaveProgress();
+                         console.log('🔍 Progress auto-saved with challenge points');
+                     });
+                 } catch (error) {
+                     console.warn('Failed to auto-save progress:', error);
+                 }
                 
                 // Move to next task or complete challenge
                                  if (getCurrentTaskIndex() < challenge.tasks.length - 1) {
@@ -71,7 +89,13 @@ export function checkWinCondition() {
                      if (nextTask) {
                          const instructionsEl = document.getElementById('instructions');
                          if (instructionsEl) {
-                             instructionsEl.textContent = `🚀 ${challenge.name}: ${nextTask.instruction}`;
+                             instructionsEl.innerHTML = `
+                                 <div class="text-center">
+                                     <div class="text-blue-400 font-bold text-lg mb-2">🚀 ${challenge.name}</div>
+                                     <div class="text-gray-300">${nextTask.instruction}</div>
+                                     ${nextTask.hint ? `<div class="text-yellow-400 text-sm mt-2">💡 ${nextTask.hint}</div>` : ''}
+                                 </div>
+                             `;
                          }
                      }
                      
@@ -84,6 +108,16 @@ export function checkWinCondition() {
                      // Disable challenge mode to stop timer
                      setChallengeMode(false);
                      setCurrentChallenge(null);
+                     
+                     // Auto-save final challenge points
+                     try {
+                         import('./progress-system.js').then(({ autoSaveProgress }) => {
+                             autoSaveProgress();
+                             console.log('🔍 Final challenge points saved to progress');
+                         });
+                     } catch (error) {
+                         console.warn('Failed to save final challenge points:', error);
+                     }
                      
                      // Debug modal elements
                      console.log('🔍 Modal elements check:');
@@ -213,24 +247,21 @@ export function maybeAwardBadges() {
     
     // Auto-save progress if badges were awarded
     if (badgesAwarded) {
-        // Import progress system if available
-        try {
-            import('./progress-system.js').then(({ autoSaveProgress, getProgressSummary }) => {
-                setTimeout(() => {
+        // Use global progress system functions
+        setTimeout(() => {
+            try {
+                // Import the global progress system functions
+                import('./progress-system.js').then(({ autoSaveProgress }) => {
                     autoSaveProgress();
-                    // Update progress summary display
-                    const progressSummary = document.getElementById('progress-summary');
-                    const lastSavedTime = document.getElementById('last-saved-time');
-                    if (progressSummary && lastSavedTime) {
-                        const summary = getProgressSummary();
-                        progressSummary.textContent = `Level ${summary.currentLevel + 1} • ${summary.badgesEarned} badges • ${summary.commandsPracticed} commands practiced`;
-                        lastSavedTime.textContent = summary.lastSaved;
+                    // Update progress summary display using the global updateProgressSummary function
+                    if (typeof window.updateProgressSummary === 'function') {
+                        window.updateProgressSummary();
                     }
-                }, 1000);
-            });
-        } catch (error) {
-            // Progress system not available, continue without auto-save
-        }
+                });
+            } catch (error) {
+                // Progress system not available, continue without auto-save
+            }
+        }, 1000);
     }
 }
 
@@ -391,19 +422,25 @@ export function updateUI() {
         renderEditor(getContent(), getCursor(), getMode());
         updateStatusBar(getMode(), getSearchMode(), getSearchQuery(), getLastSearchDirection(), getSearchMatches(), getCurrentMatchIndex());
         
-        // Show challenge instructions if in challenge mode, otherwise show level instructions
-        if (getChallengeMode() && getCurrentChallenge()) {
-            const currentTask = getCurrentChallenge().tasks[getCurrentTaskIndex()];
-            updateInstructions(`🚀 ${getCurrentChallenge().name}: ${currentTask.instruction}`);
-        } else {
-            updateInstructions(levels[getCurrentLevel()]?.instructions || '');
+        // Use centralized instructions rendering
+        updateInstructions();
+        
+        // Fix stuck challenge mode state - if we're not in practice mode and no current challenge, reset challenge mode
+        if (getChallengeMode() && !isInPracticeMode() && !getCurrentChallenge()) {
+            console.log('🔍 DEBUG: Fixing stuck challenge mode state');
+            setChallengeMode(false);
+            setCurrentChallenge(null);
         }
         
-        // Hide level indicator and buttons in challenge mode
-        if (getChallengeMode()) {
+        // Hide level indicator and buttons in challenge mode or practice mode
+        console.log('🔍 DEBUG: getChallengeMode():', getChallengeMode());
+        console.log('🔍 DEBUG: isInPracticeMode():', isInPracticeMode());
+        if (getChallengeMode() || isInPracticeMode()) {
+            console.log('🔍 DEBUG: Hiding level indicator - in challenge or practice mode');
             updateLevelIndicator(-1, 0); // Hide level indicator
-            // Don't create level buttons in challenge mode
+            // Don't create level buttons in challenge mode or practice mode
         } else {
+            console.log('🔍 DEBUG: Showing level indicator - current level:', getCurrentLevel(), 'total levels:', levels.length);
             updateLevelIndicator(getCurrentLevel(), levels.length);
             createLevelButtons(levels, getCurrentLevel());
         }

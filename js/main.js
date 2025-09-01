@@ -27,7 +27,7 @@ import {
     showModal, hideModal, showCelebration, hideCelebration, flashLevelComplete,
     updateChallengeUI, showChallengeContainer, hideChallengeContainer, showBadgeToast
 } from './ui-components.js';
-import { openCheat, closeCheat, renderCheatList } from './cheat-mode.js';
+import { openCheat, closeCheat, renderCheatList, isInPracticeMode, checkPracticeCompletion } from './cheat-mode.js';
 import { 
     checkWinCondition, maybeAwardBadges, nextLevel, previousLevel, resetLevel,
     toggleChallengeMode, updateUI
@@ -36,6 +36,13 @@ import {
     progressSystem, exportProgress, importProgress, autoLoadProgress, 
     autoSaveProgress, clearProgress, getProgressSummary 
 } from './progress-system.js';
+
+// Import the ProgressSystem class to check instanceof
+import('./progress-system.js').then(module => {
+    window.ProgressSystem = module.ProgressSystem;
+}).catch(error => {
+    console.log('Failed to import ProgressSystem class:', error);
+});
 
 // setChallengeMode is already imported above
 
@@ -206,6 +213,21 @@ function setupEventListeners() {
                 return;
             }
             
+            // Allow VIM commands in cheat mode even if lesson overlay is visible
+            if (isInPracticeMode()) {
+                // We're in cheat mode, allow VIM commands to work regardless of overlays
+                console.log('🔍 DEBUG: Practice mode detected, allowing VIM commands');
+            } else {
+                // Check for lesson overlay in non-practice mode
+                const lessonOverlay = document.getElementById('lesson-overlay');
+                if (lessonOverlay && !lessonOverlay.classList.contains('hidden')) {
+                    // Lesson overlay is visible, don't process VIM commands
+                    return;
+                }
+            }
+            
+            console.log('🔍 DEBUG: Main game keyboard handler processing key:', e.key);
+            
             // Handle Ctrl+R redo before other commands
             if (getMode() === 'NORMAL' && e.key === 'r' && e.ctrlKey) {
                 e.preventDefault();
@@ -228,7 +250,12 @@ function setupEventListeners() {
                 handleInsertMode(e);
             }
             updateUI();
-            checkWinCondition();
+            if (isInPracticeMode()) {
+                // Event-driven practice completion
+                try { checkPracticeCompletion(); } catch {}
+            } else {
+                checkWinCondition();
+            }
         });
     }
 
@@ -402,8 +429,12 @@ function updateProgressSummary() {
     const lastSavedTime = document.getElementById('last-saved-time');
     
     if (progressSummary && lastSavedTime) {
-        const summary = getProgressSummary();
-        progressSummary.textContent = `Level ${summary.currentLevel + 1} • ${summary.badgesEarned} badges • ${summary.commandsPracticed} commands practiced`;
+        const summary = progressSystem.getProgressSummary();
+        
+        // Ensure challengePoints is always a number
+        const challengePoints = (summary.challengePoints !== undefined && summary.challengePoints !== null) ? summary.challengePoints : 0;
+        
+        progressSummary.textContent = `Level ${summary.currentLevel + 1} • ${summary.badgesEarned} badges • ${summary.commandsPracticed} commands practiced • ${challengePoints} challenge points`;
         lastSavedTime.textContent = summary.lastSaved;
     }
 }
@@ -465,6 +496,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Setup event listeners
     setupEventListeners();
+    
+    // Make updateProgressSummary globally available
+    window.updateProgressSummary = updateProgressSummary;
     
     // Focus the editor
     const editorInput = document.getElementById('vim-editor-input');

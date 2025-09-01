@@ -105,15 +105,82 @@ export function updateStatusBar(mode, searchMode, searchQuery, lastSearchDirecti
 }
 
 // Instructions Updates
-export function updateInstructions(instructions) {
+export function updateInstructions(customText) {
     if (!instructionsEl) return;
-    instructionsEl.textContent = instructions;
+
+    if (customText !== undefined) {
+        instructionsEl.innerHTML = customText;
+        return;
+    }
+
+    // Import cheat mode functions for practice mode detection
+    import('./cheat-mode.js').then(({ isInPracticeMode, getCurrentLessonSpec }) => {
+        console.log('🔍 DEBUG: updateInstructions - isInPracticeMode:', isInPracticeMode());
+        console.log('🔍 DEBUG: updateInstructions - getCurrentLessonSpec:', getCurrentLessonSpec());
+        
+        if (isInPracticeMode() && getCurrentLessonSpec()) {
+            const lesson = getCurrentLessonSpec();
+            console.log('🔍 DEBUG: updateInstructions - Setting lesson instructions for:', lesson.name);
+            instructionsEl.innerHTML = `
+                <div class="text-center">
+                    <div class="text-yellow-400 font-bold text-lg mb-2">🎯 ${lesson.name}</div>
+                    <div class="text-gray-300">${lesson.instructions}</div>
+                </div>
+            `;
+        } else {
+            // Import other modules for challenge and level instructions
+            Promise.all([
+                import('./challenges.js'),
+                import('./levels.js'),
+                import('./game-state.js')
+            ]).then(([challengesModule, levelsModule, gameStateModule]) => {
+                // Check if we're in challenge mode
+                if (gameStateModule.getChallengeMode && gameStateModule.getChallengeMode()) {
+                    const currentChallenge = gameStateModule.getCurrentChallenge();
+                    const currentTaskIndex = gameStateModule.getCurrentTaskIndex();
+                    console.log('🔍 DEBUG: Challenge mode detected');
+                    console.log('🔍 DEBUG: Current challenge:', currentChallenge);
+                    console.log('🔍 DEBUG: Current task index:', currentTaskIndex);
+                    
+                    if (currentChallenge && currentTaskIndex !== undefined && currentTaskIndex < currentChallenge.tasks.length) {
+                        const currentTask = currentChallenge.tasks[currentTaskIndex];
+                        console.log('🔍 DEBUG: Setting challenge instruction:', currentTask.instruction);
+                        instructionsEl.innerHTML = `
+                            <div class="text-center">
+                                <div class="text-blue-400 font-bold text-lg mb-2">🚀 ${currentChallenge.name}</div>
+                                <div class="text-gray-300">${currentTask.instruction}</div>
+                                ${currentTask.hint ? `<div class="text-yellow-400 text-sm mt-2">💡 ${currentTask.hint}</div>` : ''}
+                            </div>
+                        `;
+                    } else {
+                        console.log('🔍 DEBUG: No valid challenge task found');
+                        instructionsEl.textContent = 'Challenge mode active';
+                    }
+                } else {
+                    // Normal level instructions
+                    const currentLevel = gameStateModule.getCurrentLevel();
+                    if (currentLevel !== undefined && levelsModule.levels && levelsModule.levels[currentLevel]) {
+                        instructionsEl.textContent = levelsModule.levels[currentLevel].instructions || '';
+                    }
+                }
+            }).catch(error => {
+                console.error('Error loading challenge/level instructions:', error);
+            });
+        }
+    }).catch(error => {
+        console.error('Error loading cheat mode instructions:', error);
+    });
 }
 
 // Level Indicator Updates
 export function updateLevelIndicator(currentLevel, totalLevels) {
-    if (!levelIndicator) return;
+    console.log('🔍 DEBUG: updateLevelIndicator called with:', { currentLevel, totalLevels });
+    if (!levelIndicator) {
+        console.log('🔍 DEBUG: levelIndicator element not found!');
+        return;
+    }
     levelIndicator.textContent = `Level: ${currentLevel + 1} / ${totalLevels}`;
+    console.log('🔍 DEBUG: Level indicator updated to:', levelIndicator.textContent);
 }
 
 // Command Log Updates

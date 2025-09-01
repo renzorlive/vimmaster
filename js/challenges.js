@@ -48,6 +48,9 @@ export const challenges = [
                 instruction: "Delete the word 'remove' from the first line using dw",
                 validation: (gameState) => {
                     const content = gameState.getContent();
+                    console.log('🔍 DEBUG: Challenge validation - content[0]:', content[0]);
+                    console.log('🔍 DEBUG: Challenge validation - expected: "delete this line"');
+                    console.log('🔍 DEBUG: Challenge validation - includes "remove":', content[0].includes("remove"));
                     return content[0] === "delete this line" && !content[0].includes("remove");
                 },
                 hint: "Position cursor on 'r' of 'remove', then use dw"

@@ -12,28 +12,36 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
 ![VIM Master Screenshot](images/vm.gif)
 
 ## Features
-- Normal/Insert modes with an on-screen status bar
-- Command log showing your keystrokes
-- Levels that validate your action outcomes (not just keystrokes)
-- Supports: `h j k l`, `w b e`, `gg G`, `0 $`, `x`, `dd`, `dw`, `yy`, `p`, `i`, `a`, `o/O`, `cw`, `D`, `r`, ex-commands `:q`, `:wq`
-- Numeric counts for motions/operators (e.g., `3w`, `2dd`, `5x`, `5G`)
-- Undo/redo support (`u`, `Ctrl+r`)
-- Completion modal with Enter to advance
- - Ctrl-[ mapped to Escape (exit insert/replace)
- - Vim-style search: `/` and `?`, with `n`/`N` navigation and match highlighting
- - Finish celebration: full-screen overlay with confetti and Play Again
- - Badge system: earn visual badges as you learn (Beginner, Search Master)
- - Cheat Mode: in-game command cheat sheet with quick practice (Ctrl+/)
- - Progress Management: Export/import progress codes for backup and sharing
- - Profile Page: Beautiful showcase of achievements with social media sharing
- - Social Sharing: Share achievements on Twitter, Facebook, and other platforms
- - Canvas-Based Achievement Cards: Generate downloadable and shareable images
+- **Normal/Insert modes** with an on-screen status bar
+- **Command log** showing your keystrokes
+- **16 Progressive Levels** that validate your action outcomes (not just keystrokes)
+- **Complete Vim Support**: `h j k l`, `w b e`, `gg G`, `0 $`, `x`, `dd`, `dw`, `yy`, `p`, `i`, `a`, `o/O`, `cw`, `D`, `r`, ex-commands `:q`, `:wq`
+- **Numeric counts** for motions/operators (e.g., `3w`, `2dd`, `5x`, `5G`)
+- **Undo/redo support** (`u`, `Ctrl+r`)
+- **Vim-style search**: `/` and `?`, with `n`/`N` navigation and match highlighting
+- **Challenge Mode**: Fast-paced timed challenges to test your Vim skills
+- **Cheat Mode**: Interactive command reference with instant practice sessions
+- **Progress Management**: Auto-save, export/import codes, and progress tracking
+- **Badge System**: Earn visual badges as you learn (Beginner, Search Master)
+- **Profile Page**: Beautiful showcase of achievements with social media sharing
+- **Canvas-Based Achievement Cards**: Generate downloadable and shareable images
+- **Modular Architecture**: Clean, maintainable codebase for easy development
 
 ## Recent UI/UX Improvements
 - **Streamlined Layout**: ASCII logo at top, title under text editor, buttons above instructions
 - **Compact Achievements**: Achievements container positioned before instructions for better flow
 - **Collapsible Progress Management**: Click to expand/collapse progress information, reducing UI clutter
 - **Responsive Design**: Optimized layout for better focus on gameplay elements
+- **Auto-Focus Editor**: Editor automatically focuses when lessons start for seamless UX
+- **Challenge Points Integration**: Challenge points now properly tracked and displayed in progress summary
+- **Enhanced Cheat Mode**: All cheat mode lessons now work with proper auto-focus and completion tracking
+
+## Latest Bug Fixes & Improvements
+- **Fixed "undefined challenge points"**: Challenge points now properly display in progress summary
+- **Enhanced Cheat Mode**: All practice lessons now auto-focus and validate completion correctly
+- **Improved Challenge Mode**: Better validation and scoring system for challenge tasks
+- **Auto-Focus UX**: Editor automatically focuses when starting lessons for better user experience
+- **Progress System**: Robust error handling and fallback values for all progress data
 
 ## Progress Management System
 VIM Master features a comprehensive client-side progress tracking system that works entirely in your browser:
@@ -55,6 +63,7 @@ VIM Master features a comprehensive client-side progress tracking system that wo
 - Current level and challenge mode status
 - Earned badges (Beginner, Search Master, etc.)
 - Commands practiced during gameplay
+- Challenge points earned from challenge mode
 - Timestamp of last save
 
 ## Profile Page & Social Sharing
@@ -138,6 +147,18 @@ The Challenge Mode is a fast-paced game designed to test and improve your Vim co
 Users are presented with a series of command tasks to complete as quickly and accurately as possible. 
 Each correctly executed command scores points, while speed and precision determine the final score.
 This mode offers an engaging way to sharpen your Vim skills by combining rapid-fire challenges with real-time feedback, making learning Vim commands both fun and effective.
+
+### **Challenge Types**
+- **Speed Navigation**: Navigate through text quickly using movement commands
+- **Quick Deletion**: Master deletion commands with time pressure
+- **Advanced Moves**: Combine multiple commands for complex operations
+
+### **Scoring System**
+- **Base Points**: Earn points for each completed task
+- **Time Bonus**: Faster completion earns bonus points
+- **Accuracy Bonus**: Perfect execution provides additional rewards
+- **Progress Tracking**: Challenge points are saved and displayed in your progress summary
+
 Try to beat your highest score and see how quickly you can master essential Vim commands!
 
 ## Cheat Mode
