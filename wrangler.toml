@@ -1,0 +1,5 @@
+name = "vimmaster"
+compatibility_date = "2025-09-01"
+
+[site]
+bucket = "./"
