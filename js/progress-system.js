@@ -245,16 +245,13 @@ class ProgressSystem {
         try {
             localStorage.removeItem('vimMasterProgress');
             
-            // Also clear the game state
+            // Clear the game state using statically imported functions
             try {
-                // Import game state functions to clear badges and practiced commands
-                import('./game-state.js').then(({ setBadges, setPracticedCommands, setCurrentLevel, setChallengeMode, setChallengeScoreValue }) => {
-                    setBadges([]);
-                    setPracticedCommands([]);
-                    setCurrentLevel(0);
-                    setChallengeMode(false);
-                    setChallengeScoreValue(0);
-                });
+                setBadges([]);
+                setPracticedCommands([]);
+                setCurrentLevel(0);
+                setChallengeMode(false);
+                setChallengeScoreValue(0);
             } catch (error) {
                 console.warn('Failed to clear game state:', error);
             }

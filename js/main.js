@@ -37,12 +37,7 @@ import {
     autoSaveProgress, clearProgress, getProgressSummary 
 } from './progress-system.js';
 
-// Import the ProgressSystem class to check instanceof
-import('./progress-system.js').then(module => {
-    window.ProgressSystem = module.ProgressSystem;
-}).catch(error => {
-    console.log('Failed to import ProgressSystem class:', error);
-});
+
 
 // setChallengeMode is already imported above
 
@@ -311,13 +306,9 @@ function setupEventListeners() {
             if (editorInput) editorInput.focus();
             
             // Auto-save progress after restart
-            import('./progress-system.js').then(({ autoSaveProgress }) => {
-                autoSaveProgress();
-                // Update progress summary display
-                updateProgressSummary();
-            }).catch(error => {
-                console.log('Auto-save after restart failed:', error);
-            });
+            autoSaveProgress();
+            // Update progress summary display
+            updateProgressSummary();
         });
     }
 

@@ -1,6 +1,10 @@
 // VIM Master Game - UI Components (Updated)
 
 import { escapeHtml, getSearchMatches, getLastSearchQuery } from './game-state.js';
+// Static imports for core dependencies to avoid performance overhead
+import * as challengesModule from './challenges.js';
+import * as levelsModule from './levels.js';
+import * as gameStateModule from './game-state.js';
 
 // DOM Elements
 let editorDisplay, statusBar, instructionsEl, levelIndicator, commandLogEl, 
@@ -128,44 +132,36 @@ export function updateInstructions(customText) {
                 </div>
             `;
         } else {
-            // Import other modules for challenge and level instructions
-            Promise.all([
-                import('./challenges.js'),
-                import('./levels.js'),
-                import('./game-state.js')
-            ]).then(([challengesModule, levelsModule, gameStateModule]) => {
-                // Check if we're in challenge mode
-                if (gameStateModule.getChallengeMode && gameStateModule.getChallengeMode()) {
-                    const currentChallenge = gameStateModule.getCurrentChallenge();
-                    const currentTaskIndex = gameStateModule.getCurrentTaskIndex();
-                    console.log('🔍 DEBUG: Challenge mode detected');
-                    console.log('🔍 DEBUG: Current challenge:', currentChallenge);
-                    console.log('🔍 DEBUG: Current task index:', currentTaskIndex);
-                    
-                    if (currentChallenge && currentTaskIndex !== undefined && currentTaskIndex < currentChallenge.tasks.length) {
-                        const currentTask = currentChallenge.tasks[currentTaskIndex];
-                        console.log('🔍 DEBUG: Setting challenge instruction:', currentTask.instruction);
-                        instructionsEl.innerHTML = `
-                            <div class="text-center">
-                                <div class="text-blue-400 font-bold text-lg mb-2">🚀 ${currentChallenge.name}</div>
-                                <div class="text-gray-300">${currentTask.instruction}</div>
-                                ${currentTask.hint ? `<div class="text-yellow-400 text-sm mt-2">💡 ${currentTask.hint}</div>` : ''}
-                            </div>
-                        `;
-                    } else {
-                        console.log('🔍 DEBUG: No valid challenge task found');
-                        instructionsEl.textContent = 'Challenge mode active';
-                    }
+            // Use statically imported modules instead of dynamic imports
+            // Check if we're in challenge mode
+            if (gameStateModule.getChallengeMode && gameStateModule.getChallengeMode()) {
+                const currentChallenge = gameStateModule.getCurrentChallenge();
+                const currentTaskIndex = gameStateModule.getCurrentTaskIndex();
+                console.log('🔍 DEBUG: Challenge mode detected');
+                console.log('🔍 DEBUG: Current challenge:', currentChallenge);
+                console.log('🔍 DEBUG: Current task index:', currentTaskIndex);
+                
+                if (currentChallenge && currentTaskIndex !== undefined && currentTaskIndex < currentChallenge.tasks.length) {
+                    const currentTask = currentChallenge.tasks[currentTaskIndex];
+                    console.log('🔍 DEBUG: Setting challenge instruction:', currentTask.instruction);
+                    instructionsEl.innerHTML = `
+                        <div class="text-center">
+                            <div class="text-blue-400 font-bold text-lg mb-2">🚀 ${currentChallenge.name}</div>
+                            <div class="text-gray-300">${currentTask.instruction}</div>
+                            ${currentTask.hint ? `<div class="text-yellow-400 text-sm mt-2">💡 ${currentTask.hint}</div>` : ''}
+                        </div>
+                    `;
                 } else {
-                    // Normal level instructions
-                    const currentLevel = gameStateModule.getCurrentLevel();
-                    if (currentLevel !== undefined && levelsModule.levels && levelsModule.levels[currentLevel]) {
-                        instructionsEl.textContent = levelsModule.levels[currentLevel].instructions || '';
-                    }
+                    console.log('🔍 DEBUG: No valid challenge task found');
+                    instructionsEl.textContent = 'Challenge mode active';
                 }
-            }).catch(error => {
-                console.error('Error loading challenge/level instructions:', error);
-            });
+            } else {
+                // Normal level instructions
+                const currentLevel = gameStateModule.getCurrentLevel();
+                if (currentLevel !== undefined && levelsModule.levels && levelsModule.levels[currentLevel]) {
+                    instructionsEl.textContent = levelsModule.levels[currentLevel].instructions || '';
+                }
+            }
         }
     }).catch(error => {
         console.error('Error loading cheat mode instructions:', error);

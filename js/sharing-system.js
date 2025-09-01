@@ -203,7 +203,7 @@ class VimMasterSharingSystem {
             if (platform === 'download') {
                 this.downloadAchievementCard(achievement);
             } else if (platform === 'clipboard') {
-                this.copyToClipboard(canvas);
+                this.copyToClipboard(canvas, achievement);
             } else {
                 this.shareAchievement(achievement, platform);
             }
@@ -213,7 +213,7 @@ class VimMasterSharingSystem {
     }
     
     // Copy image to clipboard
-    async copyToClipboard(canvas) {
+    async copyToClipboard(canvas, achievement) {
         try {
             const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
             const clipboardItem = new ClipboardItem({

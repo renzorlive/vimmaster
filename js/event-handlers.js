@@ -29,6 +29,7 @@ import {
     showChallengeContainer, hideChallengeContainer, showBadgeToast
 } from './ui-components.js';
 import { openCheat, closeCheat, renderCheatList } from './cheat-mode.js';
+import { autoSaveProgress } from './progress-system.js';
 
 // Game Logic Functions
 export function checkWinCondition() {
@@ -70,10 +71,8 @@ export function checkWinCondition() {
                  
                  // Auto-save progress to persist challenge points
                  try {
-                     import('./progress-system.js').then(({ autoSaveProgress }) => {
-                         autoSaveProgress();
-                         console.log('🔍 Progress auto-saved with challenge points');
-                     });
+                     autoSaveProgress();
+                     console.log('🔍 Progress auto-saved with challenge points');
                  } catch (error) {
                      console.warn('Failed to auto-save progress:', error);
                  }
@@ -111,10 +110,8 @@ export function checkWinCondition() {
                      
                      // Auto-save final challenge points
                      try {
-                         import('./progress-system.js').then(({ autoSaveProgress }) => {
-                             autoSaveProgress();
-                             console.log('🔍 Final challenge points saved to progress');
-                         });
+                         autoSaveProgress();
+                         console.log('🔍 Final challenge points saved to progress');
                      } catch (error) {
                          console.warn('Failed to save final challenge points:', error);
                      }
@@ -245,24 +242,21 @@ export function maybeAwardBadges() {
         badgesAwarded = true;
     }
     
-    // Auto-save progress if badges were awarded
-    if (badgesAwarded) {
-        // Use global progress system functions
-        setTimeout(() => {
-            try {
-                // Import the global progress system functions
-                import('./progress-system.js').then(({ autoSaveProgress }) => {
-                    autoSaveProgress();
-                    // Update progress summary display using the global updateProgressSummary function
-                    if (typeof window.updateProgressSummary === 'function') {
-                        window.updateProgressSummary();
-                    }
-                });
-            } catch (error) {
-                // Progress system not available, continue without auto-save
-            }
-        }, 1000);
-    }
+         // Auto-save progress if badges were awarded
+     if (badgesAwarded) {
+         // Use global progress system functions
+         setTimeout(() => {
+             try {
+                 autoSaveProgress();
+                 // Update progress summary display using the global updateProgressSummary function
+                 if (typeof window.updateProgressSummary === 'function') {
+                     window.updateProgressSummary();
+                 }
+             } catch (error) {
+                 // Progress system not available, continue without auto-save
+             }
+         }, 1000);
+     }
 }
 
 // Level Management Functions
