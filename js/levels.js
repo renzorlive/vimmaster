@@ -28,7 +28,7 @@ export const levels = [
             "Try typing :q and press Enter (or :wq)."
         ],
         exCommands: ["q", "wq"],
-        setup: (gameState) => { gameState.cursor = { row: 0, col: 0 }; gameState.commandHistory = ''; }
+        setup: (gameState) => { gameState.cursor = { row: 0, col: 0 }; }
     },
     // Level 1: Basic Movement
     {
@@ -235,6 +235,244 @@ export const levels = [
         // third 'foo' starts at col 13 in line 2 (0-based)
         target: { row: 2, col: 13 },
         setup: (gameState) => { gameState.cursor = { row: 0, col: 0 }; }
+    },
+    
+    // Chapter 2: Advanced Features
+    // Level 17: Visual Mode Fundamentals
+    {
+        name: "Visual Mode: Character Selection",
+        chapter: 2,
+        instructions: "Press 'v' to enter visual mode, select the word 'TARGET' using movement keys, then press 'd' to delete it.",
+        initialContent: [
+            "Visual mode allows precise text selection.",
+            "Select the word TARGET in this sentence.",
+            "Use visual mode to edit efficiently."
+        ],
+        targetContent: [
+            "Visual mode allows precise text selection.",
+            "Select the word in this sentence.",
+            "Use visual mode to edit efficiently."
+        ],
+        setup: (gameState) => { 
+            gameState.cursor = { row: 1, col: 15 }; 
+        },
+        validation: (gameState) => {
+            return gameState.content[1].includes("word") && 
+                   !gameState.content[1].includes("TARGET") &&
+                   gameState.usedVisualMode;
+        }
+    },
+    
+    // Level 18: Line-wise Visual Mode
+    {
+        name: "Visual Mode: Line Selection",
+        chapter: 2,
+        instructions: "Press 'V' to enter visual line mode, select the middle line, then press 'd' to delete it.",
+        initialContent: [
+            "Keep this line.",
+            "Delete this entire line.",
+            "Keep this line too."
+        ],
+        targetContent: [
+            "Keep this line.",
+            "Keep this line too."
+        ],
+        setup: (gameState) => { 
+            gameState.cursor = { row: 1, col: 0 }; 
+        },
+        validation: (gameState) => {
+            return gameState.content.length === 2 &&
+                   gameState.content[0] === "Keep this line." &&
+                   gameState.content[1] === "Keep this line too." &&
+                   gameState.usedVisualLineMode;
+        }
+    },
+    
+    // Level 19: Block Visual Mode
+    {
+        name: "Visual Mode: Block Selection",
+        chapter: 2,
+        instructions: "Press Ctrl+v to enter visual block mode, select the first column of text, then press 'd' to delete it.",
+        initialContent: [
+            "A line with text",
+            "B line with text", 
+            "C line with text"
+        ],
+        targetContent: [
+            " line with text",
+            " line with text",
+            " line with text"
+        ],
+        setup: (gameState) => { 
+            gameState.cursor = { row: 0, col: 0 }; 
+        },
+        validation: (gameState) => {
+            return gameState.content.every(line => line.startsWith(" line with text")) &&
+                   gameState.usedVisualBlockMode;
+        }
+    },
+    
+    // Level 20: Text Objects Introduction
+    {
+        name: "Text Objects: Word Boundaries",
+        chapter: 2,
+        instructions: "Use 'diw' to delete the inner word 'bad' and replace it with 'good'.",
+        initialContent: [
+            "This is a bad example."
+        ],
+        targetContent: [
+            "This is a good example."
+        ],
+        setup: (gameState) => { 
+            gameState.cursor = { row: 0, col: 10 }; 
+        },
+        validation: (gameState) => {
+            return gameState.content[0].includes("good") && 
+                   !gameState.content[0].includes("bad") &&
+                   gameState.usedTextObject;
+        }
+    },
+    
+    // Level 21: Advanced Text Objects
+    {
+        name: "Text Objects: Parentheses and Quotes",
+        chapter: 2,
+        instructions: "Use 'di(' to delete the content inside parentheses, then use 'ci\"' to change the quoted text.",
+        initialContent: [
+            "function(old parameters)",
+            'console.log("old text");'
+        ],
+        targetContent: [
+            "function()",
+            'console.log("new text");'
+        ],
+        setup: (gameState) => { 
+            gameState.cursor = { row: 0, col: 8 }; 
+        },
+        validation: (gameState) => {
+            return gameState.content[0].includes("function()") &&
+                   gameState.content[1].includes('"new text"') &&
+                   gameState.textObjectsUsed.size >= 2;
+        }
+    },
+    
+    // Level 22: Paragraph & Sentence Objects
+    {
+        name: "Text Objects: Paragraphs and Sentences",
+        chapter: 2,
+        instructions: "Use 'dip' to delete the inner paragraph, then use 'dis' to delete the inner sentence.",
+        initialContent: [
+            "First paragraph.",
+            "Second paragraph.",
+            "",
+            "This is a sentence. This is another sentence.",
+            "Final paragraph."
+        ],
+        targetContent: [
+            "First paragraph.",
+            "",
+            "This is another sentence.",
+            "Final paragraph."
+        ],
+        setup: (gameState) => { 
+            gameState.cursor = { row: 1, col: 0 }; 
+        },
+        validation: (gameState) => {
+            return gameState.content.length === 4 &&
+                   gameState.content[0] === "First paragraph." &&
+                   gameState.content[2] === "This is another sentence." &&
+                   gameState.textObjectsUsed.has('paragraph') &&
+                   gameState.textObjectsUsed.has('sentence');
+        }
+    },
+    
+    // Level 23: Basic Macros
+    {
+        name: "Macros: Recording and Playback",
+        chapter: 2,
+        instructions: "Record a macro with 'qa' that deletes a word, then use '@a' to replay it on the next word.",
+        initialContent: [
+            "delete this word and this word"
+        ],
+        targetContent: [
+            "delete and word"
+        ],
+        setup: (gameState) => { 
+            gameState.cursor = { row: 0, col: 7 }; 
+        },
+        validation: (gameState) => {
+            return gameState.content[0] === "delete and word" &&
+                   gameState.macrosCreated >= 1 &&
+                   gameState.macroPlayed;
+        }
+    },
+    
+    // Level 24: Advanced Search & Replace
+    {
+        name: "Advanced Search & Replace",
+        chapter: 2,
+        instructions: "Type the EXACT command ':s/old/new/g' (including the colon, forward slashes, and 'g' at the end) and press Enter. This will replace all occurrences of 'old' with 'new' in the entire file. Make sure to type the complete command without any extra characters.",
+        initialContent: [
+            "old text with old words",
+            "more old content here"
+        ],
+        targetContent: [
+            "new text with new words",
+            "more new content here"
+        ],
+        setup: (gameState) => { 
+            gameState.cursor = { row: 0, col: 0 }; 
+        },
+        validation: (gameState) => {
+            return gameState.content.every(line => line.includes("new")) &&
+                   gameState.content.every(line => !line.includes("old")) &&
+                   gameState.regexPatternsUsed.size >= 1;
+        }
+    },
+    
+    // Level 25: Marks & Jumps
+    {
+        name: "Marks and Jumps",
+        chapter: 2,
+        instructions: "Set a mark with 'ma' at the first line, move to the last line, then jump back with ''a'.",
+        initialContent: [
+            "Set mark here",
+            "Move to this line",
+            "Jump back to mark"
+        ],
+        targetContent: [
+            "Set mark here",
+            "Move to this line", 
+            "Jump back to mark"
+        ],
+        setup: (gameState) => { 
+            gameState.cursor = { row: 0, col: 0 }; 
+        },
+        validation: (gameState) => {
+            return gameState.marksSet >= 1 &&
+                   gameState.jumpsPerformed >= 1;
+        }
+    },
+    
+    // Level 26: Advanced Motions
+    {
+        name: "Advanced Motions",
+        chapter: 2,
+        instructions: "Use '%' to jump between matching parentheses, then use 'f' to find the next 'x'.",
+        initialContent: [
+            "(nested (parentheses) here)",
+            "find the x character"
+        ],
+        targetContent: [
+            "(nested (parentheses) here)",
+            "find the x character"
+        ],
+        setup: (gameState) => { 
+            gameState.cursor = { row: 0, col: 7 }; 
+        },
+        validation: (gameState) => {
+            return gameState.advancedMotionsUsed >= 2;
+        }
     }
 ];
 

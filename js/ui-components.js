@@ -1,6 +1,6 @@
 // VIM Master Game - UI Components (Updated)
 
-import { escapeHtml, getSearchMatches, getLastSearchQuery } from './game-state.js';
+import { escapeHtml, getSearchMatches, getLastSearchQuery, getMacroState, getCommandMode } from './game-state.js';
 // Static imports for core dependencies to avoid performance overhead
 import * as challengesModule from './challenges.js';
 import * as levelsModule from './levels.js';
@@ -50,7 +50,7 @@ export function initializeDOMReferences() {
 }
 
 // Editor Rendering
-export function renderEditor(content, cursor, mode) {
+export function renderEditor(content, cursor, mode, visualSelection = []) {
     if (!editorDisplay) return;
     
     let html = '';
@@ -63,12 +63,24 @@ export function renderEditor(content, cursor, mode) {
         return false;
     };
     
+    const isInVisualSelection = (row, col) => {
+        return visualSelection.some(pos => pos.row === row && pos.col === col);
+    };
+    
     content.forEach((line, rowIndex) => {
         html += `<div class="flex"><span class="line-number w-10">${rowIndex + 1}</span><span class="flex-1">`;
         for (let colIndex = 0; colIndex < line.length; colIndex++) {
             const char = line[colIndex];
             const safeChar = escapeHtml(char);
-            if (rowIndex === cursor.row && colIndex === cursor.col && mode === 'NORMAL') {
+            
+            // Check for visual selection first
+            if (mode.startsWith('VISUAL') && isInVisualSelection(rowIndex, colIndex)) {
+                if (rowIndex === cursor.row && colIndex === cursor.col) {
+                    html += `<span class="cursor visual-selection">${safeChar}</span>`;
+                } else {
+                    html += `<span class="visual-selection">${safeChar}</span>`;
+                }
+            } else if (rowIndex === cursor.row && colIndex === cursor.col && mode === 'NORMAL') {
                 html += `<span class="cursor">${safeChar}</span>`;
             } else {
                 if (getLastSearchQuery() && isInMatch(rowIndex, colIndex)) {
@@ -81,6 +93,8 @@ export function renderEditor(content, cursor, mode) {
         if (rowIndex === cursor.row && (cursor.col === line.length || line.length === 0)) {
              if (mode === 'NORMAL') {
                 html += `<span class="cursor">&nbsp;</span>`;
+             } else if (mode.startsWith('VISUAL')) {
+                html += `<span class="cursor visual-selection">&nbsp;</span>`;
              } else {
                 html += `<span class="inline-block w-px h-6 bg-yellow-400 animate-pulse -mb-1"></span>`;
              }
@@ -91,10 +105,40 @@ export function renderEditor(content, cursor, mode) {
 }
 
 // Status Bar Updates
-export function updateStatusBar(mode, searchMode, searchQuery, lastSearchDirection, searchMatches, currentMatchIndex) {
-    if (!statusBar) return;
+export function updateStatusBar(mode, searchMode, searchQuery, lastSearchDirection, searchMatches, currentMatchIndex, visualSelection = []) {
+    try {
+        if (!statusBar) {
+            return;
+        }
     
     let text = `-- ${mode.toUpperCase()} --`;
+    
+    // Check if we're in Ex command mode (typing a command starting with :)
+    const commandMode = getCommandMode();
+    if (commandMode) {
+        text = `-- COMMAND --`;
+    }
+    
+    // Add macro recording information
+    const macroState = getMacroState();
+    if (macroState.recording) {
+        text = `--recording-- @${macroState.register}`;
+    }
+    
+    // Add visual mode information
+    if (mode.startsWith('VISUAL') && visualSelection.length > 0) {
+        if (mode === 'VISUAL') {
+            text += ` (${visualSelection.length} chars)`;
+        } else if (mode === 'VISUAL_LINE') {
+            const lines = new Set(visualSelection.map(pos => pos.row)).size;
+            text += ` (${lines} lines)`;
+        } else if (mode === 'VISUAL_BLOCK') {
+            const rows = new Set(visualSelection.map(pos => pos.row)).size;
+            const cols = new Set(visualSelection.map(pos => pos.col)).size;
+            text += ` (${rows}x${cols} block)`;
+        }
+    }
+    
     if (searchMode) {
         const prefix = lastSearchDirection === 'backward' ? '?' : '/';
         text += ` ${prefix}${searchQuery}`;
@@ -105,7 +149,23 @@ export function updateStatusBar(mode, searchMode, searchQuery, lastSearchDirecti
         text += ` ${dir}${getLastSearchQuery()} ${current}/${total}`;
     }
     statusBar.textContent = text;
-    statusBar.className = `status-bar px-2 py-1 rounded-md text-sm ${mode === 'NORMAL' ? 'bg-yellow-400 text-gray-900' : 'bg-green-400 text-gray-900'}`;
+    
+    // Update status bar color based on mode
+    let bgColor = 'bg-yellow-400 text-gray-900'; // Default NORMAL mode
+    if (macroState.recording) {
+        bgColor = 'bg-red-400 text-gray-900'; // Recording mode
+    } else if (commandMode) {
+        bgColor = 'bg-purple-400 text-gray-900'; // Command mode
+    } else if (mode === 'INSERT') {
+        bgColor = 'bg-green-400 text-gray-900';
+    } else if (mode.startsWith('VISUAL')) {
+        bgColor = 'bg-blue-400 text-gray-900';
+    }
+    
+    statusBar.className = `status-bar px-2 py-1 rounded-md text-sm ${bgColor}`;
+    } catch (error) {
+        console.error('🔍 Error in updateStatusBar:', error);
+    }
 }
 
 // Instructions Updates
@@ -119,12 +179,11 @@ export function updateInstructions(customText) {
 
     // Import cheat mode functions for practice mode detection
     import('./cheat-mode.js').then(({ isInPracticeMode, getCurrentLessonSpec }) => {
-        console.log('🔍 DEBUG: updateInstructions - isInPracticeMode:', isInPracticeMode());
-        console.log('🔍 DEBUG: updateInstructions - getCurrentLessonSpec:', getCurrentLessonSpec());
+
         
         if (isInPracticeMode() && getCurrentLessonSpec()) {
             const lesson = getCurrentLessonSpec();
-            console.log('🔍 DEBUG: updateInstructions - Setting lesson instructions for:', lesson.name);
+
             instructionsEl.innerHTML = `
                 <div class="text-center">
                     <div class="text-yellow-400 font-bold text-lg mb-2">🎯 ${lesson.name}</div>
@@ -137,13 +196,11 @@ export function updateInstructions(customText) {
             if (gameStateModule.getChallengeMode && gameStateModule.getChallengeMode()) {
                 const currentChallenge = gameStateModule.getCurrentChallenge();
                 const currentTaskIndex = gameStateModule.getCurrentTaskIndex();
-                console.log('🔍 DEBUG: Challenge mode detected');
-                console.log('🔍 DEBUG: Current challenge:', currentChallenge);
-                console.log('🔍 DEBUG: Current task index:', currentTaskIndex);
+
                 
                 if (currentChallenge && currentTaskIndex !== undefined && currentTaskIndex < currentChallenge.tasks.length) {
                     const currentTask = currentChallenge.tasks[currentTaskIndex];
-                    console.log('🔍 DEBUG: Setting challenge instruction:', currentTask.instruction);
+
                     instructionsEl.innerHTML = `
                         <div class="text-center">
                             <div class="text-blue-400 font-bold text-lg mb-2">🚀 ${currentChallenge.name}</div>
@@ -152,7 +209,7 @@ export function updateInstructions(customText) {
                         </div>
                     `;
                 } else {
-                    console.log('🔍 DEBUG: No valid challenge task found');
+
                     instructionsEl.textContent = 'Challenge mode active';
                 }
             } else {
@@ -170,13 +227,10 @@ export function updateInstructions(customText) {
 
 // Level Indicator Updates
 export function updateLevelIndicator(currentLevel, totalLevels) {
-    console.log('🔍 DEBUG: updateLevelIndicator called with:', { currentLevel, totalLevels });
     if (!levelIndicator) {
-        console.log('🔍 DEBUG: levelIndicator element not found!');
         return;
     }
     levelIndicator.textContent = `Level: ${currentLevel + 1} / ${totalLevels}`;
-    console.log('🔍 DEBUG: Level indicator updated to:', levelIndicator.textContent);
 }
 
 // Command Log Updates
@@ -211,7 +265,11 @@ export function renderBadges(badges) {
     badgeBar.innerHTML = '';
     const badgeDefs = {
         beginner: { label: 'Beginner', emoji: '🟢', title: 'Completed basic movement lessons' },
-        searchmaster: { label: 'Search Master', emoji: '🔎', title: 'Used / ? n N to search' }
+        searchmaster: { label: 'Search Master', emoji: '🔎', title: 'Used / ? n N to search' },
+        'visual-master': { label: 'Visual Master', emoji: '👁️', title: 'Mastered all visual mode operations' },
+        'text-object-pro': { label: 'Text Object Pro', emoji: '🎯', title: 'Mastered text object manipulation' },
+        'macro-wizard': { label: 'Macro Wizard', emoji: '🪄', title: 'Created and executed complex macros' },
+        'regex-ninja': { label: 'Regex Ninja', emoji: '🥷', title: 'Advanced search and replace patterns' }
     };
     const earned = Array.from(badges);
     if (earned.length === 0) {

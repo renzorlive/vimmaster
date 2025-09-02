@@ -37,6 +37,10 @@ VIM Master is a lightweight in-browser game that teaches core Vim motions and ed
 - **Enhanced Cheat Mode**: All cheat mode lessons now work with proper auto-focus and completion tracking
 
 ## Latest Bug Fixes & Improvements
+- **Fixed Substitution Command**: `:s/old/new/g` now works correctly - all keys properly captured without interference
+- **Status Bar Command Mode**: Shows `-- COMMAND --` with purple background when typing Ex commands (like Neovim)
+- **Comprehensive Key Handling**: Fixed issue where movement keys (h,j,k,l,o,n) interfered with substitution commands
+- **Mark System Debugging**: Added debugging for mark functionality (`ma`, `'a`) to identify and fix issues
 - **Fixed "undefined challenge points"**: Challenge points now properly display in progress summary
 - **Enhanced Cheat Mode**: All practice lessons now auto-focus and validate completion correctly
 - **Improved Challenge Mode**: Better validation and scoring system for challenge tasks

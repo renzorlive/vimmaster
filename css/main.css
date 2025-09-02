@@ -411,3 +411,59 @@ input:focus {
     background-color: #f59e0b;
     box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
 }
+
+/* Visual Mode Selection Styling */
+.visual-selection {
+    background-color: rgba(100, 149, 237, 0.4);
+    color: inherit;
+    border-radius: 2px;
+}
+
+.visual-line-selection {
+    background-color: rgba(100, 149, 237, 0.2);
+    width: 100%;
+    display: inline-block;
+}
+
+.visual-block-selection {
+    background-color: rgba(147, 112, 219, 0.4);
+    border: 1px solid rgba(147, 112, 219, 0.6);
+    border-radius: 2px;
+}
+
+/* Macro recording indicator */
+.macro-recording {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Text object highlighting */
+.text-object-preview {
+    background-color: rgba(255, 223, 0, 0.3);
+    border: 1px dashed rgba(255, 223, 0, 0.6);
+    border-radius: 2px;
+}
+
+/* Advanced mode indicators */
+.mode-visual {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.mode-visual-line {
+    background-color: #8b5cf6;
+    color: white;
+}
+
+.mode-visual-block {
+    background-color: #a855f7;
+    color: white;
+}

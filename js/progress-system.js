@@ -111,7 +111,7 @@ class ProgressSystem {
         
         // Handle challenge points - if not present, default to 0
         if (data.challengePoints === undefined) {
-            console.log('🔍 DEBUG: Challenge points not found in progress data, defaulting to 0');
+
             data.challengePoints = 0;
         }
 
@@ -126,7 +126,7 @@ class ProgressSystem {
         }
 
         // Check level range
-        if (data.currentLevel < 0 || data.currentLevel > 14) {
+        if (data.currentLevel < 0 || data.currentLevel > 25) {
             return { valid: false, message: 'Invalid level number in progress data' };
         }
 
@@ -144,7 +144,7 @@ class ProgressSystem {
      * @param {Object} data - Validated progress data
      */
     applyProgressData(data) {
-        console.log('🔍 DEBUG: applyProgressData - applying challenge points:', data.challengePoints);
+
         
         // Apply badges
         setBadges(data.badges);
@@ -162,7 +162,7 @@ class ProgressSystem {
         // Apply challenge points
         setChallengeScoreValue(data.challengePoints || 0);
         
-        console.log('🔍 DEBUG: applyProgressData - after setting, getChallengeScoreValue():', getChallengeScoreValue());
+
     }
 
     /**
@@ -197,16 +197,17 @@ class ProgressSystem {
      * Auto-load progress on game start
      */
     autoLoadProgress() {
+        // Debug statements removed for cleaner console output
         const storedProgress = this.loadFromLocalStorage();
         if (storedProgress) {
-            console.log('🔍 DEBUG: autoLoadProgress - stored progress:', storedProgress);
+
             const validation = this.validateProgressData(storedProgress);
             if (validation.valid) {
-                console.log('🔍 DEBUG: autoLoadProgress - applying progress data');
+
                 this.applyProgressData(storedProgress);
                 return true;
             } else {
-                console.log('🔍 DEBUG: autoLoadProgress - validation failed:', validation.message);
+
                 // Clear invalid stored data
                 localStorage.removeItem('vimMasterProgress');
             }
@@ -220,7 +221,7 @@ class ProgressSystem {
     autoSaveProgress() {
         try {
             const challengePoints = getChallengeScoreValue();
-            console.log('🔍 DEBUG: autoSaveProgress - challengePoints:', challengePoints);
+
             
             const currentProgress = {
                 version: this.version,
@@ -231,7 +232,7 @@ class ProgressSystem {
                 challengeMode: getChallengeMode(),
                 challengePoints: challengePoints || 0
             };
-            console.log('🔍 DEBUG: autoSaveProgress - saving progress:', currentProgress);
+
             this.saveToLocalStorage(currentProgress);
         } catch (error) {
             console.warn('Auto-save failed:', error);
@@ -267,31 +268,25 @@ class ProgressSystem {
      * @returns {Object} Progress summary
      */
     getProgressSummary() {
-        console.log('🔍 DEBUG: ProgressSystem.getProgressSummary() called!');
-        console.log('🔍 DEBUG: getProgressSummary - getChallengeScoreValue function:', getChallengeScoreValue);
-        console.log('🔍 DEBUG: getProgressSummary - typeof getChallengeScoreValue:', typeof getChallengeScoreValue);
+
         
         const challengePoints = getChallengeScoreValue();
-        console.log('🔍 DEBUG: getProgressSummary - challengePoints:', challengePoints);
-        console.log('🔍 DEBUG: getProgressSummary - getChallengeScoreValue():', getChallengeScoreValue());
-        console.log('🔍 DEBUG: getProgressSummary - typeof challengePoints:', typeof challengePoints);
-        console.log('🔍 DEBUG: getProgressSummary - challengePoints === undefined:', challengePoints === undefined);
-        console.log('🔍 DEBUG: getProgressSummary - challengePoints === null:', challengePoints === null);
+
         
         // Ensure we always return a number
         const safeChallengePoints = (challengePoints !== undefined && challengePoints !== null) ? challengePoints : 0;
-        console.log('🔍 DEBUG: getProgressSummary - safeChallengePoints:', safeChallengePoints);
+
         
         const result = {
             currentLevel: getCurrentLevel(),
-            totalLevels: 15,
+            totalLevels: 26,
             badgesEarned: getBadges().size,
             commandsPracticed: getPracticedCommands().size,
             challengePoints: safeChallengePoints,
             lastSaved: this.getLastSavedTime()
         };
         
-        console.log('🔍 DEBUG: getProgressSummary - returning result:', result);
+
         return result;
     }
 

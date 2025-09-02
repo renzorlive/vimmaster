@@ -8,6 +8,10 @@ import {
     getCurrentMatchIndex, getUsedSearchInLevel, getNavCountSinceSearch, getBadges,
     getPracticedCommands, getChallengeMode, getCurrentChallenge, getChallengeTimerInterval,
     getChallengeStartTime, getChallengeScoreValue, getChallengeProgressValue, getCurrentTaskIndex,
+    getVisualMode, getVisualSelection,
+    getUsedVisualMode, getUsedVisualLineMode, getUsedVisualBlockMode, getUsedTextObject,
+    getMacrosCreated, getMacroPlayed, getMarksSet, getJumpsPerformed, getAdvancedMotionsUsed,
+    getTextObjectsUsed, getRegexPatternsUsed,
     cloneState, pushUndo, escapeHtml, isEscapeKey, resetGameState, resetChallengeState, resetLevelState,
     setChallengeMode, setCurrentLevel, setContent, setCursor, setMode, setCommandHistory,
     setCommandLog, setYankedLine, setReplacePending, setCountBuffer, setSearchMode,
@@ -203,6 +207,25 @@ export function checkWinCondition() {
                 won = true;
             }
         }
+    } else if (level.validation) {
+        // Custom validation function for Chapter 2 levels
+        const gameState = {
+            content: getContent(),
+            cursor: getCursor(),
+            mode: getMode(),
+            usedVisualMode: getUsedVisualMode(),
+            usedVisualLineMode: getUsedVisualLineMode(),
+            usedVisualBlockMode: getUsedVisualBlockMode(),
+            usedTextObject: getUsedTextObject(),
+            textObjectsUsed: getTextObjectsUsed(),
+            macrosCreated: getMacrosCreated(),
+            macroPlayed: getMacroPlayed(),
+            marksSet: getMarksSet(),
+            jumpsPerformed: getJumpsPerformed(),
+            advancedMotionsUsed: getAdvancedMotionsUsed(),
+            regexPatternsUsed: getRegexPatternsUsed()
+        };
+        won = level.validation(gameState);
     }
 
     if (won) {
@@ -239,6 +262,42 @@ export function maybeAwardBadges() {
         addBadge('searchmaster');
         renderBadges(getBadges());
         showBadgeToast('🔎 Search Master Badge earned!');
+        badgesAwarded = true;
+    }
+    
+    // Visual Master: after completing all visual mode levels
+    if (!getBadges().has('visual-master') && getCurrentLevel() >= 18) {
+        const visualLevels = [16, 17, 18]; // Levels 17, 18, 19 (0-based)
+        const completedVisualLevels = visualLevels.filter(level => getCurrentLevel() >= level);
+        if (completedVisualLevels.length === visualLevels.length) {
+            addBadge('visual-master');
+            renderBadges(getBadges());
+            showBadgeToast('👁️ Visual Master Badge earned!');
+            badgesAwarded = true;
+        }
+    }
+    
+    // Text Object Pro: after using multiple text objects
+    if (!getBadges().has('text-object-pro') && getTextObjectsUsed().size >= 3) {
+        addBadge('text-object-pro');
+        renderBadges(getBadges());
+        showBadgeToast('🎯 Text Object Pro Badge earned!');
+        badgesAwarded = true;
+    }
+    
+    // Macro Wizard: after creating and using macros
+    if (!getBadges().has('macro-wizard') && getMacrosCreated() >= 1 && getMacroPlayed()) {
+        addBadge('macro-wizard');
+        renderBadges(getBadges());
+        showBadgeToast('🪄 Macro Wizard Badge earned!');
+        badgesAwarded = true;
+    }
+    
+    // Regex Ninja: after using advanced search and replace
+    if (!getBadges().has('regex-ninja') && getRegexPatternsUsed().size >= 1) {
+        addBadge('regex-ninja');
+        renderBadges(getBadges());
+        showBadgeToast('🥷 Regex Ninja Badge earned!');
         badgesAwarded = true;
     }
     
@@ -402,39 +461,30 @@ let _isUpdatingUI = false; // Guard against infinite loops
 
 export function updateUI() {
     if (_isUpdatingUI) {
-        console.log('🔍 updateUI already running, skipping');
         return;
     }
     
     _isUpdatingUI = true;
-    console.log('🔍 updateUI called');
-    console.log('🔍 Current content in updateUI:', getContent());
-    console.log('🔍 Current cursor in updateUI:', getCursor());
-    console.log('🔍 Current mode in updateUI:', getMode());
     
     try {
-        renderEditor(getContent(), getCursor(), getMode());
-        updateStatusBar(getMode(), getSearchMode(), getSearchQuery(), getLastSearchDirection(), getSearchMatches(), getCurrentMatchIndex());
+        const visualSelection = getVisualSelection();
+        renderEditor(getContent(), getCursor(), getMode(), visualSelection);
+        updateStatusBar(getMode(), getSearchMode(), getSearchQuery(), getLastSearchDirection(), getSearchMatches(), getCurrentMatchIndex(), visualSelection);
         
         // Use centralized instructions rendering
         updateInstructions();
         
         // Fix stuck challenge mode state - if we're not in practice mode and no current challenge, reset challenge mode
         if (getChallengeMode() && !isInPracticeMode() && !getCurrentChallenge()) {
-            console.log('🔍 DEBUG: Fixing stuck challenge mode state');
             setChallengeMode(false);
             setCurrentChallenge(null);
         }
         
         // Hide level indicator and buttons in challenge mode or practice mode
-        console.log('🔍 DEBUG: getChallengeMode():', getChallengeMode());
-        console.log('🔍 DEBUG: isInPracticeMode():', isInPracticeMode());
         if (getChallengeMode() || isInPracticeMode()) {
-            console.log('🔍 DEBUG: Hiding level indicator - in challenge or practice mode');
             updateLevelIndicator(-1, 0); // Hide level indicator
             // Don't create level buttons in challenge mode or practice mode
         } else {
-            console.log('🔍 DEBUG: Showing level indicator - current level:', getCurrentLevel(), 'total levels:', levels.length);
             updateLevelIndicator(getCurrentLevel(), levels.length);
             createLevelButtons(levels, getCurrentLevel());
         }
@@ -442,7 +492,7 @@ export function updateUI() {
         updateCommandLog(getCommandLog());
         renderBadges(getBadges());
         
-        console.log('🔍 updateUI completed');
+
     } finally {
         _isUpdatingUI = false;
     }

@@ -8,6 +8,7 @@ import {
     getCurrentMatchIndex, getUsedSearchInLevel, getNavCountSinceSearch, getBadges,
     getPracticedCommands, getChallengeMode, getCurrentChallenge, getChallengeTimerInterval,
     getChallengeStartTime, getChallengeScoreValue, getChallengeProgressValue, getCurrentTaskIndex,
+    getVisualMode, getVisualSelection,
     cloneState, pushUndo, escapeHtml, isEscapeKey, resetGameState, resetChallengeState, resetLevelState,
     setCurrentLevel, setContent, setCursor, setMode, setCommandHistory, setCommandLog,
     setYankedLine, setReplacePending, setCountBuffer, setSearchMode, setSearchQuery,
@@ -20,7 +21,7 @@ import {
 
 import { levels, loadLevel, getLevelCount, isLastLevel } from './levels.js';
 import { challenges, startChallenge, endChallenge, checkChallengeTask } from './challenges.js';
-import { handleNormalMode, handleInsertMode, handleSearchMode } from './vim-commands.js';
+import { handleNormalMode, handleInsertMode, handleSearchMode, handleVisualMode } from './vim-commands.js';
 import { 
     initializeDOMReferences, renderEditor, updateStatusBar, updateInstructions, 
     updateLevelIndicator, updateCommandLog, createLevelButtons, renderBadges, 
@@ -221,7 +222,7 @@ function setupEventListeners() {
                 }
             }
             
-            console.log('🔍 DEBUG: Main game keyboard handler processing key:', e.key);
+
             
             // Handle Ctrl+R redo before other commands
             if (getMode() === 'NORMAL' && e.key === 'r' && e.ctrlKey) {
@@ -239,8 +240,12 @@ function setupEventListeners() {
                 updateUI();
                 return;
             }
-            if (getMode() === 'NORMAL') {
+            
+            const mode = getMode();
+            if (mode === 'NORMAL') {
                 handleNormalMode(e);
+            } else if (mode.startsWith('VISUAL')) {
+                handleVisualMode(e);
             } else {
                 handleInsertMode(e);
             }

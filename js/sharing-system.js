@@ -17,7 +17,7 @@ class VimMasterSharingSystem {
     getGameData() {
         return {
             level: getCurrentLevel() + 1,
-            totalLevels: 15, // Total available levels
+            totalLevels: 26, // Total available levels
             levelsCompleted: getCurrentLevel() + 1, // Actual levels completed
             badges: Array.from(getBadges()),
             commandsPracticed: getPracticedCommands().size,
