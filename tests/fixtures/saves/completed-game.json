@@ -1,0 +1,9 @@
+{
+    "version": "1.0",
+    "timestamp": 1718000000000,
+    "badges": ["first-blood", "completionist"],
+    "practicedCommands": ["d", "w", "c", "h", "j", "k", "l"],
+    "currentLevel": 15,
+    "challengeMode": true,
+    "challengePoints": 420
+}

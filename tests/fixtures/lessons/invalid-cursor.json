@@ -1,0 +1,12 @@
+{
+    "name": "Invalid Cursor Clamp",
+    "instructions": "Test that an invalid cursor gets clamped to the buffer bounds",
+    "initialContent": [
+        "A short line",
+        "Another line"
+    ],
+    "targetContent": [
+        "A short line",
+        "Another line"
+    ]
+}
