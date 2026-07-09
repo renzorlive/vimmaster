@@ -1,0 +1,51 @@
+name: 🐛 Bug report
+description: Something is broken in the game or the site
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time! A good repro is half the fix.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, what happened instead?
+      placeholder: |
+        1. Open level 5 (Delete Basics)
+        2. Press dd on line 2
+        3. Expected the line to be deleted; instead …
+    validations:
+      required: true
+  - type: input
+    id: level
+    attributes:
+      label: Level / mode
+      description: Which level, challenge, or mode (Cheat Mode, Challenge Mode, profile page)?
+      placeholder: "Level 5 — Delete Basics"
+  - type: textarea
+    id: keys
+    attributes:
+      label: Exact key sequence (if relevant)
+      description: The keystrokes that trigger the bug, in order.
+      placeholder: "j dd u Ctrl+r"
+  - type: input
+    id: browser
+    attributes:
+      label: Browser & OS
+      placeholder: "Firefox 128 / Windows 11"
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Console errors
+      description: Open DevTools (F12) → Console, paste anything red.
+      render: text
+  - type: textarea
+    id: save-code
+    attributes:
+      label: Progress export code (only for save/progress bugs)
+      description: Click "Export Progress" and paste the code — it contains no personal data, just level/badges/commands.
+      render: text

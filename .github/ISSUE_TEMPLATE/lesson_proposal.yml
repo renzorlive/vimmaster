@@ -1,0 +1,62 @@
+name: 📚 Lesson proposal
+description: Propose a new lesson or improve an existing one — no code required
+title: "content: "
+labels: ["content: lesson"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Lessons are the heart of VIMMaster — thank you! Read the short design guidelines in [docs/Lessons.md](../../blob/main/docs/Lessons.md) (one concept per lesson, win on outcomes).
+        You don't have to implement it: a good proposal here is a complete contribution, and someone else can wire it in.
+  - type: input
+    id: concept
+    attributes:
+      label: What does this lesson teach?
+      placeholder: "ciw — change inner word"
+    validations:
+      required: true
+  - type: input
+    id: track
+    attributes:
+      label: Where does it fit?
+      description: Which track / after which existing lesson?
+      placeholder: "Editing track, after 'Change Word (cw)'"
+  - type: textarea
+    id: buffer
+    attributes:
+      label: Starting buffer
+      description: The text the player sees. Keep lines under ~60 characters.
+      render: text
+      placeholder: |
+        The quick brown fux jumps over the lazy dog.
+        Fix the misspelled word using ciw.
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: Win condition
+      description: What must be true to win? (final buffer text, cursor position, or a command that must be used)
+      placeholder: |
+        Line 1 becomes: "The quick brown fox jumps over the lazy dog."
+        Must use ciw (not x/r).
+    validations:
+      required: true
+  - type: textarea
+    id: instructions
+    attributes:
+      label: Player-facing instructions
+      placeholder: "Place the cursor anywhere on 'fux' and press ciw to change the whole word. Type 'fox', then Esc."
+    validations:
+      required: true
+  - type: input
+    id: par
+    attributes:
+      label: Optimal solution (key sequence)
+      description: The fewest keystrokes you can win with — proves it's solvable and sets par.
+      placeholder: "/fux <Enter> ciw fox <Esc>"
+  - type: textarea
+    id: hints
+    attributes:
+      label: Hints (optional)
+      description: 1–2 progressive hints for stuck players.

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-label="VIM Master — Learn Vim. Together.">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="1" stop-color="#0b0f1a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#facc15"/>
+      <stop offset="1" stop-color="#fb923c"/>
+    </linearGradient>
+    <style>
+      .mono { font-family: 'Fira Code', 'Cascadia Code', Consolas, Menlo, monospace; }
+      .sans { font-family: ui-sans-serif, 'Segoe UI', Helvetica, Arial, sans-serif; }
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect width="1280" height="360" fill="url(#bg)"/>
+  <!-- subtle dot grid -->
+  <g fill="#ffffff" opacity="0.04">
+    <circle cx="60" cy="40" r="2"/><circle cx="160" cy="90" r="2"/><circle cx="90" cy="200" r="2"/>
+    <circle cx="200" cy="300" r="2"/><circle cx="1120" cy="60" r="2"/><circle cx="1220" cy="150" r="2"/>
+    <circle cx="1150" cy="280" r="2"/><circle cx="1040" cy="330" r="2"/><circle cx="340" cy="40" r="2"/>
+  </g>
+
+  <!-- editor window -->
+  <g>
+    <rect x="64" y="56" width="560" height="248" rx="14" fill="#1e1e1e" stroke="#374151" stroke-width="1.5"/>
+    <!-- title bar -->
+    <rect x="64" y="56" width="560" height="38" rx="14" fill="#161616"/>
+    <rect x="64" y="80" width="560" height="14" fill="#161616"/>
+    <circle cx="92" cy="75" r="6" fill="#ef4444"/>
+    <circle cx="114" cy="75" r="6" fill="#facc15"/>
+    <circle cx="136" cy="75" r="6" fill="#22c55e"/>
+    <text x="344" y="80" text-anchor="middle" class="mono" font-size="13" fill="#6b7280">~/lessons/basics.vim</text>
+
+    <!-- buffer lines -->
+    <g class="mono" font-size="16">
+      <text x="92" y="128" fill="#4b5563">1</text>
+      <text x="120" y="128" fill="#9ca3af">Learning Vim is <tspan fill="#f2c55c">awesome!</tspan></text>
+
+      <text x="92" y="158" fill="#4b5563">2</text>
+      <text x="120" y="158" fill="#9ca3af">Move with h j k l</text>
+
+      <text x="92" y="188" fill="#4b5563">3</text>
+      <text x="120" y="188" fill="#9ca3af">Delete a line with dd</text>
+
+      <text x="92" y="218" fill="#4b5563">4</text>
+      <!-- cursor block on the target -->
+      <rect x="119" y="203" width="11" height="20" rx="2" fill="#f2c55c"/>
+      <text x="120" y="218" fill="#1e1e1e">:</text>
+      <text x="132" y="218" fill="#9ca3af">wq</text>
+      <text x="92" y="248" fill="#4b5563">~</text>
+      <text x="92" y="272" fill="#4b5563">~</text>
+    </g>
+
+    <!-- status bar -->
+    <rect x="82" y="268" width="150" height="24" rx="6" fill="url(#accent)"/>
+    <text x="157" y="285" text-anchor="middle" class="mono" font-size="13" font-weight="700" fill="#111827">-- NORMAL --</text>
+    <text x="600" y="285" text-anchor="end" class="mono" font-size="13" fill="#6b7280">4,1  All</text>
+  </g>
+
+  <!-- wordmark + slogan -->
+  <g>
+    <text x="688" y="150" class="mono" font-size="58" font-weight="700" fill="#e5e7eb">VIM<tspan fill="url(#accent)"> MASTER</tspan></text>
+    <text x="692" y="204" class="sans" font-size="34" font-weight="700" fill="#f2c55c">Learn Vim. Together.</text>
+    <text x="692" y="240" class="sans" font-size="19" fill="#9ca3af">The open-source platform for mastering Vim.</text>
+    <g class="mono" font-size="14" fill="#6b7280">
+      <text x="692" y="286">free · no signup · works offline · open source</text>
+    </g>
+  </g>
+</svg>

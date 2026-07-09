@@ -1,6 +1,14 @@
+<p align="center">
+  <img src="images/banner.svg" alt="VIM Master — Learn Vim. Together. The open-source platform for mastering Vim." width="100%">
+</p>
+
 # VIM Master
 
-VIM Master -- in-browser game that teaches core Vim motions and editing commands through short, focused levels. 
+**Learn Vim. Together.** — *The open-source platform for mastering Vim.*
+
+An in-browser game that teaches core Vim motions and editing commands through short, focused levels — free, no signup, no backend, works offline. And more than a game: VIM Master is growing into a community-driven platform where lessons, challenges, achievements, and translations are contributed as data, without touching application code.
+
+🧭 [Vision](VISION.md) · 📍 [Roadmap](ROADMAP.md) · 📊 [Status](PROJECT_STATUS.md) · 🤝 [Contributing (PR in 15 minutes)](CONTRIBUTING.md) · ⚖️ [Principles](PROJECT_PRINCIPLES.md) · 🚫 [Non-goals](NON_GOALS.md) · 📜 [Decisions](DECISIONS.md)
 
 ## Try the Online Demo
 [![Demo Online](https://img.shields.io/badge/demo-online-brightgreen?logo=github&style=for-the-badge)](https://renzorlive.github.io/vimmaster/)

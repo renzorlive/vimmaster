@@ -1,0 +1,47 @@
+name: 📜 RFC (Request for Comments)
+description: Propose a significant change — architecture, content schema, save format, dependencies, anything server-side
+title: "RFC: "
+labels: ["rfc", "rfc: discussion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        RFC lifecycle: **Discussion → Accepted → Implemented** (or Rejected). Accepted RFCs are condensed into an [ADR](../../blob/main/docs/adr/README.md).
+        Read existing ADRs first — some directions are already decided (e.g. no backend by default, content as data) and reversing them needs to address the original reasoning.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / motivation
+      description: What can't be done well today, and why does it matter for the mission?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Detailed proposal
+      description: Concrete enough that someone else could implement it. Include schema/API sketches where relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: At least one serious alternative, including "do nothing".
+    validations:
+      required: true
+  - type: textarea
+    id: tradeoffs
+    attributes:
+      label: Trade-offs, risks, migration
+      description: What gets worse? What breaks? How do existing users/saves/content migrate?
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight
+      options:
+        - label: I checked existing ADRs and the roadmap for conflicts
+          required: true
+        - label: This preserves "static site, no accounts, works offline" or explains why it must not
+          required: true

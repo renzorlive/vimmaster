@@ -1,0 +1,38 @@
+name: 💡 Feature request
+description: Suggest an improvement or new capability
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check [docs/FeatureIdeas.md](../../blob/main/docs/FeatureIdeas.md) and the [roadmap](../../blob/main/ROADMAP.md) first — your idea may already be tracked (or explicitly rejected with reasons).
+        For **large changes** (architecture, content schema, dependencies, anything server-side), use the 📜 RFC template instead.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the learner/contributor pain, not just the solution.
+      placeholder: "As someone practicing daily, I lose motivation because…"
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Rough scope
+      options:
+        - Small (UI tweak, single lesson, copy change)
+        - Medium (new mode/screen, engine command)
+        - Large (should probably be an RFC)
+    validations:
+      required: true
