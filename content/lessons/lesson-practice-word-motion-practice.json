@@ -1,0 +1,29 @@
+{
+  "id": "lesson-practice-word-motion-practice",
+  "version": 1,
+  "name": "Word Motion Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "wbe"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Use w (next word), b (back), e (end of word). Get to the end of the 'destination' word.",
+  "initialContent": [
+    "Jumping between words is much faster than character by character.",
+    "Use 'w' to jump forwards to the start of the next word.",
+    "Use 'b' to jump backwards to the start of the previous word.",
+    "Use 'e' to jump to the end of the current word.",
+    "Find the ultimate destination."
+  ],
+  "target": {
+    "row": 4,
+    "col": 28
+  }
+}

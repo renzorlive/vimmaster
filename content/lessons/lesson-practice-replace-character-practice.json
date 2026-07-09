@@ -1,0 +1,30 @@
+{
+  "id": "lesson-practice-replace-character-practice",
+  "version": 1,
+  "name": "Replace Character Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "r"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Use r to replace single characters. Fix the typos by replacing wrong characters.",
+  "initialContent": [
+    "Thxs is a test",
+    "VxM is awesome",
+    "Reylace characters",
+    "Fxx typos quickly"
+  ],
+  "targetContent": [
+    "This is a test",
+    "VIM is awesome",
+    "Replace characters",
+    "Fix typos quickly"
+  ]
+}

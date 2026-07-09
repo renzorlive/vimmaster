@@ -1,0 +1,30 @@
+{
+  "id": "lesson-practice-delete-line-practice",
+  "version": 1,
+  "name": "Delete Line Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "dd"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Use dd to delete entire lines. Remove the marked lines.",
+  "initialContent": [
+    "Keep this line",
+    "DELETE THIS LINE",
+    "Keep this line too",
+    "REMOVE THIS ONE TOO",
+    "Keep this final line"
+  ],
+  "targetContent": [
+    "Keep this line",
+    "Keep this line too",
+    "Keep this final line"
+  ]
+}

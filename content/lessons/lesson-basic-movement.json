@@ -1,0 +1,29 @@
+{
+  "id": "lesson-basic-movement",
+  "version": 1,
+  "name": "Basic Movement",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Use h, j, k, l to move the cursor. Reach the target character '$'.",
+  "initialContent": [
+    "Move with h(left), j(down), k(up), l(right).",
+    "Your cursor starts here.",
+    "",
+    "The goal is to navigate to the dollar sign.",
+    "Practice moving around the text.",
+    "Once you are comfortable, move to the '$'."
+  ],
+  "target": {
+    "row": 5,
+    "col": 39
+  }
+}

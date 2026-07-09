@@ -6,6 +6,7 @@ const ALLOWED_FIELDS = new Set([
     'name',
     'instructions',
     'initialContent',
+    'initialCursor',
     'target',
     'targetText',
     'targetContent',

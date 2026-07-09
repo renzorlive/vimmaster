@@ -1,0 +1,26 @@
+{
+  "id": "lesson-how-to-exit-ex-commands",
+  "version": 1,
+  "name": "How to Exit (Ex Commands)",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Type :q to quit, or :wq to write and quit. Press Enter after the command.",
+  "initialContent": [
+    "Welcome to VIM Master!",
+    "Most searched question: how to exit Vim?",
+    "Try typing :q and press Enter (or :wq)."
+  ],
+  "exCommands": [
+    "q",
+    "wq"
+  ]
+}

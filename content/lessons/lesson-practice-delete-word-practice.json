@@ -1,0 +1,32 @@
+{
+  "id": "lesson-practice-delete-word-practice",
+  "version": 1,
+  "name": "Delete Word Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "dw"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Use dw to delete words. Remove the extra words to clean up the sentences.",
+  "initialContent": [
+    "This is a very very long sentence with extra words.",
+    "Remove unnecessary extra words from this line too.",
+    "Delete unwanted unwanted repetitions here.",
+    "Clean up this messy messy text.",
+    "Final result should be clean sentences."
+  ],
+  "targetContent": [
+    "This is a very long sentence with words.",
+    "Remove unnecessary words from this line too.",
+    "Delete unwanted repetitions here.",
+    "Clean up this messy text.",
+    "Final result should be clean sentences."
+  ]
+}

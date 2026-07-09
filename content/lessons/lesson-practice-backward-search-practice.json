@@ -1,0 +1,30 @@
+{
+  "id": "lesson-practice-backward-search-practice",
+  "version": 1,
+  "name": "Backward Search Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "search-backward"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Use ?text to search backward, N to find previous. Search backward for 'start'.",
+  "initialContent": [
+    "Search backward for 'start' in this text.",
+    "Use ?start and press Enter to search backward.",
+    "Then use 'N' to find the previous occurrence.",
+    "Navigate to the start word.",
+    "The start is here: start",
+    "Another start appears earlier: start"
+  ],
+  "target": {
+    "row": 4,
+    "col": 20
+  }
+}

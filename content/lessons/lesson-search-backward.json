@@ -1,0 +1,26 @@
+{
+  "id": "lesson-search-backward",
+  "version": 1,
+  "name": "Search Backward (?)",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Press ? then type 'alpha' and Enter, then press N once to jump to the previous occurrence.",
+  "initialContent": [
+    "alpha beta gamma",
+    "delta epsilon alpha",
+    "zeta eta theta"
+  ],
+  "target": {
+    "row": 0,
+    "col": 0
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "lesson-search-forward",
+  "version": 1,
+  "name": "Search Forward (/)",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Press / then type 'target' and Enter, then press n once to jump to the next occurrence.",
+  "initialContent": [
+    "find the target here",
+    "another target and another target",
+    "no match on this line"
+  ],
+  "target": {
+    "row": 1,
+    "col": 27
+  }
+}

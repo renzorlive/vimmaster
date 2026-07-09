@@ -2,11 +2,12 @@ import { validateLesson } from './validator.js';
 
 // Import all rules to register them
 import './rules/id.js';
-import './rules/buffer.js';
 import './rules/cursor.js';
-import './rules/objective.js';
+import './rules/buffer.js';
 import './rules/solution.js';
+import './rules/objective.js';
 import './rules/unknown-fields.js';
+import './rules/metadata.js';
 
 // Import content to validate
 import { levels } from '../../js/levels.js';

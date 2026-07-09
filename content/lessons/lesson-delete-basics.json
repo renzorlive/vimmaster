@@ -1,0 +1,26 @@
+{
+  "id": "lesson-delete-basics",
+  "version": 1,
+  "name": "Delete Basics",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Use dd to delete the full middle line. Then use dw to remove the word 'mistake' on the last line. You can use x to delete a single character if needed.",
+  "initialContent": [
+    "Keep this line.",
+    "Delete this entire line.",
+    "Fix this mistake here."
+  ],
+  "targetContent": [
+    "Keep this line.",
+    "Fix this here."
+  ]
+}

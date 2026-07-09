@@ -1,0 +1,30 @@
+{
+  "id": "lesson-practice-forward-search-practice",
+  "version": 1,
+  "name": "Forward Search Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "search-forward"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Use /text to search forward, n to find next. Search for 'target' and navigate to it.",
+  "initialContent": [
+    "Search for the word 'target' in this text.",
+    "Use /target and press Enter to search.",
+    "Then use 'n' to find the next occurrence.",
+    "Navigate to the target word.",
+    "The target is here: target",
+    "Another target appears later: target"
+  ],
+  "target": {
+    "row": 4,
+    "col": 20
+  }
+}

@@ -1,0 +1,24 @@
+{
+    "id": "lesson-example-movement",
+    "version": 1,
+    "name": "Example Movement",
+    "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": ["normal", "movement"],
+        "estimatedTime": 60,
+        "prerequisites": []
+    },
+    "instructions": "<div class=\"text-center\">\n    <div class=\"text-blue-400 font-bold text-lg mb-2\">Welcome</div>\n    <div class=\"text-gray-300\">Press j to move down</div>\n</div>",
+    "initialContent": [
+        "First line",
+        "Second line"
+    ],
+    "target": {
+        "row": 1,
+        "col": 0
+    },
+    "solution": ["j"]
+}

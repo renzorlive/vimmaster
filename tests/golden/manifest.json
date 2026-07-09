@@ -1,6 +1,6 @@
 [
     {
-        "lessonRef": 0,
+        "lessonId": "lesson-how-to-exit-ex-commands",
         "description": "Basic Movement: How to Exit",
         "tags": ["normal", "ex"],
         "solution": [":", "q", "Enter"],
@@ -15,10 +15,10 @@
         "finalMode": "NORMAL"
     },
     {
-        "lessonRef": 1,
+        "lessonId": "lesson-basic-movement",
         "description": "Basic Movement: Navigate to dollar sign",
         "tags": ["normal", "movement"],
-        "solution": ["j", "j", "j", "j", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l"],
+        "solution": ["j", "j", "j", "j", "j", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l"],
         "timeout": 5000,
         "maxSteps": 150,
         "finalBuffer": [

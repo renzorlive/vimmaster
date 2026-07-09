@@ -1,0 +1,25 @@
+{
+  "id": "lesson-delete-end-replace",
+  "version": 1,
+  "name": "Delete End & Replace",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Use D to delete from cursor to end of line, then use r to replace the 'x' with '!'.",
+  "initialContent": [
+    "Keep this → remove from here to end",
+    "Replace this x"
+  ],
+  "targetContent": [
+    "Keep this → ",
+    "Replace this !"
+  ]
+}

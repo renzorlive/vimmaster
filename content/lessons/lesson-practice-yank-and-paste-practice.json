@@ -1,0 +1,34 @@
+{
+  "id": "lesson-practice-yank-and-paste-practice",
+  "version": 1,
+  "name": "Yank and Paste Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "yyp"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Use yy to yank (copy) a line, then p to paste it. Duplicate the important lines.",
+  "initialContent": [
+    "This line should be duplicated",
+    "",
+    "This line should also be duplicated",
+    "",
+    "Don't duplicate this line"
+  ],
+  "targetContent": [
+    "This line should be duplicated",
+    "This line should be duplicated",
+    "",
+    "This line should also be duplicated",
+    "This line should also be duplicated",
+    "",
+    "Don't duplicate this line"
+  ]
+}

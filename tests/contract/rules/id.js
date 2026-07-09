@@ -2,16 +2,21 @@ import { registerRule } from '../validator.js';
 
 registerRule({
     id: 'L001',
-    name: 'Lesson ID Missing',
-    // Status: Temporary warning. Becomes error in PR23 when content is extracted.
-    severity: 'warning',
+    name: 'Lesson ID Invalid',
+    severity: 'error',
     validate: (lesson, report) => {
-        if (!lesson.id || typeof lesson.id !== 'string' || lesson.id.trim() === '') {
-            report(
-                'Lesson is missing a unique string `id`.',
-                'id',
-                'Add an `id` field (e.g., `id: "lesson-01-movement"`). Note: this rule will become an ERROR in PR23.'
-            );
+        if (!lesson.id || typeof lesson.id !== 'string') {
+            report('Lesson is missing a unique string `id`.', 'id');
+            return;
+        }
+
+        const idRegex = /^lesson-[a-z0-9-]+$/;
+        if (!idRegex.test(lesson.id)) {
+            report(`Lesson ID '${lesson.id}' has invalid format.`, 'id', 'Must match ^lesson-[a-z0-9-]+$');
+        }
+
+        if (/^lesson-\d+$/.test(lesson.id)) {
+            report(`Lesson ID '${lesson.id}' is too generic.`, 'id', 'Include a descriptive segment, e.g., lesson-insert-basic.');
         }
     }
 });

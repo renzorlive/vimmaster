@@ -1,0 +1,31 @@
+{
+  "id": "lesson-practice-basic-movement-practice",
+  "version": 1,
+  "name": "Basic Movement Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "hjkl"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Use h, j, k, l to move the cursor. Navigate to the target character '$'.",
+  "initialContent": [
+    "Practice basic movement with h(left), j(down), k(up), l(right).",
+    "Your cursor starts here.",
+    "",
+    "The goal is to navigate to the dollar sign below.",
+    "Practice moving around the text first.",
+    "Once comfortable, move to the '$' target.",
+    "Target: $"
+  ],
+  "target": {
+    "row": 6,
+    "col": 8
+  }
+}

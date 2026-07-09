@@ -1,0 +1,28 @@
+{
+  "id": "lesson-practice-undo-redo-practice",
+  "version": 1,
+  "name": "Undo Redo Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "undo-redo"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Make some changes, then use u to undo them, and Ctrl+r to redo. Practice the undo/redo cycle.",
+  "initialContent": [
+    "Original text that will be modified",
+    "Change this line and then undo it",
+    "Practice undoing and redoing changes",
+    "Master the undo/redo workflow"
+  ],
+  "target": {
+    "row": 0,
+    "col": 0
+  }
+}

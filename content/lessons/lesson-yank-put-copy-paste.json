@@ -1,0 +1,29 @@
+{
+  "id": "lesson-yank-put-copy-paste",
+  "version": 1,
+  "name": "Yank & Put (Copy/Paste)",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Use yy to yank (copy) a line and p to put (paste) it. Duplicate the second line.",
+  "initialContent": [
+    "Let's copy and paste.",
+    "Yank this line!",
+    "And put it below this line.",
+    ""
+  ],
+  "targetContent": [
+    "Let's copy and paste.",
+    "Yank this line!",
+    "And put it below this line.",
+    "Yank this line!"
+  ]
+}

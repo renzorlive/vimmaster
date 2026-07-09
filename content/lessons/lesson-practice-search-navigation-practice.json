@@ -1,0 +1,29 @@
+{
+  "id": "lesson-practice-search-navigation-practice",
+  "version": 1,
+  "name": "Search Navigation Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "nN"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "First search for 'word', then use n to go to next match, N to go to previous match. Navigate to the 3rd occurrence.",
+  "initialContent": [
+    "Find the word in this text",
+    "Another word appears here",
+    "The third word is the target",
+    "More word instances follow",
+    "Final word at the end"
+  ],
+  "target": {
+    "row": 2,
+    "col": 10
+  }
+}

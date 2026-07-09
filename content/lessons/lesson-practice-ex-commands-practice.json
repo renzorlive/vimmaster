@@ -1,0 +1,28 @@
+{
+  "id": "lesson-practice-ex-commands-practice",
+  "version": 1,
+  "name": "Ex Commands Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "ex"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": []
+  },
+  "instructions": "Practice ex-commands like :q to quit and :wq to write and quit. Type :q and press Enter.",
+  "initialContent": [
+    "This is a VIM lesson for ex-commands",
+    "Ex-commands start with a colon (:)",
+    "Common commands: :q (quit), :w (write), :wq (write and quit)",
+    "Type :q and press Enter to complete this lesson"
+  ],
+  "targetText": {
+    "line": 3,
+    "text": "Type :q and press Enter to complete this lesson"
+  }
+}

@@ -16,8 +16,9 @@ global.document = {
 };
 
 // Now we can safely import game modules
-import { levels, loadLevel } from '../../js/levels.js';
-import { resetGameState, getContent, getCursor, getMode, getLastExCommand, getUsedSearchInLevel, getNavCountSinceSearch, getLastSearchQuery, getLastSearchDirection, getLevel12RedoAfterUndo } from '../../js/game-state.js';
+import { StaticContentProvider } from '../../js/content-provider.js';
+import { loadLevel } from '../../js/levels.js'; // To actually set up the UI state
+import { resetGameState, getContent, getCursor, getMode, getLastExCommand, getUsedSearchInLevel, getNavCountSinceSearch, getLastSearchQuery, getLastSearchDirection, getLevel12RedoAfterUndo, setContent, setMode, setCursor } from '../../js/game-state.js';
 import { evaluateWinCondition } from '../../js/win-evaluator.js';
 import { replay } from './replay.js';
 
@@ -25,6 +26,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const manifestPath = path.join(__dirname, 'manifest.json');
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+const provider = new StaticContentProvider();
 
 let totalPassed = 0;
 let totalFailed = 0;
@@ -32,22 +34,27 @@ let totalFailed = 0;
 console.log('\n🌟 Running VIM Master Golden Suite 🌟\n');
 
 for (const testCase of manifest) {
-    const { lessonRef, description, solution, finalBuffer, finalCursor, finalMode, maxSteps = 150 } = testCase;
+    const { lessonId, description, solution, finalBuffer, finalCursor, finalMode, maxSteps = 150 } = testCase;
     
-    // Resolve lesson
-    // Temporary: lessonRef is an index. In PR23 it will be an ID.
-    const lesson = levels[lessonRef];
+    const lesson = provider.getLesson(lessonId);
     
     if (!lesson) {
-        console.log(`\x1b[31m✗ FAIL\x1b[0m ${description || lessonRef} (Lesson not found)`);
+        console.log(`\x1b[31m✗ FAIL\x1b[0m ${description || lessonId} (Lesson not found in generated-content.js)`);
         totalFailed++;
         continue;
     }
 
     // Reset Engine State
     resetGameState();
-    // Load the level (initializes buffer, mode, cursor)
-    loadLevel(lessonRef);
+    
+    // We bypass loadLevel and manually set up the engine state since loadLevel relies on array indexing
+    setContent(lesson.initialContent || []);
+    if (lesson.initialCursor) {
+        setCursor({ row: lesson.initialCursor.row, col: lesson.initialCursor.col }); 
+    } else {
+        setCursor({ row: 0, col: 0 });
+    }
+    setMode('NORMAL');
 
     // Replay keystrokes
     const safeSolution = solution.slice(0, maxSteps);

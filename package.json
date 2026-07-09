@@ -11,10 +11,11 @@
     "test:watch": "vitest",
     "test:contract": "node tests/contract/runner.js",
     "test:golden": "node tests/golden/runner.js",
+    "build:content": "node scripts/build-content.js",
     "coverage": "vitest run --coverage",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "check": "npm run lint && npm run test:contract && npm run test:golden && npm run test"
+    "check": "npm run build:content && npm run lint && npm run test:contract && npm run test:golden && npm run test"
   },
   "devDependencies": {
     "@eslint/js": "^9.6.0",
