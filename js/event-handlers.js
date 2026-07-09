@@ -30,6 +30,7 @@ import {
 } from './ui-components.js';
 import { openCheat, closeCheat, renderCheatList } from './cheat-mode.js';
 import { autoSaveProgress } from './progress-system.js';
+import { evaluateWinCondition } from './win-evaluator.js';
 
 // Game Logic Functions
 export function checkWinCondition() {
@@ -151,59 +152,19 @@ export function checkWinCondition() {
     
     // Regular level win condition check
     const level = levels[getCurrentLevel()];
-    let won = false;
-    
-    if (level.exCommands) {
-        if (getLastExCommand() && level.exCommands.includes(getLastExCommand())) won = true;
-    } else if (level.target) {
-        // For search-focused levels, require actual search usage
-        const searchLevelNames = ['Search Forward (/)','Search Backward (?)','Search Navigation (n/N)'];
-        const isSearchLevel = searchLevelNames.includes(level.name);
-        const cursor = getCursor();
-        if (cursor.row === level.target.row && cursor.col === level.target.col) {
-            if (!isSearchLevel) {
-                won = true;
-            } else {
-                if (level.name === 'Search Navigation (n/N)') {
-                    // Require at least two 'n' presses after search to reach 3rd occurrence
-                    if (getUsedSearchInLevel() && getNavCountSinceSearch() >= 2 && getLastSearchQuery() && getLastSearchQuery().toLowerCase() === 'foo' && getLastSearchDirection() === 'forward') won = true;
-                } else if (level.name === 'Search Forward (/)') {
-                    // Now require one 'n' after search to reach second occurrence
-                    if (getUsedSearchInLevel() && getLastSearchDirection() === 'forward' && getLastSearchQuery() && getLastSearchQuery().toLowerCase() === 'target' && getNavCountSinceSearch() >= 1) {
-                        won = true;
-                    }
-                } else if (level.name === 'Search Backward (?)') {
-                    // Require one 'N' after search to reach previous occurrence
-                    if (getUsedSearchInLevel() && getLastSearchDirection() === 'backward' && getLastSearchQuery() && getLastSearchQuery().toLowerCase() === 'alpha' && getNavCountSinceSearch() >= 1) {
-                        won = true;
-                    }
-                }
-            }
-        }
-    
-    } else if (level.targetText) {
-        if (getContent()[level.targetText.line] === level.targetText.text && getMode() === 'NORMAL') won = true;
-    
-    } else if (level.targetContent) {
-        // Compare lines after trimming trailing whitespace and ignoring trailing blank lines
-        const trimLineEnd = (line) => line.replace(/\s+$/, '');
-        const stripTrailingBlankLines = (lines) => {
-            const result = [...lines];
-            while (result.length > 0 && trimLineEnd(result[result.length - 1]) === '') {
-                result.pop();
-            }
-            return result;
-        };
-        const currentLines = stripTrailingBlankLines(getContent().map(trimLineEnd));
-        const targetLines = stripTrailingBlankLines(level.targetContent.map(trimLineEnd));
-        if (currentLines.length === targetLines.length && currentLines.every((l, i) => l === targetLines[i])) {
-            if (level.name === 'Undo / Redo') {
-                if (getLevel12RedoAfterUndo()) won = true;
-            } else {
-                won = true;
-            }
-        }
-    }
+    const state = {
+        lastExCommand: getLastExCommand(),
+        cursor: getCursor(),
+        usedSearchInLevel: getUsedSearchInLevel(),
+        navCountSinceSearch: getNavCountSinceSearch(),
+        lastSearchQuery: getLastSearchQuery(),
+        lastSearchDirection: getLastSearchDirection(),
+        content: getContent(),
+        mode: getMode(),
+        level12RedoAfterUndo: getLevel12RedoAfterUndo()
+    };
+
+    const { won } = evaluateWinCondition(state, level);
 
     if (won) {
         flashLevelComplete();
