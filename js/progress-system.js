@@ -1,15 +1,19 @@
 // VIM Master Game - Progress Save/Load System
 
-import { 
+import {
     getBadges, getPracticedCommands, getCurrentLevel, getChallengeMode, getChallengeScoreValue,
     setBadges, setPracticedCommands, setCurrentLevel, setChallengeMode, setChallengeScoreValue
 } from './game-state.js';
+
+import { levels } from './levels.js';
 
 // Progress System Class
 class ProgressSystem {
     constructor() {
         this.version = '1.0';
         this.exportPrefix = 'VIM_MASTER_PROGRESS_';
+        this.storageKey = 'vimMasterProgress';
+        this.backupKey = 'vimMasterProgressBackup';
     }
 
     /**
@@ -125,18 +129,63 @@ class ProgressSystem {
             return { valid: false, message: 'Invalid data types in progress data' };
         }
 
-        // Check level range
-        if (data.currentLevel < 0 || data.currentLevel > 14) {
+        // Check level range (always derived from the levels data — never hardcoded,
+        // see docs/architecture/constants.md)
+        if (!Number.isInteger(data.currentLevel) || data.currentLevel < 0 || data.currentLevel >= levels.length) {
             return { valid: false, message: 'Invalid level number in progress data' };
         }
 
-        // Check timestamp (reject very old data)
-        const maxAge = 365 * 24 * 60 * 60 * 1000; // 1 year
-        if (Date.now() - data.timestamp > maxAge) {
-            return { valid: false, message: 'Progress data is too old and may be incompatible' };
+        return { valid: true };
+    }
+
+    /**
+     * Attempt to repair invalid progress data instead of rejecting it.
+     * User data is never destroyed automatically (PROJECT_PRINCIPLES.md #8).
+     * @param {Object} data - Possibly-invalid progress data
+     * @returns {Object|null} A valid progress object, or null if unrepairable
+     */
+    repairProgressData(data) {
+        if (typeof data !== 'object' || data === null) {
+            return null;
         }
 
-        return { valid: true };
+        const repaired = { ...data };
+
+        // Best-effort migration: normalize to the current version after
+        // defaulting any fields that version didn't have
+        repaired.version = this.version;
+        if (typeof repaired.timestamp !== 'number') repaired.timestamp = Date.now();
+        if (!Array.isArray(repaired.badges)) repaired.badges = [];
+        if (!Array.isArray(repaired.practicedCommands)) repaired.practicedCommands = [];
+        if (typeof repaired.challengeMode !== 'boolean') repaired.challengeMode = false;
+        if (typeof repaired.challengePoints !== 'number' || !Number.isFinite(repaired.challengePoints)) {
+            repaired.challengePoints = 0;
+        }
+
+        // Clamp the level into the valid range instead of rejecting it
+        const level = Number(repaired.currentLevel);
+        repaired.currentLevel = Number.isFinite(level)
+            ? Math.min(Math.max(Math.trunc(level), 0), levels.length - 1)
+            : 0;
+
+        return this.validateProgressData(repaired).valid ? repaired : null;
+    }
+
+    /**
+     * Preserve the original (raw) save before it can be overwritten.
+     * @param {string} raw - The raw string found in storage
+     * @param {string} reason - Why the backup was made
+     */
+    backupProgress(raw, reason) {
+        try {
+            localStorage.setItem(this.backupKey, JSON.stringify({
+                backedUpAt: Date.now(),
+                reason,
+                raw
+            }));
+        } catch (error) {
+            console.warn('Failed to back up progress data:', error);
+        }
     }
 
     /**
@@ -171,7 +220,7 @@ class ProgressSystem {
      */
     saveToLocalStorage(data) {
         try {
-            localStorage.setItem('vimMasterProgress', JSON.stringify(data));
+            localStorage.setItem(this.storageKey, JSON.stringify(data));
         } catch (error) {
             console.warn('Failed to save progress to localStorage:', error);
         }
@@ -183,7 +232,7 @@ class ProgressSystem {
      */
     loadFromLocalStorage() {
         try {
-            const stored = localStorage.getItem('vimMasterProgress');
+            const stored = localStorage.getItem(this.storageKey);
             if (stored) {
                 return JSON.parse(stored);
             }
@@ -194,24 +243,61 @@ class ProgressSystem {
     }
 
     /**
-     * Auto-load progress on game start
+     * Auto-load progress on game start.
+     *
+     * Load → validate → if invalid, try repair → if repaired, continue;
+     * otherwise keep the original save, create a backup, and notify the user.
+     * A save is NEVER deleted here, no matter how corrupted (see PM-0001).
+     *
+     * @returns {{loaded: boolean, repaired: boolean, message: string|null}}
      */
     autoLoadProgress() {
-        const storedProgress = this.loadFromLocalStorage();
-        if (storedProgress) {
-            console.log('🔍 DEBUG: autoLoadProgress - stored progress:', storedProgress);
-            const validation = this.validateProgressData(storedProgress);
+        let raw = null;
+        try {
+            raw = localStorage.getItem(this.storageKey);
+        } catch (error) {
+            console.warn('Failed to access saved progress:', error);
+            return { loaded: false, repaired: false, message: null };
+        }
+
+        if (!raw) {
+            return { loaded: false, repaired: false, message: null };
+        }
+
+        let stored = null;
+        try {
+            stored = JSON.parse(raw);
+        } catch (error) {
+            console.warn('Saved progress is not valid JSON:', error);
+        }
+
+        if (stored) {
+            const validation = this.validateProgressData(stored);
             if (validation.valid) {
-                console.log('🔍 DEBUG: autoLoadProgress - applying progress data');
-                this.applyProgressData(storedProgress);
-                return true;
-            } else {
-                console.log('🔍 DEBUG: autoLoadProgress - validation failed:', validation.message);
-                // Clear invalid stored data
-                localStorage.removeItem('vimMasterProgress');
+                this.applyProgressData(stored);
+                return { loaded: true, repaired: false, message: null };
+            }
+
+            const repaired = this.repairProgressData(stored);
+            if (repaired) {
+                this.backupProgress(raw, `repaired: ${validation.message}`);
+                this.applyProgressData(repaired);
+                this.saveToLocalStorage(repaired);
+                return {
+                    loaded: true,
+                    repaired: true,
+                    message: 'Your saved progress was automatically repaired. A backup of the original was kept.'
+                };
             }
         }
-        return false;
+
+        // Unrepairable: keep the original save untouched, back it up, tell the user.
+        this.backupProgress(raw, 'unrepairable');
+        return {
+            loaded: false,
+            repaired: false,
+            message: 'Your saved progress could not be read. It was NOT deleted — a backup was kept in your browser.'
+        };
     }
 
     /**
@@ -239,11 +325,17 @@ class ProgressSystem {
     }
 
     /**
-     * Clear all saved progress
+     * Clear all saved progress. This is only ever called from an explicit,
+     * user-confirmed action — even then, the save is backed up first
+     * (user data is never destroyed automatically, PROJECT_PRINCIPLES.md #8).
      */
     clearProgress() {
         try {
-            localStorage.removeItem('vimMasterProgress');
+            const raw = localStorage.getItem(this.storageKey);
+            if (raw) {
+                this.backupProgress(raw, 'user-initiated clear');
+            }
+            localStorage.removeItem(this.storageKey);
             
             // Clear the game state using statically imported functions
             try {
@@ -284,7 +376,7 @@ class ProgressSystem {
         
         const result = {
             currentLevel: getCurrentLevel(),
-            totalLevels: 15,
+            totalLevels: levels.length,
             badgesEarned: getBadges().size,
             commandsPracticed: getPracticedCommands().size,
             challengePoints: safeChallengePoints,
@@ -301,7 +393,7 @@ class ProgressSystem {
      */
     getLastSavedTime() {
         try {
-            const stored = localStorage.getItem('vimMasterProgress');
+            const stored = localStorage.getItem(this.storageKey);
             if (stored) {
                 const data = JSON.parse(stored);
                 return new Date(data.timestamp).toLocaleString();

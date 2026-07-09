@@ -5,6 +5,7 @@ import {
 } from './game-state.js';
 
 import { exportProgress } from './progress-system.js';
+import { levels } from './levels.js';
 
 class VimMasterSharingSystem {
     constructor() {
@@ -17,7 +18,7 @@ class VimMasterSharingSystem {
     getGameData() {
         return {
             level: getCurrentLevel() + 1,
-            totalLevels: 15, // Total available levels
+            totalLevels: levels.length, // Always derived, never hardcoded (docs/architecture/constants.md)
             levelsCompleted: getCurrentLevel() + 1, // Actual levels completed
             badges: Array.from(getBadges()),
             commandsPracticed: getPracticedCommands().size,

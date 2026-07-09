@@ -12,6 +12,14 @@
 - [ ] 🧹 Refactor / tech debt
 - [ ] 📖 Docs
 
+## Root cause <!-- Required for bug fixes; delete for content/docs/features -->
+
+- **Problem:** <!-- what the user experienced -->
+- **Root cause:** <!-- the actual defect, not the symptom -->
+- **Solution:** <!-- what this PR changes -->
+- **Why this happened:** <!-- the process/design gap that let it in -->
+- **How we prevent this forever:** <!-- test, policy, derived constant, schema… For significant bugs, add a postmortem in docs/postmortems/ -->
+
 ## How was it verified?
 
 <!-- Until automated tests land, describe your manual verification (see the checklist in CONTRIBUTING.md). -->

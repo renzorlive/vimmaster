@@ -9,7 +9,7 @@
 | **Current version** | pre-1.0 (unversioned; semver starts with the first tagged release in Phase 0.5) |
 | **Current phase** | ✅ Phase 0.5 docs/infra complete → ▶️ **entering Phase 0 — Stabilize** ([ROADMAP.md](ROADMAP.md)) |
 | **Current sprint** | Critical bug fixes, one PR each |
-| **Current focus** | **TD-1: the save-corruption bug** — finishing the final level invalidates and deletes the player's saved progress ([docs/TechnicalDebt.md](docs/TechnicalDebt.md)) |
+| **Current focus** | TD-1 ✅ fixed ([PM-0001](docs/postmortems/PM-0001-save-corruption.md)) — next up: **TD-2** (level start positions ignored) |
 | **Next milestone** | *Stable v0.1*: all Phase 0 boxes checked — 5 bug fixes, debug logging stripped, SEO meta tags |
 | **Release target** | v1.0 after Phases 0–3 (engine rewrite + content system + platform pages) — no date commitment; quality gates over deadlines |
 
@@ -17,7 +17,7 @@
 
 | # | Issue | Severity |
 |---|---|---|
-| TD-1 | Progress save rejected & **deleted** after reaching the final level (off-by-one, 15 vs 16 levels) | 🔴 |
+| TD-1 | ~~Progress save rejected & deleted after the final level~~ ✅ fixed — [PM-0001](docs/postmortems/PM-0001-save-corruption.md) | ✅ |
 | TD-2 | Per-level cursor start positions silently ignored (`setup()` result discarded) | 🔴 |
 | TD-3 | Auto-save on level completion never fires (dead `window` hook) | 🔴 |
 | TD-6 | Duplicate, divergent challenge scoring implementations | 🔴 |
