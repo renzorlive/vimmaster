@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: ❓ Questions & help
+    url: https://github.com/renzorlive/vimmaster/discussions
+    about: Ask anything — setup, Vim itself, contribution ideas. No stupid questions.
+  - name: 🎉 Show & tell
+    url: https://github.com/renzorlive/vimmaster/discussions
+    about: Share your progress cards, streaks, and lesson ideas.
