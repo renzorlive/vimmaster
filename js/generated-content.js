@@ -9,7 +9,7 @@ export const generatedContent = {
   "index": {
     "version": 1,
     "contentVersion": 1,
-    "generatedAt": "2026-07-09T22:08:52.817Z",
+    "generatedAt": "2026-07-09T22:15:00.192Z",
     "generator": "scripts/build-content.js",
     "regularLessons": [
       "lesson-how-to-exit-ex-commands",

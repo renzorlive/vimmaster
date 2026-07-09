@@ -91,21 +91,30 @@ export function renderEditor(content, cursor, mode) {
 }
 
 // Status Bar Updates
-export function updateStatusBar(mode, searchMode, searchQuery, lastSearchDirection, searchMatches, currentMatchIndex) {
+export function updateStatusBar(mode, searchMode, searchQuery, lastSearchDirection, searchMatches, currentMatchIndex, commandHistory = '') {
     if (!statusBar) return;
     
-    let text = `-- ${mode.toUpperCase()} --`;
-    if (searchMode) {
-        const prefix = lastSearchDirection === 'backward' ? '?' : '/';
-        text += ` ${prefix}${searchQuery}`;
-    } else if (getLastSearchQuery()) {
-        const total = searchMatches.length;
-        const current = currentMatchIndex >= 0 ? currentMatchIndex + 1 : 0;
-        const dir = lastSearchDirection === 'backward' ? '?' : '/';
-        text += ` ${dir}${getLastSearchQuery()} ${current}/${total}`;
+    let text = '';
+    let bgColor = mode === 'NORMAL' ? 'bg-yellow-400 text-gray-900' : 'bg-green-400 text-gray-900';
+
+    if (commandHistory && commandHistory.startsWith(':')) {
+        text = commandHistory;
+        bgColor = 'bg-blue-400 text-gray-900';
+    } else {
+        text = `-- ${mode.toUpperCase()} --`;
+        if (searchMode) {
+            const prefix = lastSearchDirection === 'backward' ? '?' : '/';
+            text += ` ${prefix}${searchQuery}`;
+        } else if (getLastSearchQuery()) {
+            const total = searchMatches.length;
+            const current = currentMatchIndex >= 0 ? currentMatchIndex + 1 : 0;
+            const dir = lastSearchDirection === 'backward' ? '?' : '/';
+            text += ` ${dir}${getLastSearchQuery()} ${current}/${total}`;
+        }
     }
+    
     statusBar.textContent = text;
-    statusBar.className = `status-bar px-2 py-1 rounded-md text-sm ${mode === 'NORMAL' ? 'bg-yellow-400 text-gray-900' : 'bg-green-400 text-gray-900'}`;
+    statusBar.className = `status-bar px-2 py-1 rounded-md text-sm ${bgColor}`;
 }
 
 // Instructions Updates
