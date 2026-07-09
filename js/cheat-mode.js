@@ -50,7 +50,7 @@ const commandCatalog = [
 ];
 
 // Real VIM lessons that work like actual game levels
-const vimLessons = {
+export const vimLessons = {
     'hjkl': {
         name: "Basic Movement Practice",
         instructions: "Use h, j, k, l to move the cursor. Navigate to the target character '$'.",

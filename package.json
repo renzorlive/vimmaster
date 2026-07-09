@@ -9,10 +9,11 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:contract": "node tests/contract/runner.js",
     "coverage": "vitest run --coverage",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "check": "npm run lint && npm run test"
+    "check": "npm run lint && npm run test:contract && npm run test"
   },
   "devDependencies": {
     "@eslint/js": "^9.6.0",
