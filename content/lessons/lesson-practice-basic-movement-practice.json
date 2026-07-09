@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 101
   },
   "instructions": "Use h, j, k, l to move the cursor. Navigate to the target character '$'.",
   "initialContent": [

@@ -28,7 +28,8 @@ const ALLOWED_METADATA_FIELDS = new Set([
     'tags',
     'estimatedTime',
     'prerequisites',
-    'learningObjectives'
+    'learningObjectives',
+    'order'
 ]);
 
 registerRule({

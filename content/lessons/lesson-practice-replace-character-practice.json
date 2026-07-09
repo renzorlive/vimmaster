@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 110
   },
   "instructions": "Use r to replace single characters. Fix the typos by replacing wrong characters.",
   "initialContent": [

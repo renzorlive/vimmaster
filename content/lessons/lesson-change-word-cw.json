@@ -13,7 +13,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 10
   },
   "instructions": "Use cw to change the word 'bad' into 'good'. Press Esc when done.",
   "initialContent": [

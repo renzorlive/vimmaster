@@ -13,7 +13,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 3
   },
   "instructions": "Use w (next word), b (back), e (end of word). Get to the end of the 'destination' word.",
   "initialContent": [

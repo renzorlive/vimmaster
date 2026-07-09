@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 112
   },
   "instructions": "Use yy to yank (copy) a line, then p to paste it. Duplicate the important lines.",
   "initialContent": [

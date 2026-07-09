@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 117
   },
   "instructions": "Practice ex-commands like :q to quit and :wq to write and quit. Type :q and press Enter.",
   "initialContent": [

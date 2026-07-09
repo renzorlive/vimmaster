@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 108
   },
   "instructions": "Use dd to delete entire lines. Remove the marked lines.",
   "initialContent": [

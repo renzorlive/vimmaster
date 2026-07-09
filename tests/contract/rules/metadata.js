@@ -19,6 +19,10 @@ registerRule({
             report('Metadata is missing or has invalid `revision`.', 'metadata.revision', 'Must be a number (e.g. 1)');
         }
 
+        if (meta.order === undefined || typeof meta.order !== 'number') {
+            report('Metadata is missing or has invalid `order`.', 'metadata.order', 'Must be a number (e.g. 1, 2, 3) representing curriculum order.');
+        }
+
         if (!meta.author || typeof meta.author !== 'string') {
             report('Missing or invalid author.', 'metadata.author', 'Author name is required (e.g. "VIM Master Team").');
         }
