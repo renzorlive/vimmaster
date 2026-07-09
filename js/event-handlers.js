@@ -405,7 +405,7 @@ export function updateUI() {
     
     try {
         renderEditor(getContent(), getCursor(), getMode());
-        updateStatusBar(getMode(), getSearchMode(), getSearchQuery(), getLastSearchDirection(), getSearchMatches(), getCurrentMatchIndex());
+        updateStatusBar(getMode(), getSearchMode(), getSearchQuery(), getLastSearchDirection(), getSearchMatches(), getCurrentMatchIndex(), getCommandHistory());
         
         // Use centralized instructions rendering
         updateInstructions();
