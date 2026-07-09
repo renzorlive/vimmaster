@@ -15,7 +15,20 @@ const ALLOWED_FIELDS = new Set([
     'setup', // Legacy setup function
     'solution',
     'version',
-    'metadata'
+    'metadata',
+    'focusCommand'
+]);
+
+const ALLOWED_METADATA_FIELDS = new Set([
+    'revision',
+    'author',
+    'githubUsername',
+    'created',
+    'difficulty',
+    'tags',
+    'estimatedTime',
+    'prerequisites',
+    'learningObjectives'
 ]);
 
 registerRule({
@@ -30,6 +43,18 @@ registerRule({
                     key,
                     'Check for typos. Allowed properties are: ' + Array.from(ALLOWED_FIELDS).join(', ')
                 );
+            }
+        }
+
+        if (lesson.metadata) {
+            for (const key of Object.keys(lesson.metadata)) {
+                if (!ALLOWED_METADATA_FIELDS.has(key)) {
+                    report(
+                        `Unknown metadata property found: '${key}'.`,
+                        `metadata.${key}`,
+                        'Check for typos. Allowed metadata properties are: ' + Array.from(ALLOWED_METADATA_FIELDS).join(', ')
+                    );
+                }
             }
         }
     }

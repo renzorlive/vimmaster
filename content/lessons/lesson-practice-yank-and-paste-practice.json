@@ -5,6 +5,7 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
@@ -12,7 +13,8 @@
       "yyp"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Use yy to yank (copy) a line, then p to paste it. Duplicate the important lines.",
   "initialContent": [
@@ -30,5 +32,6 @@
     "This line should also be duplicated",
     "",
     "Don't duplicate this line"
-  ]
+  ],
+  "focusCommand": "VIM"
 }

@@ -1,8 +1,8 @@
 // VIM Master Game - Progress Save/Load System
 
 import {
-    getBadges, getPracticedCommands, getCurrentLevel, getChallengeMode, getChallengeScoreValue,
-    setBadges, setPracticedCommands, setCurrentLevel, setChallengeMode, setChallengeScoreValue
+    getBadges, getPracticedCommands, getCurrentLevel, getChallengeMode, getChallengeScoreValue, getXp, getCombo,
+    setBadges, setPracticedCommands, setCurrentLevel, setChallengeMode, setChallengeScoreValue, setXp, setCombo
 } from './game-state.js';
 
 import { levels } from './levels.js';
@@ -30,7 +30,9 @@ class ProgressSystem {
                 practicedCommands: Array.from(getPracticedCommands()),
                 currentLevel: getCurrentLevel(),
                 challengeMode: getChallengeMode(),
-                challengePoints: getChallengeScoreValue()
+                challengePoints: getChallengeScoreValue(),
+                xp: getXp(),
+                combo: getCombo()
             };
 
             // Convert to JSON and encode
@@ -118,6 +120,9 @@ class ProgressSystem {
             console.log('🔍 DEBUG: Challenge points not found in progress data, defaulting to 0');
             data.challengePoints = 0;
         }
+        
+        if (data.xp === undefined) data.xp = 0;
+        if (data.combo === undefined) data.combo = 0;
 
         // Check version compatibility
         if (data.version !== this.version) {
@@ -161,6 +166,8 @@ class ProgressSystem {
         if (typeof repaired.challengePoints !== 'number' || !Number.isFinite(repaired.challengePoints)) {
             repaired.challengePoints = 0;
         }
+        if (typeof repaired.xp !== 'number' || !Number.isFinite(repaired.xp)) repaired.xp = 0;
+        if (typeof repaired.combo !== 'number' || !Number.isFinite(repaired.combo)) repaired.combo = 0;
 
         // Clamp the level into the valid range instead of rejecting it
         const level = Number(repaired.currentLevel);
@@ -210,6 +217,10 @@ class ProgressSystem {
         
         // Apply challenge points
         setChallengeScoreValue(data.challengePoints || 0);
+        
+        // Apply XP and Combo
+        setXp(data.xp || 0);
+        setCombo(data.combo || 0);
         
         console.log('🔍 DEBUG: applyProgressData - after setting, getChallengeScoreValue():', getChallengeScoreValue());
     }

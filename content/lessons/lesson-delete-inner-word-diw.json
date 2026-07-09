@@ -1,0 +1,42 @@
+{
+  "id": "lesson-delete-inner-word-diw",
+  "version": 1,
+  "name": "Delete Inner Word (diw)",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-10",
+    "difficulty": "intermediate",
+    "tags": [
+      "normal",
+      "deletion",
+      "text-object"
+    ],
+    "estimatedTime": 45,
+    "prerequisites": [
+      "lesson-delete-basics"
+    ],
+    "learningObjectives": [
+      "Understand the 'iw' (inner word) text object",
+      "Use 'diw' to delete a word without needing to be at its start"
+    ]
+  },
+  "instructions": "Use 'diw' to delete the word 'mistake' from anywhere inside it.",
+  "initialContent": [
+    "This mistake is annoying."
+  ],
+  "initialCursor": {
+    "row": 0,
+    "col": 8
+  },
+  "targetContent": [
+    "This  is annoying."
+  ],
+  "solution": [
+    "d",
+    "i",
+    "w"
+  ],
+  "focusCommand": "diw"
+}

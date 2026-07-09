@@ -5,13 +5,15 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
       "normal"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Press / then type 'target' and Enter, then press n once to jump to the next occurrence.",
   "initialContent": [
@@ -22,5 +24,6 @@
   "target": {
     "row": 1,
     "col": 27
-  }
+  },
+  "focusCommand": "/"
 }

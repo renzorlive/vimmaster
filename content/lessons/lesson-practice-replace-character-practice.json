@@ -5,6 +5,7 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
@@ -12,7 +13,8 @@
       "r"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Use r to replace single characters. Fix the typos by replacing wrong characters.",
   "initialContent": [
@@ -26,5 +28,6 @@
     "VIM is awesome",
     "Replace characters",
     "Fix typos quickly"
-  ]
+  ],
+  "focusCommand": "VIM"
 }

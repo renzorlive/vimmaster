@@ -19,18 +19,34 @@ registerRule({
             report('Metadata is missing or has invalid `revision`.', 'metadata.revision', 'Must be a number (e.g. 1)');
         }
 
+        if (!meta.author || typeof meta.author !== 'string') {
+            report('Missing or invalid author.', 'metadata.author', 'Author name is required (e.g. "VIM Master Team").');
+        }
+
+        if (!meta.githubUsername || typeof meta.githubUsername !== 'string') {
+            report('Missing or invalid githubUsername.', 'metadata.githubUsername', 'GitHub username is required (e.g. "github").');
+        }
+
         if (meta.difficulty) {
             if (!['beginner', 'intermediate', 'advanced'].includes(meta.difficulty)) {
                 report(`Invalid difficulty '${meta.difficulty}'.`, 'metadata.difficulty', 'Must be beginner, intermediate, or advanced.');
             }
         }
 
-        if (meta.estimatedTime !== undefined && typeof meta.estimatedTime !== 'number') {
-            report('Invalid estimatedTime.', 'metadata.estimatedTime', 'Must be a number.');
+        if (meta.estimatedTime === undefined || typeof meta.estimatedTime !== 'number') {
+            report('Missing or invalid estimatedTime.', 'metadata.estimatedTime', 'Estimated time in seconds is required.');
         }
 
-        if (meta.prerequisites !== undefined && !Array.isArray(meta.prerequisites)) {
-            report('Invalid prerequisites.', 'metadata.prerequisites', 'Must be an array of slugs.');
+        if (!Array.isArray(meta.prerequisites)) {
+            report('Missing or invalid prerequisites.', 'metadata.prerequisites', 'Must be an array of slugs (can be empty []).');
+        }
+
+        if (!Array.isArray(meta.learningObjectives)) {
+            report('Missing or invalid learningObjectives.', 'metadata.learningObjectives', 'Must be an array of strings (can be empty []).');
+        }
+
+        if (!Array.isArray(meta.tags)) {
+            report('Missing or invalid tags.', 'metadata.tags', 'Must be an array of strings (can be empty []).');
         }
     }
 });

@@ -5,6 +5,7 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
@@ -12,7 +13,8 @@
       "hjkl"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Use h, j, k, l to move the cursor. Navigate to the target character '$'.",
   "initialContent": [
@@ -27,5 +29,6 @@
   "target": {
     "row": 6,
     "col": 8
-  }
+  },
+  "focusCommand": "hjkl"
 }

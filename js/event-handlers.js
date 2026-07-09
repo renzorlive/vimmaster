@@ -15,7 +15,7 @@ import {
     setCurrentMatchIndex, setUsedSearchInLevel, setNavCountSinceSearch, setLevel12Undo,
     setLevel12RedoAfterUndo, setLastExCommand, setCurrentChallenge, setCurrentTaskIndex,
     setChallengeScoreValue, setChallengeProgressValue, setChallengeStartTime,
-    setChallengeTimerInterval, addBadge
+    setChallengeTimerInterval, addBadge, getXp, getCombo, setXp, setCombo
 } from './game-state.js';
 
 import { levels, loadLevel, getCurrentLevelFromGameState, getLevelCount, isLastLevel } from './levels.js';
@@ -26,7 +26,7 @@ import {
     renderEditor, updateStatusBar, updateInstructions, updateLevelIndicator, 
     updateCommandLog, createLevelButtons, renderBadges, showModal, hideModal,
     showCelebration, hideCelebration, flashLevelComplete, updateChallengeUI,
-    showChallengeContainer, hideChallengeContainer, showBadgeToast
+    showChallengeContainer, hideChallengeContainer, showBadgeToast, flashError, updateStatsBar
 } from './ui-components.js';
 import { openCheat, closeCheat, renderCheatList } from './cheat-mode.js';
 import { autoSaveProgress } from './progress-system.js';
@@ -170,15 +170,45 @@ export function checkWinCondition() {
         flashLevelComplete();
         setTimeout(() => {
             maybeAwardBadges();
+            
+            // Calculate XP based on difficulty
+            let earnedXp = 10;
+            const diff = level.metadata && level.metadata.difficulty ? level.metadata.difficulty : 'beginner';
+            if (diff === 'beginner') earnedXp = 15;
+            else if (diff === 'intermediate') earnedXp = 25;
+            else if (diff === 'advanced') earnedXp = 50;
+            
+            setXp(getXp() + earnedXp);
+            setCombo(getCombo() + 1);
+            
             // Check if this is the final level
             if (getCurrentLevel() === levels.length - 1) {
                 // Final level completed - show celebration directly
                 showCelebration();
             } else {
                 // Regular level completed - show level completion modal
-                showModal(`Level ${getCurrentLevel() + 1} Complete!`, `You've mastered: ${levels[getCurrentLevel()].name}.`);
+                const focusCmd = level.focusCommand ? level.focusCommand : (level.solution ? level.solution.join('') : '');
+                
+                let title = `✔ You learned`;
+                let message = `<div class="bg-gray-800 p-4 rounded font-mono text-green-400 text-4xl text-center inline-block my-4 tracking-tight shadow-inner">${focusCmd}</div>`;
+                message += `<div class="text-gray-300 text-sm mb-4">${level.instructions || 'You completed the lesson!'}</div>`;
+                message += `<div class="text-yellow-400 font-bold text-lg animate-bounce">+${earnedXp} XP</div>`;
+                
+                if (getCurrentLevel() === 3) {
+                    message += `<div class="mt-4 pt-4 border-t border-gray-700/50 text-blue-400 font-bold fade-in-up">🎉 New mode unlocked: Practice Arena</div>`;
+                }
+                
+                showModal(title, message);
             }
         }, 500);
+    } else {
+        // If an Ex command was just entered and failed to win
+        if (state.lastExCommand) {
+            flashError();
+            setCombo(0);
+            updateStatsBar(0, getXp());
+            setLastExCommand(''); // Reset it so it doesn't flash continuously
+        }
     }
 }
 
@@ -402,6 +432,11 @@ export function updateUI() {
         
         updateCommandLog(getCommandLog());
         renderBadges(getBadges());
+        
+        // Update gamification stats
+        import('./game-state.js').then(module => {
+            updateStatsBar(module.getCombo(), module.getXp());
+        });
         
         console.log('🔍 updateUI completed');
     } finally {

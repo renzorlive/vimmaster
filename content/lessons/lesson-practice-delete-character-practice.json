@@ -5,6 +5,7 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
@@ -12,7 +13,8 @@
       "x"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Use x to delete characters. Remove the X from 'Delete X this' and fix other typos.",
   "initialContent": [
@@ -26,5 +28,6 @@
     "Use x to remove the  character",
     "Also fix: 'Fix this typo'",
     "And: 'Remove extra letters'"
-  ]
+  ],
+  "focusCommand": "VIM"
 }

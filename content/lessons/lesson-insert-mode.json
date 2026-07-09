@@ -5,13 +5,15 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
       "normal"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Press 'a' to append after the cursor. Type ' is awesome!' and press Esc to return to NORMAL mode.",
   "initialContent": [
@@ -24,5 +26,6 @@
   "targetText": {
     "line": 4,
     "text": "Learning VIM is awesome!"
-  }
+  },
+  "focusCommand": "i"
 }

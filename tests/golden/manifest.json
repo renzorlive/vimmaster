@@ -31,5 +31,29 @@
         ],
         "finalCursor": { "row": 5, "col": 39 },
         "finalMode": "NORMAL"
+    },
+    {
+        "lessonId": "lesson-delete-inner-word-diw",
+        "description": "Deletion: Delete Inner Word (diw)",
+        "tags": ["normal", "deletion", "text-object"],
+        "solution": ["d", "i", "w"],
+        "timeout": 5000,
+        "maxSteps": 15,
+        "finalBuffer": [
+            "This  is annoying."
+        ],
+        "winCondition": "exactMatch"
+    },
+    {
+        "lessonId": "lesson-change-inner-word-ciw",
+        "description": "Editing: Change Inner Word (ciw)",
+        "tags": ["normal", "editing", "text-object"],
+        "solution": ["c", "i", "w", "r", "i", "g", "h", "t", "Escape"],
+        "timeout": 5000,
+        "maxSteps": 20,
+        "finalBuffer": [
+            "This is the right word."
+        ],
+        "winCondition": "exactMatch"
     }
 ]

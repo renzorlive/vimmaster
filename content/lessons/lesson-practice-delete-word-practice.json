@@ -5,6 +5,7 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
@@ -12,7 +13,8 @@
       "dw"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Use dw to delete words. Remove the extra words to clean up the sentences.",
   "initialContent": [
@@ -28,5 +30,6 @@
     "Delete unwanted repetitions here.",
     "Clean up this messy text.",
     "Final result should be clean sentences."
-  ]
+  ],
+  "focusCommand": "VIM"
 }

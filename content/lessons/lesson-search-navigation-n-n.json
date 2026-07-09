@@ -5,13 +5,15 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
       "normal"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Search for 'foo' with /foo then press n twice to reach the third occurrence.",
   "initialContent": [
@@ -22,5 +24,6 @@
   "target": {
     "row": 2,
     "col": 13
-  }
+  },
+  "focusCommand": "n"
 }

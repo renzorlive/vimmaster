@@ -1,15 +1,17 @@
 {
   "version": 1,
   "contentVersion": 1,
-  "generatedAt": "2026-07-09T20:53:26.141Z",
+  "generatedAt": "2026-07-09T21:57:45.934Z",
   "generator": "scripts/build-content.js",
   "regularLessons": [
     "lesson-append-and-open-lines",
     "lesson-basic-movement",
+    "lesson-change-inner-word-ciw",
     "lesson-change-word-cw",
     "lesson-counts-move-faster",
     "lesson-delete-basics",
     "lesson-delete-end-replace",
+    "lesson-delete-inner-word-diw",
     "lesson-how-to-exit-ex-commands",
     "lesson-insert-mode",
     "lesson-line-bounds-0-and",
