@@ -25,6 +25,8 @@ let _usedSearchInLevel = false;
 let _navCountSinceSearch = 0;
 let _badges = new Set();
 let _practicedCommands = new Set();
+let _xp = 0;
+let _combo = 0;
 
 // Challenge Mode State
 let _challengeMode = false;
@@ -60,6 +62,8 @@ export const getUsedSearchInLevel = () => _usedSearchInLevel;
 export const getNavCountSinceSearch = () => _navCountSinceSearch;
 export const getBadges = () => new Set(_badges);
 export const getPracticedCommands = () => new Set(_practicedCommands);
+export const getXp = () => _xp;
+export const getCombo = () => _combo;
 export const getChallengeMode = () => _challengeMode;
 export const getCurrentChallenge = () => _currentChallenge;
 export const getChallengeTimerInterval = () => _challengeTimerInterval;
@@ -332,9 +336,9 @@ export const setBadges = (badges) => {
     _badges = new Set(badges);
 };
 
-export const setPracticedCommands = (commands) => {
-    _practicedCommands = new Set(commands);
-};
+export const setPracticedCommands = (cmds) => { _practicedCommands = new Set(cmds); };
+export const setXp = (xp) => { _xp = xp; };
+export const setCombo = (combo) => { _combo = combo; };
 
 export const addPracticedCommand = (command) => {
     _practicedCommands.add(command);

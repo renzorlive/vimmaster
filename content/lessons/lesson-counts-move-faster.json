@@ -1,0 +1,27 @@
+{
+  "id": "lesson-counts-move-faster",
+  "version": 1,
+  "name": "Counts: Move Faster",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": [],
+    "learningObjectives": []
+  },
+  "instructions": "Use a count with motions. Press 3 then w to jump three words and land on 'target'.",
+  "initialContent": [
+    "one two three target here"
+  ],
+  "target": {
+    "row": 0,
+    "col": 14
+  },
+  "focusCommand": "VIM"
+}

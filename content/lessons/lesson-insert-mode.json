@@ -1,0 +1,31 @@
+{
+  "id": "lesson-insert-mode",
+  "version": 1,
+  "name": "Insert Mode",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": [],
+    "learningObjectives": []
+  },
+  "instructions": "Press 'a' to append after the cursor. Type ' is awesome!' and press Esc to return to NORMAL mode.",
+  "initialContent": [
+    "VIM has multiple modes. You've been in NORMAL mode.",
+    "Press 'a' to append after the cursor and start typing.",
+    "When you're done, press 'Escape' to go back.",
+    "Your task: complete the sentence below.",
+    "Learning VIM"
+  ],
+  "targetText": {
+    "line": 4,
+    "text": "Learning VIM is awesome!"
+  },
+  "focusCommand": "i"
+}

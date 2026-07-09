@@ -1,0 +1,31 @@
+{
+  "id": "lesson-practice-line-boundary-practice",
+  "version": 1,
+  "name": "Line Boundary Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "0$"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": [],
+    "learningObjectives": []
+  },
+  "instructions": "Use 0 to go to start of line, $ to go to end of line. Practice moving between boundaries.",
+  "initialContent": [
+    "Start here and go to end with $",
+    "Then return to start with 0",
+    "Practice moving between line boundaries",
+    "Use 0 for start, $ for end of each line"
+  ],
+  "target": {
+    "row": 0,
+    "col": 0
+  },
+  "focusCommand": "VIM"
+}

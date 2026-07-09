@@ -1,0 +1,29 @@
+{
+  "id": "lesson-undo-redo",
+  "version": 1,
+  "name": "Undo / Redo",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": [],
+    "learningObjectives": []
+  },
+  "instructions": "Delete the middle line with dd, undo it with u, then redo with Ctrl+r to finish with the line deleted.",
+  "initialContent": [
+    "Top line.",
+    "Remove me.",
+    "Bottom line."
+  ],
+  "targetContent": [
+    "Top line.",
+    "Bottom line."
+  ],
+  "focusCommand": "u"
+}

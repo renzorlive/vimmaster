@@ -1,0 +1,29 @@
+{
+  "name": "vimmaster",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:contract": "node tests/contract/runner.js",
+    "test:golden": "node tests/golden/runner.js",
+    "build:content": "node scripts/build-content.js",
+    "coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "check": "npm run build:content && npm run lint && npm run test:contract && npm run test:golden && npm run test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.6.0",
+    "eslint": "^9.6.0",
+    "globals": "^15.8.0",
+    "happy-dom": "^14.12.3",
+    "prettier": "^3.3.2",
+    "vite": "^5.3.3",
+    "vitest": "^2.0.2"
+  }
+}

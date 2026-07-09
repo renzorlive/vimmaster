@@ -15,7 +15,7 @@ import {
     setCurrentMatchIndex, setUsedSearchInLevel, setNavCountSinceSearch, setLevel12Undo,
     setLevel12RedoAfterUndo, setLastExCommand, setCurrentChallenge, setCurrentTaskIndex,
     setChallengeScoreValue, setChallengeProgressValue, setChallengeStartTime,
-    setChallengeTimerInterval, addBadge
+    setChallengeTimerInterval, addBadge, getXp, getCombo, setXp, setCombo
 } from './game-state.js';
 
 import { levels, loadLevel, getCurrentLevelFromGameState, getLevelCount, isLastLevel } from './levels.js';
@@ -26,10 +26,11 @@ import {
     renderEditor, updateStatusBar, updateInstructions, updateLevelIndicator, 
     updateCommandLog, createLevelButtons, renderBadges, showModal, hideModal,
     showCelebration, hideCelebration, flashLevelComplete, updateChallengeUI,
-    showChallengeContainer, hideChallengeContainer, showBadgeToast
+    showChallengeContainer, hideChallengeContainer, showBadgeToast, flashError, updateStatsBar
 } from './ui-components.js';
 import { openCheat, closeCheat, renderCheatList } from './cheat-mode.js';
 import { autoSaveProgress } from './progress-system.js';
+import { evaluateWinCondition } from './win-evaluator.js';
 
 // Game Logic Functions
 export function checkWinCondition() {
@@ -151,73 +152,63 @@ export function checkWinCondition() {
     
     // Regular level win condition check
     const level = levels[getCurrentLevel()];
-    let won = false;
-    
-    if (level.exCommands) {
-        if (getLastExCommand() && level.exCommands.includes(getLastExCommand())) won = true;
-    } else if (level.target) {
-        // For search-focused levels, require actual search usage
-        const searchLevelNames = ['Search Forward (/)','Search Backward (?)','Search Navigation (n/N)'];
-        const isSearchLevel = searchLevelNames.includes(level.name);
-        const cursor = getCursor();
-        if (cursor.row === level.target.row && cursor.col === level.target.col) {
-            if (!isSearchLevel) {
-                won = true;
-            } else {
-                if (level.name === 'Search Navigation (n/N)') {
-                    // Require at least two 'n' presses after search to reach 3rd occurrence
-                    if (getUsedSearchInLevel() && getNavCountSinceSearch() >= 2 && getLastSearchQuery() && getLastSearchQuery().toLowerCase() === 'foo' && getLastSearchDirection() === 'forward') won = true;
-                } else if (level.name === 'Search Forward (/)') {
-                    // Now require one 'n' after search to reach second occurrence
-                    if (getUsedSearchInLevel() && getLastSearchDirection() === 'forward' && getLastSearchQuery() && getLastSearchQuery().toLowerCase() === 'target' && getNavCountSinceSearch() >= 1) {
-                        won = true;
-                    }
-                } else if (level.name === 'Search Backward (?)') {
-                    // Require one 'N' after search to reach previous occurrence
-                    if (getUsedSearchInLevel() && getLastSearchDirection() === 'backward' && getLastSearchQuery() && getLastSearchQuery().toLowerCase() === 'alpha' && getNavCountSinceSearch() >= 1) {
-                        won = true;
-                    }
-                }
-            }
-        }
-    
-    } else if (level.targetText) {
-        if (getContent()[level.targetText.line] === level.targetText.text && getMode() === 'NORMAL') won = true;
-    
-    } else if (level.targetContent) {
-        // Compare lines after trimming trailing whitespace and ignoring trailing blank lines
-        const trimLineEnd = (line) => line.replace(/\s+$/, '');
-        const stripTrailingBlankLines = (lines) => {
-            const result = [...lines];
-            while (result.length > 0 && trimLineEnd(result[result.length - 1]) === '') {
-                result.pop();
-            }
-            return result;
-        };
-        const currentLines = stripTrailingBlankLines(getContent().map(trimLineEnd));
-        const targetLines = stripTrailingBlankLines(level.targetContent.map(trimLineEnd));
-        if (currentLines.length === targetLines.length && currentLines.every((l, i) => l === targetLines[i])) {
-            if (level.name === 'Undo / Redo') {
-                if (getLevel12RedoAfterUndo()) won = true;
-            } else {
-                won = true;
-            }
-        }
-    }
+    const state = {
+        lastExCommand: getLastExCommand(),
+        cursor: getCursor(),
+        usedSearchInLevel: getUsedSearchInLevel(),
+        navCountSinceSearch: getNavCountSinceSearch(),
+        lastSearchQuery: getLastSearchQuery(),
+        lastSearchDirection: getLastSearchDirection(),
+        content: getContent(),
+        mode: getMode(),
+        level12RedoAfterUndo: getLevel12RedoAfterUndo()
+    };
+
+    const { won } = evaluateWinCondition(state, level);
 
     if (won) {
         flashLevelComplete();
         setTimeout(() => {
             maybeAwardBadges();
+            
+            // Calculate XP based on difficulty
+            let earnedXp = 10;
+            const diff = level.metadata && level.metadata.difficulty ? level.metadata.difficulty : 'beginner';
+            if (diff === 'beginner') earnedXp = 15;
+            else if (diff === 'intermediate') earnedXp = 25;
+            else if (diff === 'advanced') earnedXp = 50;
+            
+            setXp(getXp() + earnedXp);
+            setCombo(getCombo() + 1);
+            
             // Check if this is the final level
             if (getCurrentLevel() === levels.length - 1) {
                 // Final level completed - show celebration directly
                 showCelebration();
             } else {
                 // Regular level completed - show level completion modal
-                showModal(`Level ${getCurrentLevel() + 1} Complete!`, `You've mastered: ${levels[getCurrentLevel()].name}.`);
+                const focusCmd = level.focusCommand ? level.focusCommand : (level.solution ? level.solution.join('') : '');
+                
+                let title = `✔ You learned`;
+                let message = `<div class="bg-gray-800 p-4 rounded font-mono text-green-400 text-4xl text-center inline-block my-4 tracking-tight shadow-inner">${focusCmd}</div>`;
+                message += `<div class="text-gray-300 text-sm mb-4">${level.instructions || 'You completed the lesson!'}</div>`;
+                message += `<div class="text-yellow-400 font-bold text-lg animate-bounce">+${earnedXp} XP</div>`;
+                
+                if (getCurrentLevel() === 3) {
+                    message += `<div class="mt-4 pt-4 border-t border-gray-700/50 text-blue-400 font-bold fade-in-up">🎉 New mode unlocked: Practice Arena</div>`;
+                }
+                
+                showModal(title, message);
             }
         }, 500);
+    } else {
+        // If an Ex command was just entered and failed to win
+        if (state.lastExCommand) {
+            flashError();
+            setCombo(0);
+            updateStatsBar(0, getXp());
+            setLastExCommand(''); // Reset it so it doesn't flash continuously
+        }
     }
 }
 
@@ -441,6 +432,11 @@ export function updateUI() {
         
         updateCommandLog(getCommandLog());
         renderBadges(getBadges());
+        
+        // Update gamification stats
+        import('./game-state.js').then(module => {
+            updateStatsBar(module.getCombo(), module.getXp());
+        });
         
         console.log('🔍 updateUI completed');
     } finally {

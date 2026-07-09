@@ -1,0 +1,29 @@
+{
+  "id": "lesson-append-and-open-lines",
+  "version": 1,
+  "name": "Append and Open Lines",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": [],
+    "learningObjectives": []
+  },
+  "instructions": "Use a to append after cursor. Use o to open a new line below, and O to open above. Add a new line between the two lines that reads 'Inserted here'.",
+  "initialContent": [
+    "First line.",
+    "Second line."
+  ],
+  "targetContent": [
+    "First line.",
+    "Inserted here",
+    "Second line."
+  ],
+  "focusCommand": "a"
+}

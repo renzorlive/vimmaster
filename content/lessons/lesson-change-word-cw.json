@@ -1,0 +1,27 @@
+{
+  "id": "lesson-change-word-cw",
+  "version": 1,
+  "name": "Change Word (cw)",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": [],
+    "learningObjectives": []
+  },
+  "instructions": "Use cw to change the word 'bad' into 'good'. Press Esc when done.",
+  "initialContent": [
+    "This is a bad example."
+  ],
+  "targetText": {
+    "line": 0,
+    "text": "This is a good example."
+  },
+  "focusCommand": "VIM"
+}

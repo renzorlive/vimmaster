@@ -1,0 +1,33 @@
+{
+  "id": "lesson-practice-delete-to-end-practice",
+  "version": 1,
+  "name": "Delete to End Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "D"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": [],
+    "learningObjectives": []
+  },
+  "instructions": "Use D to delete from cursor to end of line. Clean up the messy line endings.",
+  "initialContent": [
+    "Keep this part DELETE_FROM_HERE_TO_END",
+    "Preserve this DELETE_REST_OF_LINE",
+    "Save this text REMOVE_EVERYTHING_AFTER",
+    "Maintain this DELETE_TO_FINISH"
+  ],
+  "targetContent": [
+    "Keep this part",
+    "Preserve this",
+    "Save this text",
+    "Maintain this"
+  ],
+  "focusCommand": "VIM"
+}

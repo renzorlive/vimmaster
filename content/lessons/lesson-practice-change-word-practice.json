@@ -1,0 +1,33 @@
+{
+  "id": "lesson-practice-change-word-practice",
+  "version": 1,
+  "name": "Change Word Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "cw"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": [],
+    "learningObjectives": []
+  },
+  "instructions": "Use cw to change words. Replace the wrong words with correct ones.",
+  "initialContent": [
+    "The wrong animal is a elephant",
+    "I like to eat wrong food",
+    "VIM is a wrong editor",
+    "Programming is wrong activity"
+  ],
+  "targetContent": [
+    "The best animal is a elephant",
+    "I like to eat good food",
+    "VIM is a great editor",
+    "Programming is fun activity"
+  ],
+  "focusCommand": "VIM"
+}

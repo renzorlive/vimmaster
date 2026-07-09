@@ -1,0 +1,32 @@
+{
+  "id": "lesson-practice-insert-mode-practice",
+  "version": 1,
+  "name": "Insert Mode Practice",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "practice",
+      "ia"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": [],
+    "learningObjectives": []
+  },
+  "instructions": "Press 'i' to insert before cursor, 'a' to append after cursor. Type 'INSERTED' and 'APPENDED'.",
+  "initialContent": [
+    "VIM has multiple modes. You're in NORMAL mode now.",
+    "Press 'i' to insert before cursor and type 'INSERTED'.",
+    "Press 'a' to append after cursor and type 'APPENDED'.",
+    "When done, press 'Escape' to return to NORMAL mode.",
+    "Complete the sentence: Learning VIM"
+  ],
+  "targetText": {
+    "line": 4,
+    "text": "Learning VIM INSERTED APPENDED"
+  },
+  "focusCommand": "i"
+}

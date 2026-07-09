@@ -1,0 +1,59 @@
+[
+    {
+        "lessonId": "lesson-how-to-exit-ex-commands",
+        "description": "Basic Movement: How to Exit",
+        "tags": ["normal", "ex"],
+        "solution": [":", "q", "Enter"],
+        "timeout": 5000,
+        "maxSteps": 150,
+        "finalBuffer": [
+            "Welcome to VIM Master!",
+            "Most searched question: how to exit Vim?",
+            "Try typing :q and press Enter (or :wq)."
+        ],
+        "finalCursor": { "row": 0, "col": 0 },
+        "finalMode": "NORMAL"
+    },
+    {
+        "lessonId": "lesson-basic-movement",
+        "description": "Basic Movement: Navigate to dollar sign",
+        "tags": ["normal", "movement"],
+        "solution": ["j", "j", "j", "j", "j", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l"],
+        "timeout": 5000,
+        "maxSteps": 150,
+        "finalBuffer": [
+            "Move with h(left), j(down), k(up), l(right).",
+            "Your cursor starts here.",
+            "",
+            "The goal is to navigate to the dollar sign.",
+            "Practice moving around the text.",
+            "Once you are comfortable, move to the '$'."
+        ],
+        "finalCursor": { "row": 5, "col": 39 },
+        "finalMode": "NORMAL"
+    },
+    {
+        "lessonId": "lesson-delete-inner-word-diw",
+        "description": "Deletion: Delete Inner Word (diw)",
+        "tags": ["normal", "deletion", "text-object"],
+        "solution": ["d", "i", "w"],
+        "timeout": 5000,
+        "maxSteps": 15,
+        "finalBuffer": [
+            "This  is annoying."
+        ],
+        "winCondition": "exactMatch"
+    },
+    {
+        "lessonId": "lesson-change-inner-word-ciw",
+        "description": "Editing: Change Inner Word (ciw)",
+        "tags": ["normal", "editing", "text-object"],
+        "solution": ["c", "i", "w", "r", "i", "g", "h", "t", "Escape"],
+        "timeout": 5000,
+        "maxSteps": 20,
+        "finalBuffer": [
+            "This is the right word."
+        ],
+        "winCondition": "exactMatch"
+    }
+]

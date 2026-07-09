@@ -1,0 +1,29 @@
+{
+  "id": "lesson-search-navigation-n-n",
+  "version": 1,
+  "name": "Search Navigation (n/N)",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-09",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": [],
+    "learningObjectives": []
+  },
+  "instructions": "Search for 'foo' with /foo then press n twice to reach the third occurrence.",
+  "initialContent": [
+    "foo bar baz",
+    "qux foo quux",
+    "corge grault foo"
+  ],
+  "target": {
+    "row": 2,
+    "col": 13
+  },
+  "focusCommand": "n"
+}
