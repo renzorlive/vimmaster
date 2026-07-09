@@ -25,7 +25,8 @@ import {
     initializeDOMReferences, renderEditor, updateStatusBar, updateInstructions, 
     updateLevelIndicator, updateCommandLog, createLevelButtons, renderBadges, 
     showModal, hideModal, showCelebration, hideCelebration, flashLevelComplete,
-    updateChallengeUI, showChallengeContainer, hideChallengeContainer, showBadgeToast
+    updateChallengeUI, showChallengeContainer, hideChallengeContainer, showBadgeToast,
+    initOnboarding
 } from './ui-components.js';
 import { openCheat, closeCheat, renderCheatList, isInPracticeMode, checkPracticeCompletion } from './cheat-mode.js';
 import { 
@@ -64,6 +65,9 @@ function initializeGame() {
     
     // Initial UI update
     updateUI();
+    
+    // Check onboarding
+    initOnboarding();
     
     // Update progress summary
     updateProgressSummary();

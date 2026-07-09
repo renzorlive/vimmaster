@@ -5,13 +5,15 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
       "normal"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Type :q to quit, or :wq to write and quit. Press Enter after the command.",
   "initialContent": [
@@ -22,5 +24,6 @@
   "exCommands": [
     "q",
     "wq"
-  ]
+  ],
+  "focusCommand": ":q"
 }

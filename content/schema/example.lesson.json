@@ -4,12 +4,17 @@
     "name": "Example Movement",
     "metadata": {
         "revision": 1,
-        "author": "VIM Master Team",
-        "created": "2026-07-09",
+        "author": "Your Name",
+        "githubUsername": "yourusername",
+        "created": "2026-07-10",
         "difficulty": "beginner",
-        "tags": ["normal", "movement"],
-        "estimatedTime": 60,
-        "prerequisites": []
+        "tags": ["movement", "example"],
+        "estimatedTime": 45,
+        "prerequisites": [],
+        "learningObjectives": [
+            "Understand how to use the 'x' command to delete a single character",
+            "Understand how to move the cursor to the character you want to delete"
+        ]
     },
     "instructions": "<div class=\"text-center\">\n    <div class=\"text-blue-400 font-bold text-lg mb-2\">Welcome</div>\n    <div class=\"text-gray-300\">Press j to move down</div>\n</div>",
     "initialContent": [
@@ -20,5 +25,6 @@
         "row": 1,
         "col": 0
     },
-    "solution": ["j"]
+    "solution": ["j"],
+    "focusCommand": "j"
 }

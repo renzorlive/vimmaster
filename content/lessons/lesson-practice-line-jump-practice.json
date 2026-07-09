@@ -5,6 +5,7 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
@@ -12,7 +13,8 @@
       "ggG"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Use gg to go to the first line, and G to go to the last line. Go to the last character of the last line.",
   "initialContent": [
@@ -26,5 +28,6 @@
   "target": {
     "row": 5,
     "col": 30
-  }
+  },
+  "focusCommand": "VIM"
 }

@@ -5,13 +5,15 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
       "normal"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Use dd to delete the full middle line. Then use dw to remove the word 'mistake' on the last line. You can use x to delete a single character if needed.",
   "initialContent": [
@@ -22,5 +24,6 @@
   "targetContent": [
     "Keep this line.",
     "Fix this here."
-  ]
+  ],
+  "focusCommand": "x"
 }

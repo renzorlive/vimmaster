@@ -5,13 +5,15 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
       "normal"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Use 0 to jump to start of line and $ to jump to end. Move to the last character of the first line.",
   "initialContent": [
@@ -21,5 +23,6 @@
   "target": {
     "row": 0,
     "col": 38
-  }
+  },
+  "focusCommand": "0 / $"
 }

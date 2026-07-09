@@ -5,13 +5,15 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
       "normal"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Use w (next word), b (back), e (end of word). Get to the end of the 'destination' word.",
   "initialContent": [
@@ -24,5 +26,6 @@
   "target": {
     "row": 4,
     "col": 28
-  }
+  },
+  "focusCommand": "w"
 }

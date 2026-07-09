@@ -38,11 +38,13 @@ function migrate() {
             metadata: {
                 revision: 1,
                 author: "VIM Master Team",
+                githubUsername: "vimmaster",
                 created: "2026-07-09",
                 difficulty: "beginner",
                 tags: ["normal"],
                 estimatedTime: 60,
-                prerequisites: []
+                prerequisites: [],
+                learningObjectives: []
             },
             instructions: level.instructions,
             initialContent: level.initialContent,
@@ -75,11 +77,13 @@ function migrate() {
             metadata: {
                 revision: 1,
                 author: "VIM Master Team",
+                githubUsername: "vimmaster",
                 created: "2026-07-09",
                 difficulty: "beginner",
                 tags: ["practice", key],
                 estimatedTime: 60,
-                prerequisites: []
+                prerequisites: [],
+                learningObjectives: []
             },
             instructions: level.instructions,
             initialContent: level.initialContent,

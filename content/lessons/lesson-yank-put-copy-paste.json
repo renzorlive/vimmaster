@@ -5,13 +5,15 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
       "normal"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Use yy to yank (copy) a line and p to put (paste) it. Duplicate the second line.",
   "initialContent": [
@@ -25,5 +27,6 @@
     "Yank this line!",
     "And put it below this line.",
     "Yank this line!"
-  ]
+  ],
+  "focusCommand": "p"
 }

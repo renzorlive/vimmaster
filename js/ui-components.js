@@ -119,31 +119,30 @@ export function updateInstructions(customText) {
 
     // Import cheat mode functions for practice mode detection
     import('./cheat-mode.js').then(({ isInPracticeMode, getCurrentLessonSpec }) => {
-        console.log('🔍 DEBUG: updateInstructions - isInPracticeMode:', isInPracticeMode());
-        console.log('🔍 DEBUG: updateInstructions - getCurrentLessonSpec:', getCurrentLessonSpec());
-        
+        const authorEl = document.getElementById('lesson-author');
+        if (authorEl) authorEl.classList.add('hidden'); // Hide by default
+
         if (isInPracticeMode() && getCurrentLessonSpec()) {
             const lesson = getCurrentLessonSpec();
-            console.log('🔍 DEBUG: updateInstructions - Setting lesson instructions for:', lesson.name);
             instructionsEl.innerHTML = `
                 <div class="text-center">
                     <div class="text-yellow-400 font-bold text-lg mb-2">🎯 ${lesson.name}</div>
                     <div class="text-gray-300">${lesson.instructions}</div>
                 </div>
             `;
+            if (lesson.metadata && lesson.metadata.githubUsername && authorEl) {
+                authorEl.textContent = `Lesson by @${lesson.metadata.githubUsername}`;
+                authorEl.classList.remove('hidden');
+            }
         } else {
             // Use statically imported modules instead of dynamic imports
             // Check if we're in challenge mode
             if (gameStateModule.getChallengeMode && gameStateModule.getChallengeMode()) {
                 const currentChallenge = gameStateModule.getCurrentChallenge();
                 const currentTaskIndex = gameStateModule.getCurrentTaskIndex();
-                console.log('🔍 DEBUG: Challenge mode detected');
-                console.log('🔍 DEBUG: Current challenge:', currentChallenge);
-                console.log('🔍 DEBUG: Current task index:', currentTaskIndex);
                 
                 if (currentChallenge && currentTaskIndex !== undefined && currentTaskIndex < currentChallenge.tasks.length) {
                     const currentTask = currentChallenge.tasks[currentTaskIndex];
-                    console.log('🔍 DEBUG: Setting challenge instruction:', currentTask.instruction);
                     instructionsEl.innerHTML = `
                         <div class="text-center">
                             <div class="text-blue-400 font-bold text-lg mb-2">🚀 ${currentChallenge.name}</div>
@@ -152,19 +151,33 @@ export function updateInstructions(customText) {
                         </div>
                     `;
                 } else {
-                    console.log('🔍 DEBUG: No valid challenge task found');
                     instructionsEl.textContent = 'Challenge mode active';
                 }
             } else {
                 // Normal level instructions
                 const currentLevel = gameStateModule.getCurrentLevel();
                 if (currentLevel !== undefined && levelsModule.levels && levelsModule.levels[currentLevel]) {
-                    instructionsEl.textContent = levelsModule.levels[currentLevel].instructions || '';
+                    const level = levelsModule.levels[currentLevel];
+                    const focusCmd = level.focusCommand ? level.focusCommand : (level.solution ? level.solution.join('') : '');
+                    instructionsEl.innerHTML = `
+                        <div class="text-center">
+                            <div class="text-yellow-400 font-bold text-lg mb-2 uppercase tracking-widest">🎯 Goal</div>
+                            <div class="text-gray-300 text-sm mb-4">${level.instructions || ''}</div>
+                            <div class="border-t border-b border-gray-700/50 py-3 my-3">
+                                <div class="text-5xl md:text-6xl font-mono text-green-400 font-bold tracking-tight">${focusCmd}</div>
+                            </div>
+                            <div class="text-gray-500 text-xs mt-2">Type exactly as shown</div>
+                        </div>
+                    `;
+                    if (level.metadata && level.metadata.githubUsername && authorEl) {
+                        authorEl.textContent = `Lesson by @${level.metadata.githubUsername}`;
+                        authorEl.classList.remove('hidden');
+                    }
                 }
             }
         }
-    }).catch(error => {
-        console.error('Error loading cheat mode instructions:', error);
+    }).catch(err => {
+        console.error("Error updating instructions", err);
     });
 }
 
@@ -176,7 +189,96 @@ export function updateLevelIndicator(currentLevel, totalLevels) {
         return;
     }
     levelIndicator.textContent = `Level: ${currentLevel + 1} / ${totalLevels}`;
-    console.log('🔍 DEBUG: Level indicator updated to:', levelIndicator.textContent);
+    
+    // Minimal progress indicator
+    const minimalProgress = document.getElementById('minimal-progress');
+    if (minimalProgress) {
+        minimalProgress.classList.remove('hidden');
+        let blocks = '';
+        const blocksToShow = Math.min(totalLevels, 16);
+        for (let i = 0; i < blocksToShow; i++) {
+            blocks += (i <= currentLevel) ? '█' : '□';
+        }
+        minimalProgress.textContent = `Lesson ${currentLevel + 1} / ${totalLevels}   ${blocks}`;
+    }
+    
+    progressiveUnlocking(currentLevel);
+}
+
+// First Time Experience (Onboarding & Unlocking)
+export function initOnboarding() {
+    const overlay = document.getElementById('onboarding-overlay');
+    const modal = document.getElementById('onboarding-modal');
+    const startBtn = document.getElementById('start-learning-btn');
+    
+    // Defer the check to next tick to ensure state is loaded
+    setTimeout(() => {
+        const currentLevel = window.vimmasterGameState ? window.vimmasterGameState.getCurrentLevel() : 0;
+        
+        if (currentLevel > 0) {
+            if (overlay) overlay.classList.add('hidden');
+            progressiveUnlocking(currentLevel);
+            return;
+        }
+        
+        // First time experience
+        if (overlay && modal && startBtn) {
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('scale-95', 'opacity-0');
+                modal.classList.add('scale-100', 'opacity-100');
+            }, 50);
+            
+            startBtn.onclick = () => {
+                modal.classList.remove('scale-100', 'opacity-100');
+                modal.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+            };
+        }
+        progressiveUnlocking(currentLevel);
+    }, 100);
+}
+
+export function progressiveUnlocking(currentLevel) {
+    const progressToggle = document.getElementById('progress-toggle');
+    const profileBtn = document.getElementById('profile-btn');
+    const practiceArena = document.getElementById('challenge-toggle');
+    const cheatHints = document.getElementById('cheat-hints');
+    const badgeSection = document.getElementById('badge-section');
+    const statsBar = document.getElementById('stats-bar');
+
+    const showWithAnimation = (el) => {
+        if (el && el.classList.contains('hidden')) {
+            el.classList.remove('hidden');
+            el.classList.add('fade-in-up');
+        }
+    };
+
+    if (currentLevel >= 1) {
+        showWithAnimation(statsBar);
+        showWithAnimation(profileBtn);
+        showWithAnimation(badgeSection);
+    }
+    if (currentLevel >= 4) {
+        showWithAnimation(practiceArena);
+    }
+    if (currentLevel >= 8) { // End of basics
+        showWithAnimation(cheatHints);
+    }
+}
+
+// Stats Bar Updates
+export function updateStatsBar(combo, xp) {
+    const statsBar = document.getElementById('stats-bar');
+    const comboDisplay = document.getElementById('combo-display');
+    const xpDisplay = document.getElementById('xp-display');
+    
+    if (statsBar && comboDisplay && xpDisplay) {
+        comboDisplay.textContent = combo;
+        xpDisplay.textContent = xp;
+    }
 }
 
 // Command Log Updates
@@ -305,9 +407,18 @@ function spawnConfettiOnce() {
 export function flashLevelComplete() {
     if (!editorContainer) return;
     
-    editorContainer.classList.add('level-complete-flash');
+    editorContainer.classList.add('success-pulse');
     setTimeout(() => {
-        editorContainer.classList.remove('level-complete-flash');
+        editorContainer.classList.remove('success-pulse');
+    }, 800);
+}
+
+export function flashError() {
+    if (!editorContainer) return;
+    
+    editorContainer.classList.add('error-flash');
+    setTimeout(() => {
+        editorContainer.classList.remove('error-flash');
     }, 500);
 }
 
@@ -358,6 +469,7 @@ export function getDOMReferences() {
         nextLevelBtn, celebration, celebrationRestartBtn, levelSelectionContainer,
         challengeToggleBtn, challengeContainer, challengeInstructions, challengeTimer,
         challengeProgress, challengeTotal, challengeScore, badgeSection, badgeBar,
-        badgeCount, badgeToast, cheatPanel, cheatOverlay, cheatCloseBtn, cheatSearch, cheatContent
+        badgeCount, badgeToast, cheatPanel, cheatOverlay, cheatCloseBtn, cheatSearch, cheatContent,
+        flashError, updateStatsBar
     };
 }

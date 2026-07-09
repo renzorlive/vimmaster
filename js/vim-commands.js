@@ -201,6 +201,27 @@ export function handleNormalMode(e) {
         clearCommandHistory();
         clearCommandLog();
         return; // Exit early after processing compound command
+    } else if (freshCommandHistory.endsWith('diw')) {
+        pushUndo();
+        let line = content[cursor.row];
+        if (line.length > 0) {
+            const isWordChar = (c) => /\w/.test(c);
+            const startIsWord = isWordChar(line[cursor.col]);
+            let start = cursor.col;
+            while (start > 0 && isWordChar(line[start - 1]) === startIsWord && line[start - 1] !== ' ') {
+                start--;
+            }
+            let end = cursor.col;
+            while (end < line.length && isWordChar(line[end]) === startIsWord && line[end] !== ' ') {
+                end++;
+            }
+            // diw doesn't delete trailing space unless it's just spaces, but basic implementation:
+            updateContentLine(cursor.row, line.slice(0, start) + line.slice(end));
+            setCursorCol(Math.min(start, content[cursor.row].length > 0 ? content[cursor.row].length - 1 : 0));
+        }
+        clearCommandHistory();
+        clearCommandLog();
+        return;
     }
 
     // Get FRESH count buffer value right before movement commands
@@ -241,7 +262,7 @@ export function handleNormalMode(e) {
 
     // Word movement
     // Avoid moving on 'w' when it's part of operators like 'dw' or 'cw'
-    if (key === 'w' && !(freshCommandHistory.endsWith('dw') || freshCommandHistory.endsWith('cw'))) {
+    if (key === 'w' && !(freshCommandHistory.endsWith('dw') || freshCommandHistory.endsWith('cw') || freshCommandHistory.endsWith('diw') || freshCommandHistory.endsWith('ciw'))) {
         addPracticedCommand('w_word_forward');
         repeat(count, () => {
             // Get FRESH cursor position for each iteration
@@ -297,7 +318,7 @@ export function handleNormalMode(e) {
     }
 
     // Mode change
-    if (key === 'i') {
+    if (key === 'i' && !freshCommandHistory.endsWith('di') && !freshCommandHistory.endsWith('ci')) {
         addPracticedCommand('i_insert_mode');
         setMode('INSERT');
         clearCommandHistory(); // Clear command history for standalone 'i'
@@ -348,6 +369,27 @@ export function handleNormalMode(e) {
         let endRel = line.substring(start).search(/\s|$/);
         let end = endRel === -1 ? line.length : start + endRel;
         updateContentLine(cursor.row, line.slice(0, start) + line.slice(end));
+        setMode('INSERT');
+        clearCommandHistory();
+        clearCommandLog();
+    }
+    if (freshCommandHistory.endsWith('ciw')) {
+        pushUndo();
+        let line = content[cursor.row];
+        if (line.length > 0) {
+            const isWordChar = (c) => /\w/.test(c);
+            const startIsWord = isWordChar(line[cursor.col]);
+            let start = cursor.col;
+            while (start > 0 && isWordChar(line[start - 1]) === startIsWord && line[start - 1] !== ' ') {
+                start--;
+            }
+            let end = cursor.col;
+            while (end < line.length && isWordChar(line[end]) === startIsWord && line[end] !== ' ') {
+                end++;
+            }
+            updateContentLine(cursor.row, line.slice(0, start) + line.slice(end));
+            setCursorCol(Math.min(start, content[cursor.row].length > 0 ? content[cursor.row].length - 1 : 0));
+        }
         setMode('INSERT');
         clearCommandHistory();
         clearCommandLog();

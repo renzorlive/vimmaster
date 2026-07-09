@@ -5,13 +5,15 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
       "normal"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Press ? then type 'alpha' and Enter, then press N once to jump to the previous occurrence.",
   "initialContent": [
@@ -22,5 +24,6 @@
   "target": {
     "row": 0,
     "col": 0
-  }
+  },
+  "focusCommand": "?"
 }

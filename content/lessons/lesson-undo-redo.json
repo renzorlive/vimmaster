@@ -5,13 +5,15 @@
   "metadata": {
     "revision": 1,
     "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
     "created": "2026-07-09",
     "difficulty": "beginner",
     "tags": [
       "normal"
     ],
     "estimatedTime": 60,
-    "prerequisites": []
+    "prerequisites": [],
+    "learningObjectives": []
   },
   "instructions": "Delete the middle line with dd, undo it with u, then redo with Ctrl+r to finish with the line deleted.",
   "initialContent": [
@@ -22,5 +24,6 @@
   "targetContent": [
     "Top line.",
     "Bottom line."
-  ]
+  ],
+  "focusCommand": "u"
 }

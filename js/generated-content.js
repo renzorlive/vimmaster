@@ -9,15 +9,17 @@ export const generatedContent = {
   "index": {
     "version": 1,
     "contentVersion": 1,
-    "generatedAt": "2026-07-09T20:53:26.141Z",
+    "generatedAt": "2026-07-09T21:52:41.564Z",
     "generator": "scripts/build-content.js",
     "regularLessons": [
       "lesson-append-and-open-lines",
       "lesson-basic-movement",
+      "lesson-change-inner-word-ciw",
       "lesson-change-word-cw",
       "lesson-counts-move-faster",
       "lesson-delete-basics",
       "lesson-delete-end-replace",
+      "lesson-delete-inner-word-diw",
       "lesson-how-to-exit-ex-commands",
       "lesson-insert-mode",
       "lesson-line-bounds-0-and",
@@ -57,13 +59,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use a to append after cursor. Use o to open a new line below, and O to open above. Add a new line between the two lines that reads 'Inserted here'.",
       "initialContent": [
@@ -74,7 +78,8 @@ export const generatedContent = {
         "First line.",
         "Inserted here",
         "Second line."
-      ]
+      ],
+      "focusCommand": "a"
     },
     "lesson-basic-movement": {
       "id": "lesson-basic-movement",
@@ -83,13 +88,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use h, j, k, l to move the cursor. Reach the target character '$'.",
       "initialContent": [
@@ -103,7 +110,56 @@ export const generatedContent = {
       "target": {
         "row": 5,
         "col": 39
-      }
+      },
+      "focusCommand": "hjkl"
+    },
+    "lesson-change-inner-word-ciw": {
+      "id": "lesson-change-inner-word-ciw",
+      "version": 1,
+      "name": "Change Inner Word (ciw)",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-10",
+        "difficulty": "intermediate",
+        "tags": [
+          "normal",
+          "editing",
+          "text-object"
+        ],
+        "estimatedTime": 45,
+        "prerequisites": [
+          "lesson-delete-inner-word-diw"
+        ],
+        "learningObjectives": [
+          "Use 'ciw' to change a word completely without needing to be at its start",
+          "Understand how 'c' combines with 'iw'"
+        ]
+      },
+      "instructions": "Use 'ciw' to change the word 'wrong' into 'right'. Press Esc when done.",
+      "initialContent": [
+        "This is the wrong word."
+      ],
+      "initialCursor": {
+        "row": 0,
+        "col": 14
+      },
+      "targetContent": [
+        "This is the right word."
+      ],
+      "solution": [
+        "c",
+        "i",
+        "w",
+        "r",
+        "i",
+        "g",
+        "h",
+        "t",
+        "Escape"
+      ],
+      "focusCommand": "ciw"
     },
     "lesson-change-word-cw": {
       "id": "lesson-change-word-cw",
@@ -112,13 +168,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use cw to change the word 'bad' into 'good'. Press Esc when done.",
       "initialContent": [
@@ -127,7 +185,8 @@ export const generatedContent = {
       "targetText": {
         "line": 0,
         "text": "This is a good example."
-      }
+      },
+      "focusCommand": "VIM"
     },
     "lesson-counts-move-faster": {
       "id": "lesson-counts-move-faster",
@@ -136,13 +195,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use a count with motions. Press 3 then w to jump three words and land on 'target'.",
       "initialContent": [
@@ -151,7 +212,8 @@ export const generatedContent = {
       "target": {
         "row": 0,
         "col": 14
-      }
+      },
+      "focusCommand": "VIM"
     },
     "lesson-delete-basics": {
       "id": "lesson-delete-basics",
@@ -160,13 +222,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use dd to delete the full middle line. Then use dw to remove the word 'mistake' on the last line. You can use x to delete a single character if needed.",
       "initialContent": [
@@ -177,7 +241,8 @@ export const generatedContent = {
       "targetContent": [
         "Keep this line.",
         "Fix this here."
-      ]
+      ],
+      "focusCommand": "x"
     },
     "lesson-delete-end-replace": {
       "id": "lesson-delete-end-replace",
@@ -186,13 +251,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use D to delete from cursor to end of line, then use r to replace the 'x' with '!'.",
       "initialContent": [
@@ -202,7 +269,50 @@ export const generatedContent = {
       "targetContent": [
         "Keep this → ",
         "Replace this !"
-      ]
+      ],
+      "focusCommand": "D"
+    },
+    "lesson-delete-inner-word-diw": {
+      "id": "lesson-delete-inner-word-diw",
+      "version": 1,
+      "name": "Delete Inner Word (diw)",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-10",
+        "difficulty": "intermediate",
+        "tags": [
+          "normal",
+          "deletion",
+          "text-object"
+        ],
+        "estimatedTime": 45,
+        "prerequisites": [
+          "lesson-delete-basics"
+        ],
+        "learningObjectives": [
+          "Understand the 'iw' (inner word) text object",
+          "Use 'diw' to delete a word without needing to be at its start"
+        ]
+      },
+      "instructions": "Use 'diw' to delete the word 'mistake' from anywhere inside it.",
+      "initialContent": [
+        "This mistake is annoying."
+      ],
+      "initialCursor": {
+        "row": 0,
+        "col": 8
+      },
+      "targetContent": [
+        "This  is annoying."
+      ],
+      "solution": [
+        "d",
+        "i",
+        "w"
+      ],
+      "focusCommand": "diw"
     },
     "lesson-how-to-exit-ex-commands": {
       "id": "lesson-how-to-exit-ex-commands",
@@ -211,13 +321,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Type :q to quit, or :wq to write and quit. Press Enter after the command.",
       "initialContent": [
@@ -228,7 +340,8 @@ export const generatedContent = {
       "exCommands": [
         "q",
         "wq"
-      ]
+      ],
+      "focusCommand": ":q"
     },
     "lesson-insert-mode": {
       "id": "lesson-insert-mode",
@@ -237,13 +350,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Press 'a' to append after the cursor. Type ' is awesome!' and press Esc to return to NORMAL mode.",
       "initialContent": [
@@ -256,7 +371,8 @@ export const generatedContent = {
       "targetText": {
         "line": 4,
         "text": "Learning VIM is awesome!"
-      }
+      },
+      "focusCommand": "i"
     },
     "lesson-line-bounds-0-and": {
       "id": "lesson-line-bounds-0-and",
@@ -265,13 +381,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use 0 to jump to start of line and $ to jump to end. Move to the last character of the first line.",
       "initialContent": [
@@ -281,7 +399,8 @@ export const generatedContent = {
       "target": {
         "row": 0,
         "col": 38
-      }
+      },
+      "focusCommand": "0 / $"
     },
     "lesson-line-jumps": {
       "id": "lesson-line-jumps",
@@ -290,13 +409,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use gg to go to the first line, and G to go to the last line. Go to the last character of the last line.",
       "initialContent": [
@@ -310,7 +431,8 @@ export const generatedContent = {
       "target": {
         "row": 5,
         "col": 30
-      }
+      },
+      "focusCommand": "gg / G"
     },
     "lesson-practice-backward-search-practice": {
       "id": "lesson-practice-backward-search-practice",
@@ -319,6 +441,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -326,7 +449,8 @@ export const generatedContent = {
           "search-backward"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use ?text to search backward, N to find previous. Search backward for 'start'.",
       "initialContent": [
@@ -340,7 +464,8 @@ export const generatedContent = {
       "target": {
         "row": 4,
         "col": 20
-      }
+      },
+      "focusCommand": "VIM"
     },
     "lesson-practice-basic-movement-practice": {
       "id": "lesson-practice-basic-movement-practice",
@@ -349,6 +474,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -356,7 +482,8 @@ export const generatedContent = {
           "hjkl"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use h, j, k, l to move the cursor. Navigate to the target character '$'.",
       "initialContent": [
@@ -371,7 +498,8 @@ export const generatedContent = {
       "target": {
         "row": 6,
         "col": 8
-      }
+      },
+      "focusCommand": "hjkl"
     },
     "lesson-practice-change-word-practice": {
       "id": "lesson-practice-change-word-practice",
@@ -380,6 +508,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -387,7 +516,8 @@ export const generatedContent = {
           "cw"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use cw to change words. Replace the wrong words with correct ones.",
       "initialContent": [
@@ -401,7 +531,8 @@ export const generatedContent = {
         "I like to eat good food",
         "VIM is a great editor",
         "Programming is fun activity"
-      ]
+      ],
+      "focusCommand": "VIM"
     },
     "lesson-practice-delete-character-practice": {
       "id": "lesson-practice-delete-character-practice",
@@ -410,6 +541,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -417,7 +549,8 @@ export const generatedContent = {
           "x"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use x to delete characters. Remove the X from 'Delete X this' and fix other typos.",
       "initialContent": [
@@ -431,7 +564,8 @@ export const generatedContent = {
         "Use x to remove the  character",
         "Also fix: 'Fix this typo'",
         "And: 'Remove extra letters'"
-      ]
+      ],
+      "focusCommand": "VIM"
     },
     "lesson-practice-delete-line-practice": {
       "id": "lesson-practice-delete-line-practice",
@@ -440,6 +574,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -447,7 +582,8 @@ export const generatedContent = {
           "dd"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use dd to delete entire lines. Remove the marked lines.",
       "initialContent": [
@@ -461,7 +597,8 @@ export const generatedContent = {
         "Keep this line",
         "Keep this line too",
         "Keep this final line"
-      ]
+      ],
+      "focusCommand": "VIM"
     },
     "lesson-practice-delete-to-end-practice": {
       "id": "lesson-practice-delete-to-end-practice",
@@ -470,6 +607,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -477,7 +615,8 @@ export const generatedContent = {
           "D"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use D to delete from cursor to end of line. Clean up the messy line endings.",
       "initialContent": [
@@ -491,7 +630,8 @@ export const generatedContent = {
         "Preserve this",
         "Save this text",
         "Maintain this"
-      ]
+      ],
+      "focusCommand": "VIM"
     },
     "lesson-practice-delete-word-practice": {
       "id": "lesson-practice-delete-word-practice",
@@ -500,6 +640,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -507,7 +648,8 @@ export const generatedContent = {
           "dw"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use dw to delete words. Remove the extra words to clean up the sentences.",
       "initialContent": [
@@ -523,7 +665,8 @@ export const generatedContent = {
         "Delete unwanted repetitions here.",
         "Clean up this messy text.",
         "Final result should be clean sentences."
-      ]
+      ],
+      "focusCommand": "VIM"
     },
     "lesson-practice-ex-commands-practice": {
       "id": "lesson-practice-ex-commands-practice",
@@ -532,6 +675,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -539,7 +683,8 @@ export const generatedContent = {
           "ex"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Practice ex-commands like :q to quit and :wq to write and quit. Type :q and press Enter.",
       "initialContent": [
@@ -551,7 +696,8 @@ export const generatedContent = {
       "targetText": {
         "line": 3,
         "text": "Type :q and press Enter to complete this lesson"
-      }
+      },
+      "focusCommand": "VIM"
     },
     "lesson-practice-forward-search-practice": {
       "id": "lesson-practice-forward-search-practice",
@@ -560,6 +706,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -567,7 +714,8 @@ export const generatedContent = {
           "search-forward"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use /text to search forward, n to find next. Search for 'target' and navigate to it.",
       "initialContent": [
@@ -581,7 +729,8 @@ export const generatedContent = {
       "target": {
         "row": 4,
         "col": 20
-      }
+      },
+      "focusCommand": "VIM"
     },
     "lesson-practice-insert-mode-practice": {
       "id": "lesson-practice-insert-mode-practice",
@@ -590,6 +739,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -597,7 +747,8 @@ export const generatedContent = {
           "ia"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Press 'i' to insert before cursor, 'a' to append after cursor. Type 'INSERTED' and 'APPENDED'.",
       "initialContent": [
@@ -610,7 +761,8 @@ export const generatedContent = {
       "targetText": {
         "line": 4,
         "text": "Learning VIM INSERTED APPENDED"
-      }
+      },
+      "focusCommand": "i"
     },
     "lesson-practice-line-boundary-practice": {
       "id": "lesson-practice-line-boundary-practice",
@@ -619,6 +771,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -626,7 +779,8 @@ export const generatedContent = {
           "0$"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use 0 to go to start of line, $ to go to end of line. Practice moving between boundaries.",
       "initialContent": [
@@ -638,7 +792,8 @@ export const generatedContent = {
       "target": {
         "row": 0,
         "col": 0
-      }
+      },
+      "focusCommand": "VIM"
     },
     "lesson-practice-line-jump-practice": {
       "id": "lesson-practice-line-jump-practice",
@@ -647,6 +802,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -654,7 +810,8 @@ export const generatedContent = {
           "ggG"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use gg to go to the first line, and G to go to the last line. Go to the last character of the last line.",
       "initialContent": [
@@ -668,7 +825,8 @@ export const generatedContent = {
       "target": {
         "row": 5,
         "col": 30
-      }
+      },
+      "focusCommand": "VIM"
     },
     "lesson-practice-replace-character-practice": {
       "id": "lesson-practice-replace-character-practice",
@@ -677,6 +835,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -684,7 +843,8 @@ export const generatedContent = {
           "r"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use r to replace single characters. Fix the typos by replacing wrong characters.",
       "initialContent": [
@@ -698,7 +858,8 @@ export const generatedContent = {
         "VIM is awesome",
         "Replace characters",
         "Fix typos quickly"
-      ]
+      ],
+      "focusCommand": "VIM"
     },
     "lesson-practice-search-navigation-practice": {
       "id": "lesson-practice-search-navigation-practice",
@@ -707,6 +868,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -714,7 +876,8 @@ export const generatedContent = {
           "nN"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "First search for 'word', then use n to go to next match, N to go to previous match. Navigate to the 3rd occurrence.",
       "initialContent": [
@@ -727,7 +890,8 @@ export const generatedContent = {
       "target": {
         "row": 2,
         "col": 10
-      }
+      },
+      "focusCommand": "n"
     },
     "lesson-practice-undo-redo-practice": {
       "id": "lesson-practice-undo-redo-practice",
@@ -736,6 +900,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -743,7 +908,8 @@ export const generatedContent = {
           "undo-redo"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Make some changes, then use u to undo them, and Ctrl+r to redo. Practice the undo/redo cycle.",
       "initialContent": [
@@ -755,7 +921,8 @@ export const generatedContent = {
       "target": {
         "row": 0,
         "col": 0
-      }
+      },
+      "focusCommand": "u"
     },
     "lesson-practice-word-motion-practice": {
       "id": "lesson-practice-word-motion-practice",
@@ -764,6 +931,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -771,7 +939,8 @@ export const generatedContent = {
           "wbe"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use w (next word), b (back), e (end of word). Get to the end of the 'destination' word.",
       "initialContent": [
@@ -784,7 +953,8 @@ export const generatedContent = {
       "target": {
         "row": 4,
         "col": 28
-      }
+      },
+      "focusCommand": "VIM"
     },
     "lesson-practice-yank-and-paste-practice": {
       "id": "lesson-practice-yank-and-paste-practice",
@@ -793,6 +963,7 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
@@ -800,7 +971,8 @@ export const generatedContent = {
           "yyp"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use yy to yank (copy) a line, then p to paste it. Duplicate the important lines.",
       "initialContent": [
@@ -818,7 +990,8 @@ export const generatedContent = {
         "This line should also be duplicated",
         "",
         "Don't duplicate this line"
-      ]
+      ],
+      "focusCommand": "VIM"
     },
     "lesson-search-backward": {
       "id": "lesson-search-backward",
@@ -827,13 +1000,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Press ? then type 'alpha' and Enter, then press N once to jump to the previous occurrence.",
       "initialContent": [
@@ -844,7 +1019,8 @@ export const generatedContent = {
       "target": {
         "row": 0,
         "col": 0
-      }
+      },
+      "focusCommand": "?"
     },
     "lesson-search-forward": {
       "id": "lesson-search-forward",
@@ -853,13 +1029,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Press / then type 'target' and Enter, then press n once to jump to the next occurrence.",
       "initialContent": [
@@ -870,7 +1048,8 @@ export const generatedContent = {
       "target": {
         "row": 1,
         "col": 27
-      }
+      },
+      "focusCommand": "/"
     },
     "lesson-search-navigation-n-n": {
       "id": "lesson-search-navigation-n-n",
@@ -879,13 +1058,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Search for 'foo' with /foo then press n twice to reach the third occurrence.",
       "initialContent": [
@@ -896,7 +1077,8 @@ export const generatedContent = {
       "target": {
         "row": 2,
         "col": 13
-      }
+      },
+      "focusCommand": "n"
     },
     "lesson-undo-redo": {
       "id": "lesson-undo-redo",
@@ -905,13 +1087,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Delete the middle line with dd, undo it with u, then redo with Ctrl+r to finish with the line deleted.",
       "initialContent": [
@@ -922,7 +1106,8 @@ export const generatedContent = {
       "targetContent": [
         "Top line.",
         "Bottom line."
-      ]
+      ],
+      "focusCommand": "u"
     },
     "lesson-word-movement": {
       "id": "lesson-word-movement",
@@ -931,13 +1116,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use w (next word), b (back), e (end of word). Get to the end of the 'destination' word.",
       "initialContent": [
@@ -950,7 +1137,8 @@ export const generatedContent = {
       "target": {
         "row": 4,
         "col": 28
-      }
+      },
+      "focusCommand": "w"
     },
     "lesson-yank-put-copy-paste": {
       "id": "lesson-yank-put-copy-paste",
@@ -959,13 +1147,15 @@ export const generatedContent = {
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
           "normal"
         ],
         "estimatedTime": 60,
-        "prerequisites": []
+        "prerequisites": [],
+        "learningObjectives": []
       },
       "instructions": "Use yy to yank (copy) a line and p to put (paste) it. Duplicate the second line.",
       "initialContent": [
@@ -979,7 +1169,8 @@ export const generatedContent = {
         "Yank this line!",
         "And put it below this line.",
         "Yank this line!"
-      ]
+      ],
+      "focusCommand": "p"
     }
   }
 };
