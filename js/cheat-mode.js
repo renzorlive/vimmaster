@@ -5,7 +5,7 @@ import {
     getCommandHistory, setCommandHistory, getCommandLog, setCommandLog, addPracticedCommand
 } from './game-state.js';
 
-import { loadLevel } from './levels.js';
+import { initializeLessonState } from './levels.js';
 import { updateUI } from './event-handlers.js';
 
 // Command catalog with real VIM lessons
@@ -465,26 +465,15 @@ function startCheatPractice(item) {
         commandLog: getCommandLog()
     };
     
-    // Set up the VIM lesson exactly like a real level
-    console.log('🔍 DEBUG: Setting lesson content:', lesson.initialContent);
-    setContent(lesson.initialContent);
-    console.log('🔍 DEBUG: After setContent, current content:', getContent());
-    
-    // Apply lesson setup to game state
-    const gameState = {
-        cursor: getCursor(),
-        mode: getMode(),
-        commandHistory: getCommandHistory(),
-        commandLog: getCommandLog()
-    };
-    lesson.setup(gameState);
-    
-    // Apply the setup changes back to game state
-    setCursor(gameState.cursor);
-    setMode(gameState.mode);
-    setCommandHistory(gameState.commandHistory);
-    setCommandLog(gameState.commandLog);
-    
+    // Set up the VIM lesson through the single initialization pipeline
+    // (docs/architecture/level-lifecycle.md — same path as real levels)
+    if (!initializeLessonState(lesson)) {
+        practiceMode = false;
+        currentPractice = null;
+        originalGameState = null;
+        return;
+    }
+
     // Cache lesson spec for event-driven completion BEFORE updating UI
     currentLessonSpec = lesson;
     

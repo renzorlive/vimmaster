@@ -10,7 +10,7 @@ Each item is small enough to be one reviewable PR unless noted.
 `js/progress-system.js:129` rejects `currentLevel > 14` and `getProgressSummary()` reports `totalLevels: 15`, but `levels.js` defines **16** levels. A player who reaches the last level gets their save rejected on next load — and `autoLoadProgress()` then **deletes** it (`localStorage.removeItem`). Same magic number appears in `sharing-system.js:20`.
 **Fix:** derive from `levels.length` everywhere; never hard-delete on validation failure (keep a backup key).
 
-### TD-2 Level `setup()` never takes effect
+### TD-2 Level `setup()` never takes effect — ✅ FIXED ([ADR-0005](adr/0005-lesson-initialization-pipeline.md), [level-lifecycle.md](architecture/level-lifecycle.md))
 `js/levels.js:259-264` calls `level.setup({ cursor: getCursor(), ... })`. `getCursor()` returns a copy; the setup mutates the copy; nothing is written back. Every level starts at `{row:0, col:0}` even though 12 of 16 levels specify another start position. (Cheat-mode lessons do write the result back — `cheat-mode.js:474-486` — which is why they behave differently.)
 **Fix:** apply `gameState.cursor`/`commandHistory` back via setters after `setup()` runs, mirroring cheat-mode.
 
