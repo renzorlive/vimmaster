@@ -7,6 +7,7 @@
     "node": ">=22"
   },
   "scripts": {
+    "start": "vite",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:contract": "node tests/contract/runner.js",

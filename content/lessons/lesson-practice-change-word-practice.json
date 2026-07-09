@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 111
   },
   "instructions": "Use cw to change words. Replace the wrong words with correct ones.",
   "initialContent": [

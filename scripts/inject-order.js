@@ -1,9 +1,9 @@
-{
-  "version": 1,
-  "contentVersion": 1,
-  "generatedAt": "2026-07-09T22:08:52.817Z",
-  "generator": "scripts/build-content.js",
-  "regularLessons": [
+import fs from 'fs';
+import path from 'path';
+
+const CONTENT_DIR = path.join(process.cwd(), 'content/lessons');
+
+const orderedRegular = [
     "lesson-how-to-exit-ex-commands",
     "lesson-basic-movement",
     "lesson-word-movement",
@@ -22,8 +22,9 @@
     "lesson-search-navigation-n-n",
     "lesson-delete-inner-word-diw",
     "lesson-change-inner-word-ciw"
-  ],
-  "practiceLessons": [
+];
+
+const orderedPractice = [
     "lesson-practice-basic-movement-practice",
     "lesson-practice-word-motion-practice",
     "lesson-practice-line-jump-practice",
@@ -41,5 +42,21 @@
     "lesson-practice-backward-search-practice",
     "lesson-practice-search-navigation-practice",
     "lesson-practice-ex-commands-practice"
-  ]
+];
+
+function processList(list, startIndex) {
+    list.forEach((slug, idx) => {
+        const filePath = path.join(CONTENT_DIR, `${slug}.json`);
+        if (fs.existsSync(filePath)) {
+            const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+            data.metadata.order = startIndex + idx;
+            fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+            console.log(`Updated ${slug} with order ${startIndex + idx}`);
+        } else {
+            console.warn(`File not found: ${filePath}`);
+        }
+    });
 }
+
+processList(orderedRegular, 1);
+processList(orderedPractice, 101); // offset practice lessons just in case

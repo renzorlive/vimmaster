@@ -13,7 +13,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 1
   },
   "instructions": "Type :q to quit, or :wq to write and quit. Press Enter after the command.",
   "initialContent": [

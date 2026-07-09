@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 104
   },
   "instructions": "Use 0 to go to start of line, $ to go to end of line. Practice moving between boundaries.",
   "initialContent": [

@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 114
   },
   "instructions": "Use /text to search forward, n to find next. Search for 'target' and navigate to it.",
   "initialContent": [

@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 105
   },
   "instructions": "Press 'i' to insert before cursor, 'a' to append after cursor. Type 'INSERTED' and 'APPENDED'.",
   "initialContent": [

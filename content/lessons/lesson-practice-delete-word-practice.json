@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 107
   },
   "instructions": "Use dw to delete words. Remove the extra words to clean up the sentences.",
   "initialContent": [

@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 109
   },
   "instructions": "Use D to delete from cursor to end of line. Clean up the messy line endings.",
   "initialContent": [
