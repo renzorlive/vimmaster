@@ -26,3 +26,4 @@ ADRs are **immutable history**: to reverse a decision, write a new ADR that supe
 | [0002](0002-build-tooling-and-ui-framework.md) | Vite + TypeScript build, Preact UI shell, pure-TS Vim core | Proposed |
 | [0003](0003-content-as-data.md) | All content is data, engine knows no content | Accepted |
 | [0004](0004-no-backend-by-default.md) | No backend by default; localStorage + export codes | Accepted |
+| [0005](0005-lesson-initialization-pipeline.md) | Single lesson-initialization pipeline with a consumption invariant | Accepted |

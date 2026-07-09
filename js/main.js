@@ -46,14 +46,21 @@ function initializeGame() {
     // Initialize DOM references
     initializeDOMReferences();
     
-    // Auto-load progress if available
-    const progressLoaded = autoLoadProgress();
-    if (progressLoaded) {
-        console.log('Progress loaded from localStorage');
+    // Auto-load progress if available. Invalid saves are repaired when
+    // possible and backed up otherwise — never silently deleted (PM-0001).
+    const progressResult = autoLoadProgress();
+    if (progressResult.message) {
+        showProgressMessage(progressResult.message, progressResult.loaded ? 'info' : 'error');
     }
-    
-    // Load first level
-    loadLevel(0);
+
+    // Resume at the saved level, or start at the first level
+    loadLevel(progressResult.loaded ? getCurrentLevel() : 0);
+
+    // Level count in the feature list is derived, never hardcoded
+    const featureLevelCount = document.getElementById('feature-level-count');
+    if (featureLevelCount) {
+        featureLevelCount.textContent = `${levels.length} Progressive Levels`;
+    }
     
     // Initial UI update
     updateUI();
