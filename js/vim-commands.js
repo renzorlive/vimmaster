@@ -252,6 +252,12 @@ export function handleNormalMode(e) {
         addPracticedCommand('o_open_line_below');
         return;
     }
+
+    // Get FRESH count buffer value right before movement commands
+    const countBufferValue = getCountBuffer();
+    const count = countBufferValue ? Math.max(1, parseInt(countBufferValue, 10)) : 1;
+    
+    // Movement
     
     // Handle movement keys after command history is updated
     if (key === 'h') {
@@ -372,15 +378,6 @@ export function handleNormalMode(e) {
     // Handle marks and advanced motions
     handleMarks(e);
     handleAdvancedMotions(e);
-
-    // Get FRESH count buffer value right before movement commands
-    const countBufferValue = getCountBuffer();
-    const count = countBufferValue ? Math.max(1, parseInt(countBufferValue, 10)) : 1;
-    
-    // Movement
-
-
-
 
     if (key === '0') { 
         setCursorCol(0); 
