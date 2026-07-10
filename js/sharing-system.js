@@ -1,8 +1,7 @@
 // VIM Master Game - Social Media Sharing System
 
-import { 
-    getBadges, getPracticedCommands, getCurrentLevel, getChallengeMode
-} from './game-state.js';
+import { getBadges, getPracticedCommands, getCurrentLevel } from './game-state.js';
+import { logger, CATEGORIES } from './logger.js';
 
 import { exportProgress } from './progress-system.js';
 import { levels } from './levels.js';
@@ -192,7 +191,7 @@ class VimMasterSharingSystem {
             link.href = canvas.toDataURL();
             link.click();
         } catch (error) {
-            console.error('Failed to download achievement card:', error);
+            logger.error(CATEGORIES.UI, 'Failed to download achievement card', { error: error.message });
         }
     }
     
@@ -209,7 +208,7 @@ class VimMasterSharingSystem {
                 this.shareAchievement(achievement, platform);
             }
         } catch (error) {
-            console.error('Failed to share achievement card:', error);
+            logger.error(CATEGORIES.UI, 'Failed to share achievement card', { error: error.message });
         }
     }
     
@@ -221,9 +220,8 @@ class VimMasterSharingSystem {
                 'image/png': blob
             });
             await navigator.clipboard.write([clipboardItem]);
-            console.log('Achievement card copied to clipboard!');
         } catch (error) {
-            console.error('Failed to copy to clipboard:', error);
+            logger.error(CATEGORIES.UI, 'Failed to copy achievement card to clipboard', { error: error.message });
             // Fallback to download
             this.downloadAchievementCard(achievement);
         }
@@ -813,8 +811,8 @@ class VimMasterSharingSystem {
     async nativeShare(shareData) {
         try {
             await navigator.share(shareData);
-        } catch (error) {
-            console.log('Share cancelled or failed:', error);
+        } catch {
+            // User cancelled the native share sheet — not an error
         }
     }
     

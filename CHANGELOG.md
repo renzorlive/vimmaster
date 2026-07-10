@@ -5,6 +5,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: se
 
 ## [Unreleased]
 
+### Fixed (hygiene PR — TD-11 + practice mode)
+- **Cheat Mode practice buttons work again.** The content extraction turned `vimLessons` into a `Map`, but the lookup kept using bracket access — property access on a Map reads nothing, so every Practice button silently did nothing. Fixed with `Map.get` via a named `getPracticeLesson()`; regression-tested end-to-end (every catalog entry must resolve, and starting practice must load the lesson buffer).
+- **Zero console noise in production** (TD-11): ~110 debug `console.log`s deleted (several dumped full buffer state per keystroke); meaningful warnings/errors now flow through the structured logger (`js/logger.js`) with categories (`lesson`, `progress`, `storage`, `ui`) and debug filtering via `localStorage.vimMasterDebug`.
+- **Lint is clean and stays clean:** 195 warnings burned down to **0**; ~170 unused imports/variables removed; `no-console`, `no-unused-vars`, `no-empty`, and `no-debugger` are now ESLint **errors** (with `js/logger.js`, `scripts/`, and `tests/` exempted from `no-console`), enforced by CI on every PR.
+
 ### Fixed (PR26 — completion auto-save & challenge scoring)
 - **Progress is saved the moment a level is won** (TD-3). The intended on-completion save was a dead `window.checkWinCondition` wrapper that never ran; wins relied on the 30-second interval save and could be lost by closing the tab. The save now lives inside the win path itself. Regression-tested.
 - **Challenge task scoring has a single source of truth** (TD-6): dead `endChallenge`/`checkChallengeTask` exports (carrying a divergent 100-points formula players never experienced) are deleted; the live formula (10 + 1 point per 10s remaining) lives only in `challenges.js#calculateTaskPoints`, unit-tested, with dead imports cleaned from three modules.

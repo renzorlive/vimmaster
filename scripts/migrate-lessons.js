@@ -27,7 +27,7 @@ function migrate() {
     };
 
     // 1. Regular Lessons
-    levels.forEach((level, index) => {
+    levels.forEach((level) => {
         const slug = 'lesson-' + toSlug(level.name);
         indexData.regularLessons.push(slug);
 

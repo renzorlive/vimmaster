@@ -27,11 +27,18 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { loadFixture } from '../helpers/fixtures.js';
 import { initializeLessonState } from '../../js/levels.js';
 import { getCursor } from '../../js/game-state.js';
+import { logger } from '../../js/logger.js';
 
 describe('Regression: TD-0002 Lesson Start Position', () => {
     let originalConsoleWarn;
 
     beforeEach(() => {
+        // Force the logger's production console format — the singleton
+        // auto-detects "development" from hostname/localStorage, which
+        // differs between local Node and CI. In development format, warns
+        // with metadata go through console.group, not console.warn, and
+        // this test's spy would see nothing.
+        logger.configure({ development: false });
         originalConsoleWarn = console.warn;
         console.warn = vi.fn();
     });
@@ -80,9 +87,11 @@ describe('Regression: TD-0002 Lesson Start Position', () => {
         expect(currentCursor.row).toBe(1);
         expect(currentCursor.col).toBe(fixture.initialContent[1].length - 1);
         
-        // Should warn that clamping occurred
+        // Should warn that clamping occurred (via the structured logger,
+        // which passes metadata as a second console argument)
         expect(console.warn).toHaveBeenCalledWith(
-            expect.stringContaining('is outside the buffer — clamped to')
+            expect.stringContaining('is outside the buffer — clamped to'),
+            expect.anything()
         );
     });
 });

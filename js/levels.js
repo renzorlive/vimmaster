@@ -1,23 +1,14 @@
 // VIM Master Game - Level Definitions and Management
 
 // Import global state variables for backward compatibility
-import { 
-    getContent, getCursor, getMode, getCurrentLevel, getCommandHistory, getCommandLog,
-    getYankedLine, getReplacePending, getCountBuffer, getUndoStack, getRedoStack,
-    getLevel12Undo, getLevel12RedoAfterUndo, getLastExCommand, getSearchMode,
-    getSearchQuery, getLastSearchQuery, getLastSearchDirection, getSearchMatches,
-    getCurrentMatchIndex, getUsedSearchInLevel, getNavCountSinceSearch, getBadges,
-    getPracticedCommands, getChallengeMode, getCurrentChallenge, getChallengeTimerInterval,
-    getChallengeStartTime, getChallengeScoreValue, getChallengeProgressValue, getCurrentTaskIndex,
-    resetLevelState, resetChallengeState, setContent, setCursor, setMode, setCurrentLevel,
-    setCommandHistory, setCommandLog, setYankedLine, setReplacePending, setCountBuffer,
-    setSearchMode, setSearchQuery, setLastSearchQuery, setLastSearchDirection, setSearchMatches,
-    setCurrentMatchIndex, setUsedSearchInLevel, setNavCountSinceSearch, setLevel12Undo,
-    setLevel12RedoAfterUndo, setLastExCommand
+import {
+    resetLevelState, setContent, setCursor, setMode,
+    setCurrentLevel, setCommandHistory
 } from './game-state.js';
 
 // Level Definitions
 import { loadRegularLessons } from './content-loader.js';
+import { logger, CATEGORIES } from './logger.js';
 export const levels = loadRegularLessons();
 
 // Lesson Initialization Pipeline
@@ -45,7 +36,7 @@ const PASSIVE_LESSON_PROPS = ['id', 'version', 'metadata', 'focusCommand', 'solu
 export const initializeLessonState = (lesson) => {
     // --- lesson validates -------------------------------------------------
     if (!lesson || !Array.isArray(lesson.initialContent) || lesson.initialContent.length === 0) {
-        console.warn(`VIMMaster: lesson "${lesson?.name ?? '?'}" has no valid initialContent buffer — not loaded`);
+        logger.warn(CATEGORIES.LESSON, `Lesson "${lesson?.name ?? '?'}" has no valid initialContent buffer — not loaded`, { lessonId: lesson?.id });
         return false;
     }
 
@@ -64,7 +55,7 @@ export const initializeLessonState = (lesson) => {
     const objectives = WIN_CONDITION_PROPS.filter((prop) => prop in lesson);
     objectives.forEach(read);
     if (objectives.length !== 1) {
-        console.warn(`VIMMaster: lesson "${lesson.name}" must define exactly one win condition, found ${objectives.length}${objectives.length ? `: ${objectives.join(', ')}` : ''}`);
+        logger.warn(CATEGORIES.LESSON, `Lesson "${lesson.name}" must define exactly one win condition, found ${objectives.length}`, { lessonId: lesson.id, objectives });
     }
 
     // --- state initializes ------------------------------------------------
@@ -103,7 +94,7 @@ export const initializeLessonState = (lesson) => {
     const row = Math.min(Math.max(requestedRow, 0), buffer.length - 1);
     const col = Math.min(Math.max(requestedCol, 0), Math.max(0, buffer[row].length - 1));
     if (row !== requestedRow || col !== requestedCol) {
-        console.warn(`VIMMaster: lesson "${lesson.name}" start cursor {${requestedRow},${requestedCol}} is outside the buffer — clamped to {${row},${col}}`);
+        logger.warn(CATEGORIES.LESSON, `Lesson "${lesson.name}" start cursor {${requestedRow},${requestedCol}} is outside the buffer — clamped to {${row},${col}}`, { lessonId: lesson.id });
     }
 
     setCursor({ row, col });
@@ -113,7 +104,7 @@ export const initializeLessonState = (lesson) => {
     // --- consumption check --------------------------------------------------
     const unconsumed = Object.keys(lesson).filter((key) => !consumed.has(key));
     if (unconsumed.length > 0) {
-        console.warn(`VIMMaster: lesson "${lesson.name}" has properties that were never consumed during initialization: ${unconsumed.join(', ')} — see docs/architecture/level-lifecycle.md`);
+        logger.warn(CATEGORIES.LESSON, `Lesson "${lesson.name}" has properties that were never consumed during initialization: ${unconsumed.join(', ')} — see docs/architecture/level-lifecycle.md`, { lessonId: lesson.id, unconsumed });
     }
 
     // buffer rendered / game starts: the caller triggers updateUI()

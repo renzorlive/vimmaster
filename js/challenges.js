@@ -48,9 +48,6 @@ export const challenges = [
                 instruction: "Delete the word 'remove' from the first line using dw",
                 validation: (gameState) => {
                     const content = gameState.getContent();
-                    console.log('🔍 DEBUG: Challenge validation - content[0]:', content[0]);
-                    console.log('🔍 DEBUG: Challenge validation - expected: "delete this line"');
-                    console.log('🔍 DEBUG: Challenge validation - includes "remove":', content[0].includes("remove"));
                     return content[0] === "delete this line" && !content[0].includes("remove");
                 },
                 hint: "Position cursor on 'r' of 'remove', then use dw"
@@ -118,10 +115,8 @@ export const challenges = [
 
 // Challenge Management Functions
 export const startChallenge = (gameState, challengeIndex = null) => {
-    console.log('🔍 startChallenge called with gameState:', gameState);
     
     if (gameState.currentChallenge) {
-        console.log('🔍 Challenge already exists, returning');
         return;
     }
     
@@ -130,8 +125,6 @@ export const startChallenge = (gameState, challengeIndex = null) => {
         challengeIndex = Math.floor(Math.random() * challenges.length);
     }
     
-    console.log('🔍 Selected challenge index:', challengeIndex);
-    console.log('🔍 Available challenges:', challenges);
     
     gameState.currentChallenge = challenges[challengeIndex];
     gameState.currentTaskIndex = 0;
@@ -139,47 +132,28 @@ export const startChallenge = (gameState, challengeIndex = null) => {
     gameState.challengeProgressValue = 0;
     gameState.challengeStartTime = Date.now();
     
-    console.log('🔍 Challenge selected:', gameState.currentChallenge);
-    console.log('🔍 Challenge initial content:', gameState.currentChallenge.initialContent);
     
     // Load challenge content and update global state
     gameState.content = [...gameState.currentChallenge.initialContent];
     gameState.cursor = { row: 0, col: 0 };
     gameState.mode = 'NORMAL';
     
-    console.log('🔍 Local gameState updated:');
-    console.log('🔍 - content:', gameState.content);
-    console.log('🔍 - cursor:', gameState.cursor);
-    console.log('🔍 - mode:', gameState.mode);
     
     // Update global state using setter functions
-    console.log('🔍 Updating global state...');
     if (gameState.setContent) {
-        console.log('🔍 Calling setContent with:', [...gameState.currentChallenge.initialContent]);
         gameState.setContent([...gameState.currentChallenge.initialContent]);
-    } else {
-        console.log('🔍 setContent function not found!');
     }
     
     if (gameState.setCursor) {
-        console.log('🔍 Calling setCursor with:', { row: 0, col: 0 });
         gameState.setCursor({ row: 0, col: 0 });
-    } else {
-        console.log('🔍 setCursor function not found!');
     }
     
     if (gameState.setMode) {
-        console.log('🔍 Calling setMode with: NORMAL');
         gameState.setMode('NORMAL');
-    } else {
-        console.log('🔍 setMode function not found!');
     }
     
     if (gameState.setCurrentChallenge) {
-        console.log('🔍 Calling setCurrentChallenge with:', challenges[challengeIndex]);
         gameState.setCurrentChallenge(challenges[challengeIndex]);
-    } else {
-        console.log('🔍 setCurrentChallenge function not found!');
     }
     
     if (gameState.setCurrentTaskIndex) gameState.setCurrentTaskIndex(0);
@@ -187,7 +161,6 @@ export const startChallenge = (gameState, challengeIndex = null) => {
     if (gameState.setChallengeProgressValue) gameState.setChallengeProgressValue(0);
     if (gameState.setChallengeStartTime) gameState.setChallengeStartTime(Date.now());
     
-    console.log('🔍 startChallenge returning:', gameState.currentChallenge);
     return gameState.currentChallenge;
 };
 

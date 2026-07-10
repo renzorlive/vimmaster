@@ -1,15 +1,14 @@
 // VIM Master Profile Page - Main JavaScript
 
-import { 
-    getBadges, getPracticedCommands, getCurrentLevel, getChallengeMode,
-    setBadges, setPracticedCommands, setCurrentLevel, setChallengeMode
+import {
+    getBadges, setBadges, setPracticedCommands, setCurrentLevel,
+    setChallengeMode
 } from './game-state.js';
+import { logger, CATEGORIES } from './logger.js';
 
 import { exportProgress } from './progress-system.js';
 
-import { 
-    sharingSystem, generateCard, generateProfileCard, generateAsciiLogo
-} from './sharing-system.js';
+import { sharingSystem, generateProfileCard, generateAsciiLogo } from './sharing-system.js';
 
 // Profile page initialization
 function initializeProfilePage() {
@@ -56,12 +55,9 @@ function loadProgressData() {
                 setChallengeMode(progressData.challengeMode);
             }
             
-            console.log('Progress data loaded:', progressData);
-        } else {
-            console.log('No saved progress found in localStorage');
         }
     } catch (error) {
-        console.error('Failed to load progress data:', error);
+        logger.error(CATEGORIES.PROGRESS, 'Failed to load progress data', { error: error.message });
     }
 }
 
@@ -112,7 +108,7 @@ function generateProfileSection() {
         const profileCard = generateProfileCard();
         container.innerHTML = profileCard;
     } catch (error) {
-        console.error('Failed to generate profile card:', error);
+        logger.error(CATEGORIES.UI, 'Failed to generate profile card', { error: error.message });
         container.innerHTML = `
             <div class="bg-gradient-to-br from-red-900/50 to-red-800/50 rounded-xl p-8 border border-red-600/50 backdrop-blur-sm text-center">
                 <div class="text-6xl mb-4">⚠️</div>
@@ -240,7 +236,7 @@ function generateAchievementSection() {
         });
         
     } catch (error) {
-        console.error('Failed to generate achievement cards:', error);
+        logger.error(CATEGORIES.UI, 'Failed to generate achievement cards', { error: error.message });
         container.innerHTML = `
             <div class="bg-gradient-to-br from-red-900/50 to-red-800/50 rounded-xl p-8 border border-red-600/50 backdrop-blur-sm text-center">
                 <div class="text-6xl mb-4">⚠️</div>
@@ -301,7 +297,7 @@ function setupCopyProgressCode() {
             // Show success message
             showCopySuccessMessage();
         } catch (error) {
-            console.error('Failed to copy progress code:', error);
+            logger.error(CATEGORIES.UI, 'Failed to copy progress code', { error: error.message });
             showCopyErrorMessage();
         }
     };
