@@ -5,7 +5,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: se
 
 ## [Unreleased]
 
-### Fixed (hygiene PR — TD-11 + practice mode)
+_Nothing yet._
+
+## [3.0.0] - 2026-07-10 — Community Alpha
+
+> First tagged release. Everything below shipped together as the Community Alpha; nothing earlier was ever tagged.
+
+### Fixed (hygiene — TD-11 + practice mode)
 - **Cheat Mode practice buttons work again.** The content extraction turned `vimLessons` into a `Map`, but the lookup kept using bracket access — property access on a Map reads nothing, so every Practice button silently did nothing. Fixed with `Map.get` via a named `getPracticeLesson()`; regression-tested end-to-end (every catalog entry must resolve, and starting practice must load the lesson buffer).
 - **Zero console noise in production** (TD-11): ~110 debug `console.log`s deleted (several dumped full buffer state per keystroke); meaningful warnings/errors now flow through the structured logger (`js/logger.js`) with categories (`lesson`, `progress`, `storage`, `ui`) and debug filtering via `localStorage.vimMasterDebug`.
 - **Lint is clean and stays clean:** 195 warnings burned down to **0**; ~170 unused imports/variables removed; `no-console`, `no-unused-vars`, `no-empty`, and `no-debugger` are now ESLint **errors** (with `js/logger.js`, `scripts/`, and `tests/` exempted from `no-console`), enforced by CI on every PR.
@@ -24,15 +30,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: se
 - Lesson start positions restored as declarative `initialCursor` in every lesson JSON (they were lost in the content extraction; the engine ignored the field entirely, so all lessons started at `{0,0}` — caught by the ADR-0005 consumption invariant).
 - The lesson initializer now consumes the full content schema (`initialCursor` applied; `id`/`version`/`metadata`/`focusCommand`/`solution` acknowledged), eliminating per-load invariant warnings.
 
-### Fixed
+### Fixed (content — unwinnable lessons found by the Golden Suite)
 - `lesson-practice-insert-mode-practice` was unwinnable (target text omitted the line's prefix — inherited from the original cheat-mode data); target, start cursor, and solution corrected.
 - `lesson-practice-delete-character-practice` had an unachievable target buffer; replaced with an x-achievable target.
 - `lesson-practice-backward-search-practice` target was one column past the search match; aligned to the match start.
 - Two engine defects discovered by the Golden Suite are documented as TD-4 (confirmed: `0` silently fails when the cursor is past EOL after `j`) and TD-4b (`2x` deletes one char — counted edits loop over a stale buffer copy) in docs/TechnicalDebt.md.
 
-## [v3.0.0] - Community Alpha
-
-### Added
+### Added (content & platform architecture)
 - JSON lesson architecture: all levels are now loaded from external JSON files in `content/lessons/`.
 - Contract Suite: ensures valid structure for all community lessons.
 - Golden Suite: automated regression testing against actual engine logic.
@@ -53,7 +57,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: se
 - Lesson metadata: added metadata schema for descriptions, authors, tags, and focus commands.
 - Progress persistence: saves XP, Combos, and Challenge Points in a backwards-compatible manner.
 
-### Fixed
+### Fixed (initialization & save integrity)
 - **Level start positions now apply.** `loadLevel()` discarded the result of each level's `setup()`, so every level started at `{0,0}` despite its configuration. Lessons (game levels and cheat-mode practice) now initialize through a single pipeline ([docs/architecture/level-lifecycle.md](docs/architecture/level-lifecycle.md)) with a consumption invariant: every lesson property must be consumed exactly once during initialization — unconsumed or malformed configuration is reported immediately instead of silently ignored ([ADR-0005](docs/adr/0005-lesson-initialization-pipeline.md)).
 - **Saves are no longer destroyed after finishing the game** ([PM-0001](docs/postmortems/PM-0001-save-corruption.md)). The progress validator hardcoded a 15-level range while the game has 16 levels; reaching the final level made the save "invalid", and the loader deleted it on the next visit. All level counts are now derived from `levels.length`.
 - **Invalid saves are repaired, never deleted.** The load path is now: load → validate → repair → otherwise keep the original, write a backup (`vimMasterProgressBackup`), and notify the player. The age-based save rejection (saves older than 1 year were deleted) is removed.
