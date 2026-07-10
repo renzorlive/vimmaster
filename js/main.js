@@ -340,8 +340,9 @@ function setupEventListeners() {
     // Level selection
     if (levelSelectionContainer) {
         levelSelectionContainer.addEventListener('click', (e) => {
-            if (e.target.tagName === 'BUTTON') {
-                const levelIndex = parseInt(e.target.dataset.level, 10);
+            const button = e.target.closest('button[data-level]');
+            if (button) {
+                const levelIndex = parseInt(button.dataset.level, 10);
                 if (levelIndex !== getCurrentLevel()) {
                     loadLevel(levelIndex);
                     updateUI();

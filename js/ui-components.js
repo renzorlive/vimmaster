@@ -14,6 +14,53 @@ let editorDisplay, statusBar, instructionsEl, levelIndicator, commandLogEl,
     challengeProgress, challengeTotal, challengeScore, badgeSection, badgeBar,
     badgeCount, badgeToast, feedbackToast, sessionProgressFill, retentionPanel, streakPill, cheatPanel, cheatOverlay, cheatCloseBtn, cheatSearch, cheatContent;
 
+const CURRICULUM_SECTIONS = [
+    {
+        key: 'basics',
+        title: 'Basics',
+        description: 'Get oriented',
+        lessonIds: ['lesson-how-to-exit-ex-commands', 'lesson-insert-mode']
+    },
+    {
+        key: 'movement',
+        title: 'Movement',
+        description: 'Navigate the buffer',
+        lessonIds: ['lesson-basic-movement', 'lesson-word-movement', 'lesson-line-jumps', 'lesson-line-bounds-0-and', 'lesson-counts-move-faster']
+    },
+    {
+        key: 'editing',
+        title: 'Editing',
+        description: 'Delete, change, undo',
+        lessonIds: ['lesson-delete-basics', 'lesson-yank-put-copy-paste', 'lesson-append-and-open-lines', 'lesson-change-word-cw', 'lesson-delete-end-replace', 'lesson-undo-redo']
+    },
+    {
+        key: 'search',
+        title: 'Search',
+        description: 'Find text fast',
+        lessonIds: ['lesson-search-forward', 'lesson-search-backward', 'lesson-search-navigation-n-n']
+    },
+    {
+        key: 'files',
+        title: 'Files',
+        description: 'Coming soon',
+        locked: true,
+        unlockHint: 'Unlock after the core search track'
+    },
+    {
+        key: 'macros',
+        title: 'Macros',
+        description: 'Coming soon',
+        locked: true,
+        unlockHint: 'Unlock after Files'
+    },
+    {
+        key: 'advanced',
+        title: 'Advanced',
+        description: 'Precision editing',
+        lessonIds: ['lesson-delete-inner-word-diw', 'lesson-change-inner-word-ciw']
+    }
+];
+
 // Initialize DOM references
 export function initializeDOMReferences() {
     editorDisplay = document.getElementById('vim-editor-display');
@@ -218,6 +265,9 @@ export function updateLevelIndicator(currentLevel, totalLevels) {
         if (sessionProgressFill) {
             sessionProgressFill.style.width = '0%';
         }
+        if (levelSelectionContainer) {
+            levelSelectionContainer.classList.add('hidden');
+        }
         return;
     }
 
@@ -387,20 +437,124 @@ export function updateCommandLog(commandLog) {
 // Level Buttons Creation
 export function createLevelButtons(levels, currentLevel) {
     if (!levelSelectionContainer) return;
-    
-    levelSelectionContainer.innerHTML = ''; // Clear existing buttons
-    levels.forEach((level, index) => {
-        const button = document.createElement('button');
-        button.textContent = `${index + 1}`;
-        button.dataset.level = index;
-        button.className = `w-8 h-8 flex items-center justify-center rounded-md transition-colors font-bold`;
-        if (index === currentLevel) {
-            button.classList.add('bg-yellow-400', 'text-gray-900');
-        } else {
-            button.classList.add('bg-gray-700', 'text-gray-300', 'hover:bg-gray-600');
+
+    levelSelectionContainer.classList.remove('hidden');
+    levelSelectionContainer.className = 'curriculum-explorer grid gap-3';
+
+    const lessonsById = new Map(levels.map((level, index) => [level.id, { ...level, index }]));
+    const totalLessons = levels.length;
+    const completedLessons = Math.max(0, Math.min(currentLevel, totalLessons));
+    const overallPercent = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+    const currentLesson = levels[currentLevel];
+    const nextLesson = levels[currentLevel + 1];
+
+    const renderLessonNode = (lesson, index) => {
+        const isCompleted = index < currentLevel;
+        const isCurrent = index === currentLevel;
+        const isAvailable = index === currentLevel + 1;
+        const state = isCurrent ? 'current' : (isCompleted ? 'completed' : (isAvailable ? 'available' : 'locked'));
+        const shortLabel = lesson.focusCommand || lesson.name;
+        const title = lesson.name;
+
+        return `
+            <button
+                type="button"
+                data-level="${index}"
+                class="curriculum-node curriculum-node--${state}"
+                aria-current="${isCurrent ? 'step' : 'false'}"
+                title="${escapeHtml(title)}"
+            >
+                <span class="curriculum-node-state">${isCurrent ? '▶' : (isCompleted ? '✓' : (isAvailable ? '•' : '◦'))}</span>
+                <span class="curriculum-node-command">${escapeHtml(shortLabel)}</span>
+                <span class="curriculum-node-name">${escapeHtml(title)}</span>
+            </button>
+        `;
+    };
+
+    const renderSectionCard = (section) => {
+        if (section.locked) {
+            return `
+                <article class="curriculum-section curriculum-section--locked">
+                    <div class="curriculum-section-header">
+                        <div>
+                            <div class="curriculum-section-title">${escapeHtml(section.title)}</div>
+                            <div class="curriculum-section-subtitle">${escapeHtml(section.description)}</div>
+                        </div>
+                        <div class="curriculum-section-badge">🔒 Locked</div>
+                    </div>
+                    <div class="curriculum-locked-copy">${escapeHtml(section.unlockHint || 'Unlock this chapter later in the curriculum.')}</div>
+                </article>
+            `;
         }
-        levelSelectionContainer.appendChild(button);
-    });
+
+        const lessons = section.lessonIds
+            .map((id) => lessonsById.get(id))
+            .filter(Boolean)
+            .sort((a, b) => a.index - b.index);
+
+        const total = lessons.length;
+        const completed = lessons.filter(({ index }) => index < currentLevel).length;
+        const currentInSection = lessons.find(({ index }) => index === currentLevel);
+        const lastIndex = lessons[lessons.length - 1]?.index ?? -1;
+        const firstIndex = lessons[0]?.index ?? -1;
+        const sectionState = currentInSection
+            ? 'current'
+            : (lastIndex < currentLevel ? 'completed' : (firstIndex === currentLevel + 1 ? 'available' : 'locked'));
+        const progressPercent = total > 0 ? Math.round((completed / total) * 100) : 0;
+        const progressLabel = total > 0 ? `${completed} / ${total} Lessons` : '0 / 0 Lessons';
+
+        return `
+            <article class="curriculum-section curriculum-section--${sectionState}">
+                <div class="curriculum-section-header">
+                    <div>
+                        <div class="curriculum-section-title">${escapeHtml(section.title)}</div>
+                        <div class="curriculum-section-subtitle">${escapeHtml(section.description)}</div>
+                    </div>
+                    <div class="curriculum-section-badge">${progressPercent}%</div>
+                </div>
+                <div class="curriculum-progress">
+                    <div class="curriculum-progress-fill" style="width:${progressPercent}%"></div>
+                </div>
+                <div class="curriculum-progress-meta">${progressLabel}</div>
+                <div class="curriculum-nodes">
+                    ${lessons.map(({ index, ...lesson }) => renderLessonNode(lesson, index)).join('')}
+                </div>
+            </article>
+        `;
+    };
+
+    const summaryCard = `
+        <article class="curriculum-summary">
+            <div class="curriculum-summary-copy">
+                <div class="curriculum-summary-kicker">Course Progress</div>
+                <div class="curriculum-summary-title">${escapeHtml(currentLesson ? currentLesson.name : 'Ready to learn Vim?')}</div>
+                <div class="curriculum-summary-subtitle">${currentLesson ? `Lesson ${currentLevel + 1} / ${totalLessons}` : `${totalLessons} lessons ready`}</div>
+            </div>
+            <div class="curriculum-summary-stack">
+                <div class="curriculum-summary-progress">
+                    <div class="curriculum-progress">
+                        <div class="curriculum-progress-fill" style="width:${overallPercent}%"></div>
+                    </div>
+                    <div class="curriculum-progress-meta">${completedLessons} / ${totalLessons} lessons completed</div>
+                </div>
+                <div class="curriculum-summary-actions">
+                    <button type="button" data-level="${Math.max(0, currentLevel)}" class="curriculum-resume">
+                        ${currentLesson ? 'Continue Learning' : 'Start Learning'}
+                    </button>
+                    ${nextLesson ? `<div class="curriculum-next">Next: ${escapeHtml(nextLesson.name)}</div>` : '<div class="curriculum-next">All lessons complete</div>'}
+                </div>
+            </div>
+        </article>
+    `;
+
+    levelSelectionContainer.innerHTML = `
+        <section class="curriculum-shell">
+            ${summaryCard}
+            <div class="curriculum-grid">
+                ${CURRICULUM_SECTIONS.map(renderSectionCard).join('')}
+            </div>
+        </section>
+    `;
 }
 
 // Badge Rendering
