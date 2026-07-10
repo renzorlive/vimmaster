@@ -1,13 +1,15 @@
 // VIM Master Game - Cheat Mode & Real VIM Lessons
 
-import { 
-    getPracticedCommands, getCurrentLevel, getContent, setContent, getCursor, setCursor, getMode, setMode,
-    getCommandHistory, setCommandHistory, getCommandLog, setCommandLog, addPracticedCommand
+import {
+    getPracticedCommands, getContent, setContent, getCursor,
+    setCursor, getMode, setMode, getCommandHistory,
+    setCommandHistory, getCommandLog, setCommandLog, addPracticedCommand
 } from './game-state.js';
 import { loadPracticeLessons } from './content-loader.js';
 
 import { initializeLessonState } from './levels.js';
 import { updateUI } from './event-handlers.js';
+import { logger, CATEGORIES } from './logger.js';
 
 // Command catalog with real VIM lessons
 const commandCatalog = [
@@ -60,7 +62,6 @@ practiceLessons.forEach(lesson => {
 
 // Practice mode state
 let practiceMode = false;
-let currentPractice = null; // catalog item selected
 let originalGameState = null;
 let currentLessonSpec = null; // resolved lesson data
 
@@ -136,22 +137,27 @@ export function closeCheat(cheatOverlay, cheatPanel, editorInput) {
     if (editorInput) editorInput.focus();
 }
 
+// Resolve a catalog entry to its practice lesson. `vimLessons` is a Map —
+// bracket access on a Map reads properties, not entries, which silently
+// broke every Practice button (see practice-mode-lookup regression test).
+export function getPracticeLesson(catalogId) {
+    return vimLessons.get(catalogId) || null;
+}
+
 // Practice Mode Functions - Now creates real VIM lessons
-function startCheatPractice(item) {
+export function startCheatPractice(item) {
     if (practiceMode) {
-        console.log('Already in practice mode');
         return;
     }
-    
-    const lesson = vimLessons[item.id];
+
+    const lesson = getPracticeLesson(item.id);
     if (!lesson) {
-        console.log('No lesson found for:', item.id);
+        logger.warn(CATEGORIES.LESSON, `No practice lesson found for cheat-sheet entry '${item.id}'`, { catalogId: item.id });
         return;
     }
     
     // Enter practice mode
     practiceMode = true;
-    currentPractice = item;
     
     // Save current game state
     originalGameState = {
@@ -166,8 +172,7 @@ function startCheatPractice(item) {
     // (docs/architecture/level-lifecycle.md — same path as real levels)
     if (!initializeLessonState(lesson)) {
         practiceMode = false;
-        currentPractice = null;
-        originalGameState = null;
+            originalGameState = null;
         return;
     }
 
@@ -175,16 +180,13 @@ function startCheatPractice(item) {
     currentLessonSpec = lesson;
     
     // Update the UI to show the lesson
-    console.log('🔍 DEBUG: About to call updateUI(), current content:', getContent());
     updateUI();
-    console.log('🔍 DEBUG: After updateUI(), current content:', getContent());
     
     // IMPORTANT: Update the instructions to show the lesson instructions instead of level instructions
     import('./ui-components.js').then(({ updateInstructions }) => {
-        console.log('🔍 DEBUG: Calling updateInstructions() for lesson:', lesson.name);
         updateInstructions();
     }).catch(error => {
-        console.error('🔍 ERROR: Failed to update instructions:', error);
+        logger.error(CATEGORIES.UI, 'Failed to update instructions', { error: error.message });
     });
     
     // Auto-close cheat panel for better UX
@@ -210,9 +212,7 @@ function startCheatPractice(item) {
     // We intentionally avoid auto-focus and custom key handlers here.
      
      // Show lesson interface AFTER focusing the editor
-     console.log('🔍 DEBUG: About to show lesson interface, current activeElement:', document.activeElement);
      showLessonInterface(item, lesson);
-     console.log('🔍 DEBUG: After showing lesson interface, current activeElement:', document.activeElement);
      
      // Mark as practiced
      addPracticedCommand(item.id);
@@ -223,7 +223,6 @@ function startCheatPractice(item) {
         if (editorInput) editorInput.focus();
     }, 100);
     
-    console.log(`Started VIM lesson for: ${item.key}`);
 }
 
 function showLessonInterface(item, lesson) {
@@ -275,8 +274,6 @@ export function checkPracticeCompletion() {
     const lesson = currentLessonSpec;
     const currentCursor = getCursor();
     const currentContent = getContent();
-    // Debug: minimal insight while testing
-    // console.log('Practice check:', lesson.name, 'cursor', currentCursor);
     
     if (lesson.target && isTargetReached(currentCursor, lesson.target)) {
         showLessonCompletion(lesson, 'Target reached!');
@@ -360,7 +357,6 @@ function showLessonCompletion(lesson, message) {
         exitPracticeMode();
     });
     
-    console.log('🎉 Completion overlay created and displayed!');
 }
 
 function closeLesson() {
@@ -376,19 +372,12 @@ function closeLesson() {
     // practiceMode = false;  ← REMOVED
     // currentPractice = null; ← REMOVED
     
-    console.log('Lesson overlay closed - continue practicing in main editor');
-    console.log('Practice mode remains active - completion monitor continues running');
 }
 
 // Function to exit practice mode and restore game state
 export function exitPracticeMode() {
     if (!practiceMode) return;
     
-         // Clean up event handlers
-     const editorContainer = document.getElementById('editor-container');
-     if (editorContainer) {
-         console.log('Cleaned up cheat mode event handlers');
-     }
     
     // Restore original game state
     if (originalGameState) {
@@ -418,13 +407,11 @@ export function exitPracticeMode() {
     
     // Reset practice mode
     practiceMode = false;
-    currentPractice = null;
     originalGameState = null;
     
     // Update UI
     updateUI();
     
-    console.log('Exited practice mode and restored game state');
 }
 
 // Export command catalog for other modules
