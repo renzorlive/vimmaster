@@ -19,7 +19,7 @@ import {
 } from './game-state.js';
 
 import { levels, loadLevel, getLevelCount, isLastLevel } from './levels.js';
-import { challenges, startChallenge, endChallenge, checkChallengeTask } from './challenges.js';
+import { challenges, startChallenge } from './challenges.js';
 import { handleNormalMode, handleInsertMode, handleSearchMode } from './vim-commands.js';
 import { 
     initializeDOMReferences, renderEditor, updateStatusBar, updateInstructions, 
@@ -470,22 +470,10 @@ function setupAutoSave() {
         updateProgressSummary();
     }, 30000);
     
-    // Auto-save on level completion
-    const originalCheckWinCondition = window.checkWinCondition;
-    if (originalCheckWinCondition) {
-        window.checkWinCondition = function() {
-            const result = originalCheckWinCondition();
-            if (result) {
-                // Progress was made, auto-save
-                setTimeout(() => {
-                    autoSaveProgress();
-                    updateProgressSummary();
-                }, 1000);
-            }
-            return result;
-        };
-    }
-    
+    // Auto-save on level completion happens inside checkWinCondition's win
+    // path (event-handlers.js) — a window.checkWinCondition wrapper here was
+    // dead code because the function was never assigned to window (TD-3).
+
     // Update progress summary more frequently for real-time updates
     setInterval(() => {
         updateProgressSummary();

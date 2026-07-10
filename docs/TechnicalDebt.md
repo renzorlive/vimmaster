@@ -14,7 +14,7 @@ Each item is small enough to be one reviewable PR unless noted.
 `js/levels.js:259-264` calls `level.setup({ cursor: getCursor(), ... })`. `getCursor()` returns a copy; the setup mutates the copy; nothing is written back. Every level starts at `{row:0, col:0}` even though 12 of 16 levels specify another start position. (Cheat-mode lessons do write the result back — `cheat-mode.js:474-486` — which is why they behave differently.)
 **Fix:** apply `gameState.cursor`/`commandHistory` back via setters after `setup()` runs, mirroring cheat-mode.
 
-### TD-3 Auto-save-on-completion never fires
+### TD-3 Auto-save-on-completion never fires — ✅ FIXED (PR26, regression-tested)
 `js/main.js:463-476` wraps `window.checkWinCondition`, but `checkWinCondition` is an ES-module export that is never assigned to `window`. The wrapper is dead code; only the 30-second interval save works.
 **Fix:** call `autoSaveProgress()` from the actual win path in `checkWinCondition()`.
 
@@ -29,7 +29,7 @@ Found by the Golden Suite (PR24): the count loops for `x` (and `dw`) re-read `co
 ### TD-5 `0` is unreachable as a motion
 `vim-commands.js:64-70` routes `0` into the count buffer unless the buffer is empty, then line 239 also treats `0` as "go to line start" — but only when the count buffer is empty, and `$`'s handler at line 240 runs even when `$` was typed during a pending count. Behavior around `10j`, `0`, `d0` is inconsistent. Verify with tests once the core is testable.
 
-### TD-6 Duplicate, divergent challenge logic
+### TD-6 Duplicate, divergent challenge logic — ✅ FIXED (PR26: dead `endChallenge`/`checkChallengeTask` deleted; scoring lives only in `challenges.js#calculateTaskPoints`, unit-tested)
 `challenges.js#checkChallengeTask` and `#endChallenge` are never called; scoring was re-implemented in `event-handlers.js#checkWinCondition` with different point values (10 + time/10 vs 100 + timeBonus). One source of truth must win.
 **Fix:** delete the dead functions or (better) move scoring back into `challenges.js` and call it.
 

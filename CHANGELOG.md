@@ -5,6 +5,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: se
 
 ## [Unreleased]
 
+### Fixed (PR26 — completion auto-save & challenge scoring)
+- **Progress is saved the moment a level is won** (TD-3). The intended on-completion save was a dead `window.checkWinCondition` wrapper that never ran; wins relied on the 30-second interval save and could be lost by closing the tab. The save now lives inside the win path itself. Regression-tested.
+- **Challenge task scoring has a single source of truth** (TD-6): dead `endChallenge`/`checkChallengeTask` exports (carrying a divergent 100-points formula players never experienced) are deleted; the live formula (10 + 1 point per 10s remaining) lives only in `challenges.js#calculateTaskPoints`, unit-tested, with dead imports cleaned from three modules.
+
 ### Fixed (PR25 — stale-state normal mode)
 - **Numeric counts now work as promised.** `2x` deleted a single character (counted edits looped over a stale buffer snapshot — TD-4b), and `2dd`/`2dw` never worked at all (the operator's first key wiped the pending count). Counts survive multi-key commands and each loop iteration reads fresh state. 8 new regression tests.
 - **`0` no longer silently fails after `j` onto a shorter line** (TD-4): the end-of-handler bounds clamp evaluated the cursor captured at handler entry and overwrote valid motions; it now clamps fresh state, and `j` onto a shorter line clamps the column into the line.
