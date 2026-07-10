@@ -11,7 +11,7 @@ import { handleNormalMode, handleInsertMode, handleSearchMode } from './vim-comm
 import {
     initializeDOMReferences, updateLevelIndicator, createLevelButtons, hideModal,
     showCelebration, hideCelebration, initOnboarding, renderRetentionPanel,
-    updateStreakPill
+    updateStreakPill, setCurriculumExplorerExpanded, isCurriculumExplorerExpanded
 } from './ui-components.js';
 import {
     openCheat, closeCheat, renderCheatList, isInPracticeMode,
@@ -340,6 +340,13 @@ function setupEventListeners() {
     // Level selection
     if (levelSelectionContainer) {
         levelSelectionContainer.addEventListener('click', (e) => {
+            const toggleButton = e.target.closest('button[data-curriculum-toggle]');
+            if (toggleButton) {
+                setCurriculumExplorerExpanded(!isCurriculumExplorerExpanded());
+                createLevelButtons(levels, getCurrentLevel());
+                return;
+            }
+
             const button = e.target.closest('button[data-level]');
             if (button) {
                 const levelIndex = parseInt(button.dataset.level, 10);

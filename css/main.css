@@ -90,22 +90,23 @@ body {
 }
 
 .ascii-logo {
-    line-height: 1.2;
+    line-height: 1.02;
     filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.3));
     animation: logoGlow 3s ease-in-out infinite alternate;
 }
 
 .ascii-logo-brand {
     display: block;
-    margin-bottom: -0.15rem;
-    transform: translateY(-1px);
+    margin-bottom: 0;
+    transform: none;
     max-width: 100%;
     overflow: hidden;
+    text-rendering: geometricPrecision;
 }
 
 @media (max-width: 768px) {
     .ascii-logo-brand {
-        transform: translateY(0);
+        transform: none;
     }
 }
 
@@ -649,6 +650,10 @@ input:focus {
     gap: 0.9rem;
 }
 
+.curriculum-summary--compact {
+    gap: 0.6rem;
+}
+
 .curriculum-summary-kicker,
 .curriculum-section-title {
     text-transform: uppercase;
@@ -684,6 +689,25 @@ input:focus {
     flex-wrap: wrap;
     align-items: center;
     gap: 0.75rem;
+}
+
+.curriculum-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 0.95rem;
+    border-radius: 0.85rem;
+    border: 1px solid rgba(75, 85, 99, 0.85);
+    background: rgba(17, 24, 39, 0.78);
+    color: #d1d5db;
+    font-weight: 700;
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.curriculum-toggle:hover {
+    transform: translateY(-1px);
+    border-color: rgba(250, 204, 21, 0.55);
+    background: rgba(31, 41, 55, 0.95);
 }
 
 .curriculum-resume,
@@ -727,6 +751,41 @@ input:focus {
     border-radius: inherit;
     background: linear-gradient(90deg, #fbbf24, #f59e0b, #ef4444);
     transition: width 320ms ease;
+}
+
+.curriculum-collapsed {
+    display: grid;
+    gap: 0.45rem;
+    padding: 0.15rem 0.1rem 0;
+}
+
+.curriculum-collapsed-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.8rem;
+    border: 1px solid rgba(75, 85, 99, 0.55);
+    background: rgba(17, 24, 39, 0.75);
+    color: #e5e7eb;
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 0.8rem;
+}
+
+.curriculum-collapsed-row--locked {
+    color: #9ca3af;
+    border-style: dashed;
+}
+
+.curriculum-collapsed-title {
+    font-weight: 700;
+}
+
+.curriculum-collapsed-progress {
+    color: #fbbf24;
+    font-weight: 800;
+    flex: 0 0 auto;
 }
 
 .curriculum-grid {
@@ -834,6 +893,10 @@ input:focus {
     border-style: dashed;
 }
 
+.curriculum-summary--compact .curriculum-next {
+    max-width: 100%;
+}
+
 .curriculum-locked-copy {
     margin-top: 0.8rem;
     padding: 0.7rem 0.8rem;
@@ -851,6 +914,10 @@ input:focus {
     .curriculum-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .retention-hub-row {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 768px) {
@@ -865,6 +932,10 @@ input:focus {
     .curriculum-summary-title {
         font-size: 1.03rem;
     }
+
+    .retention-hub-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 .retention-card {
@@ -875,13 +946,9 @@ input:focus {
     box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
 }
 
-.retention-hero {
-    border-color: rgba(250, 204, 21, 0.45);
-    background: linear-gradient(180deg, rgba(35, 26, 14, 0.95), rgba(17, 17, 17, 0.95));
-}
-
-.retention-empty {
-    border-color: rgba(96, 165, 250, 0.35);
+.retention-hub {
+    border-color: rgba(250, 204, 21, 0.35);
+    background: linear-gradient(180deg, rgba(33, 24, 13, 0.95), rgba(17, 17, 17, 0.95));
 }
 
 .retention-kicker {
@@ -908,6 +975,34 @@ input:focus {
 .retention-subtle.mono {
     font-family: 'Fira Code', 'Consolas', monospace;
     color: #d1d5db;
+}
+
+.retention-hub-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.retention-hub-pill {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.55rem 0.7rem;
+    border-radius: 0.8rem;
+    border: 1px solid rgba(75, 85, 99, 0.6);
+    background: rgba(31, 41, 55, 0.7);
+    font-size: 0.8rem;
+}
+
+.retention-hub-label {
+    color: #9ca3af;
+}
+
+.retention-hub-value {
+    color: #f9fafb;
+    font-weight: 800;
 }
 
 .retention-progress {

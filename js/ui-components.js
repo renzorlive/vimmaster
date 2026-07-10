@@ -14,6 +14,8 @@ let editorDisplay, statusBar, instructionsEl, levelIndicator, commandLogEl,
     challengeProgress, challengeTotal, challengeScore, badgeSection, badgeBar,
     badgeCount, badgeToast, feedbackToast, sessionProgressFill, retentionPanel, streakPill, cheatPanel, cheatOverlay, cheatCloseBtn, cheatSearch, cheatContent;
 
+let curriculumExplorerExpanded = false;
+
 const CURRICULUM_SECTIONS = [
     {
         key: 'basics',
@@ -226,7 +228,6 @@ export function updateInstructions(customText) {
                 if (currentLevel !== undefined && levelsModule.levels && levelsModule.levels[currentLevel]) {
                     const level = levelsModule.levels[currentLevel];
                     const focusCmd = level.focusCommand ? level.focusCommand : (level.solution ? level.solution.join('') : '');
-                    const whyText = getLessonWhyCopy(level.name, focusCmd, level.metadata || {});
                     instructionsEl.innerHTML = `
                         <div class="text-center">
                             <div class="text-yellow-400 font-bold text-lg mb-2 uppercase tracking-widest">🎯 Goal</div>
@@ -234,7 +235,6 @@ export function updateInstructions(customText) {
                             <div class="border-t border-b border-gray-700/50 py-3 my-3">
                                 <div class="text-5xl md:text-6xl font-mono text-green-400 font-bold tracking-tight">${focusCmd}</div>
                             </div>
-                            ${whyText ? `<div class="mt-3 text-xs md:text-sm text-emerald-300/90 border border-emerald-700/40 bg-emerald-950/30 rounded-lg px-3 py-2 text-left">${whyText}</div>` : ''}
                             <div class="text-gray-500 text-xs mt-2">Type exactly as shown</div>
                         </div>
                     `;
@@ -367,6 +367,14 @@ export function updateStreakPill(streakDays, welcomeBack = false) {
     streakPill.textContent = `🔥 ${streakDays} day streak`;
     streakPill.classList.remove('hidden');
     streakPill.classList.toggle('streak-welcome', welcomeBack);
+}
+
+export function setCurriculumExplorerExpanded(isExpanded) {
+    curriculumExplorerExpanded = Boolean(isExpanded);
+}
+
+export function isCurriculumExplorerExpanded() {
+    return curriculumExplorerExpanded;
 }
 
 // Stats Bar Updates
@@ -524,7 +532,7 @@ export function createLevelButtons(levels, currentLevel) {
     };
 
     const summaryCard = `
-        <article class="curriculum-summary">
+        <article class="curriculum-summary curriculum-summary--compact">
             <div class="curriculum-summary-copy">
                 <div class="curriculum-summary-kicker">Course Progress</div>
                 <div class="curriculum-summary-title">${escapeHtml(currentLesson ? currentLesson.name : 'Ready to learn Vim?')}</div>
@@ -541,18 +549,53 @@ export function createLevelButtons(levels, currentLevel) {
                     <button type="button" data-level="${Math.max(0, currentLevel)}" class="curriculum-resume">
                         ${currentLesson ? 'Continue Learning' : 'Start Learning'}
                     </button>
+                    <button type="button" data-curriculum-toggle="true" class="curriculum-toggle">
+                        ${curriculumExplorerExpanded ? 'Collapse Explorer' : 'Open Explorer'}
+                    </button>
                     ${nextLesson ? `<div class="curriculum-next">Next: ${escapeHtml(nextLesson.name)}</div>` : '<div class="curriculum-next">All lessons complete</div>'}
                 </div>
             </div>
         </article>
     `;
 
+    const explorerBody = curriculumExplorerExpanded ? `
+        <div class="curriculum-grid">
+            ${CURRICULUM_SECTIONS.map(renderSectionCard).join('')}
+        </div>
+    ` : `
+        <div class="curriculum-collapsed">
+            ${CURRICULUM_SECTIONS.map((section) => {
+                if (section.locked) {
+                    return `
+                        <div class="curriculum-collapsed-row curriculum-collapsed-row--locked">
+                            <span class="curriculum-collapsed-title">${escapeHtml(section.title)}</span>
+                            <span class="curriculum-collapsed-progress">🔒</span>
+                        </div>
+                    `;
+                }
+
+                const lessons = section.lessonIds
+                    .map((id) => lessonsById.get(id))
+                    .filter(Boolean)
+                    .sort((a, b) => a.index - b.index);
+                const total = lessons.length;
+                const completed = lessons.filter(({ index }) => index < currentLevel).length;
+                const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+                return `
+                    <div class="curriculum-collapsed-row">
+                        <span class="curriculum-collapsed-title">${escapeHtml(section.title)}</span>
+                        <span class="curriculum-collapsed-progress">${percent}%</span>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+
     levelSelectionContainer.innerHTML = `
         <section class="curriculum-shell">
             ${summaryCard}
-            <div class="curriculum-grid">
-                ${CURRICULUM_SECTIONS.map(renderSectionCard).join('')}
-            </div>
+            ${explorerBody}
         </section>
     `;
 }
@@ -616,34 +659,6 @@ export function showEditorFeedback(message, variant = 'success') {
     }, 420);
 }
 
-function getLessonWhyCopy(lessonName, focusCommand, metadata = {}) {
-    if (metadata.learningObjectives && metadata.learningObjectives.length > 0) {
-        return `Why this matters: ${metadata.learningObjectives[0]}`;
-    }
-
-    const normalized = String(focusCommand || '').trim();
-    const map = {
-        ':q': 'Why this matters: quit Vim quickly when you are done.',
-        ':wq': 'Why this matters: save and exit in one step.',
-        'dd': 'Why this matters: remove the current line without reaching for the mouse.',
-        'dw': 'Why this matters: delete a word in a single motion.',
-        'x': 'Why this matters: remove one character with surgical precision.',
-        'cw': 'Why this matters: change a word and keep your hands on the keyboard.',
-        'ciw': 'Why this matters: edit the word under the cursor without leaving insert flow.',
-        'diw': 'Why this matters: delete a word from anywhere inside it.',
-        'j': 'Why this matters: move down one line instantly.',
-        'k': 'Why this matters: move up one line without leaving home row.',
-        'h': 'Why this matters: move left without using arrow keys.',
-        'l': 'Why this matters: move right without leaving the keyboard cluster.',
-        '/': 'Why this matters: search text fast when you know what you need.',
-        '?': 'Why this matters: search backward through the buffer.'
-    };
-
-    if (map[normalized]) return map[normalized];
-    if (lessonName) return `Why this matters: ${lessonName} is a core Vim habit worth memorizing.`;
-    return '';
-}
-
 export function renderRetentionPanel(viewModel) {
     if (!retentionPanel) return;
 
@@ -663,72 +678,43 @@ export function renderRetentionPanel(viewModel) {
     const streakMessage = viewModel.welcomeBack
         ? 'Welcome back! Your streak is alive 🔥'
         : 'Keep the streak going';
-
-    const continueCard = viewModel.continueLearning ? `
-        <section class="retention-card retention-hero">
-            <div class="retention-kicker">Continue Learning</div>
-            <div class="retention-title">${escape(viewModel.continueLearning.lessonName)}</div>
-            <div class="retention-subtle">${escape(viewModel.continueLearning.lessonLabel)}</div>
-            <div class="retention-progress"><div class="retention-progress-fill" style="width:${viewModel.continueLearning.progressPercent}%"></div></div>
-            <div class="retention-meta">Progress ${viewModel.continueLearning.progressPercent}%</div>
-            <div class="retention-actions">${resumeButton}</div>
-        </section>
-    ` : '';
-
-    const emptyState = viewModel.emptyState ? `
-        <section class="retention-card retention-empty">
-            <div class="retention-kicker">${escape(viewModel.emptyState.title)}</div>
-            <div class="retention-title">${escape(viewModel.emptyState.description)}</div>
-            <div class="retention-subtle">${escape(viewModel.emptyState.estimate)}</div>
-            <div class="retention-actions">${viewModel.completedAllLessons ? practiceButton : startButton}</div>
-        </section>
-    ` : '';
-
-    const dashboard = `
-        <section class="retention-card">
-            <div class="retention-kicker">Today's Practice</div>
-            <div class="retention-stats">
-                <div><span class="retention-stat">${viewModel.dashboard.sessionMinutes} min</span><span>time</span></div>
-                <div><span class="retention-stat">${viewModel.dashboard.lessonsCompleted}</span><span>lessons</span></div>
-                <div><span class="retention-stat">${viewModel.dashboard.accuracy}%</span><span>accuracy</span></div>
-                <div><span class="retention-stat">+${viewModel.dashboard.xpEarned}</span><span>XP</span></div>
-            </div>
-        </section>
-    `;
-
-    const resumeCard = viewModel.lastSession ? `
-        <section class="retention-card">
-            <div class="retention-kicker">Last Session</div>
-            <div class="retention-title">${escape(viewModel.lastSession.lessonName)}</div>
-            <div class="retention-subtle">${escape(viewModel.lastSession.lessonLabel)}</div>
-            <div class="retention-subtle mono">${escape(viewModel.lastSession.focusCommand || 'Resume where you left off')}</div>
-            <div class="retention-actions">${resumeButton}</div>
-        </section>
-    ` : '';
-
-    const whyCard = viewModel.whyThisMatters ? `
-        <section class="retention-card retention-why lg:col-span-3">
-            <div class="retention-kicker">Why am I learning this?</div>
-            <div class="retention-subtle">${escape(viewModel.whyThisMatters)}</div>
-        </section>
-    ` : '';
-
-    const streakCard = `
-        <section class="retention-card retention-streak">
-            <div class="retention-kicker">Daily Streak</div>
-            <div class="retention-title">${escape(viewModel.streakDays > 0 ? `${viewModel.streakDays} day streak` : 'Start a streak')}</div>
-            <div class="retention-subtle">${escape(streakMessage)}</div>
-        </section>
-    `;
+    const primaryLesson = viewModel.continueLearning || viewModel.lastSession;
+    const title = viewModel.continueLearning
+        ? 'Practice Hub'
+        : (viewModel.emptyState ? escape(viewModel.emptyState.title) : 'Practice Hub');
+    const subtitle = primaryLesson
+        ? escape(primaryLesson.lessonLabel)
+        : (viewModel.emptyState ? escape(viewModel.emptyState.estimate) : 'Your session summary');
+    const progressPercent = viewModel.continueLearning ? viewModel.continueLearning.progressPercent : 0;
+    const primaryAction = viewModel.continueLearning ? resumeButton : (viewModel.completedAllLessons ? practiceButton : startButton);
 
     retentionPanel.innerHTML = `
-        <div class="grid gap-3 lg:grid-cols-3">
-            ${continueCard || emptyState}
-            ${streakCard}
-            ${dashboard}
-            ${resumeCard}
-            ${whyCard}
-        </div>
+        <section class="retention-card retention-hub">
+            <div class="retention-kicker">Practice Hub</div>
+            <div class="retention-title">${title}</div>
+            <div class="retention-subtle">${subtitle}</div>
+            <div class="retention-hub-row">
+                <div class="retention-hub-pill">
+                    <span class="retention-hub-label">🔥 Streak</span>
+                    <span class="retention-hub-value">${escape(viewModel.streakDays > 0 ? `${viewModel.streakDays} days` : 'Start')}</span>
+                </div>
+                <div class="retention-hub-pill">
+                    <span class="retention-hub-label">XP</span>
+                    <span class="retention-hub-value">+${escape(viewModel.dashboard.xpEarned)}</span>
+                </div>
+                <div class="retention-hub-pill">
+                    <span class="retention-hub-label">Lessons</span>
+                    <span class="retention-hub-value">${escape(viewModel.dashboard.lessonsCompleted)}</span>
+                </div>
+                <div class="retention-hub-pill">
+                    <span class="retention-hub-label">Accuracy</span>
+                    <span class="retention-hub-value">${escape(viewModel.dashboard.accuracy)}%</span>
+                </div>
+            </div>
+            ${primaryLesson ? `<div class="retention-progress"><div class="retention-progress-fill" style="width:${progressPercent}%"></div></div>` : ''}
+            <div class="retention-meta">${escape(streakMessage)}</div>
+            <div class="retention-actions">${primaryAction}</div>
+        </section>
     `;
 }
 
