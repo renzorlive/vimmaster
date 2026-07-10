@@ -16,7 +16,6 @@ import {
 } from './game-state.js';
 
 import { levels } from './levels.js';
-import { checkChallengeTask } from './challenges.js';
 import { updateStatusBar } from './ui-components.js';
 
 // Utility function for repeating actions

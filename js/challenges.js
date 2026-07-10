@@ -191,63 +191,21 @@ export const startChallenge = (gameState, challengeIndex = null) => {
     return gameState.currentChallenge;
 };
 
-export const endChallenge = (gameState, success) => {
-    if (gameState.challengeTimerInterval) {
-        clearInterval(gameState.challengeTimerInterval);
-        gameState.challengeTimerInterval = null;
-    }
-    
-    let result = null;
-    if (success) {
-        const elapsed = Math.floor((Date.now() - gameState.challengeStartTime) / 1000);
-        const finalScore = gameState.challengeScoreValue + Math.max(0, gameState.currentChallenge.timeLimit - elapsed) * 10;
-        result = {
-            success: true,
-            score: finalScore,
-            time: elapsed
-        };
-    } else {
-        result = {
-            success: false,
-            score: gameState.challengeScoreValue,
-            time: Math.floor((Date.now() - gameState.challengeStartTime) / 1000)
-        };
-    }
-    
-    // Reset challenge state
-    gameState.resetChallengeState();
-    
-    return result;
-};
+// NOTE (TD-6): the former endChallenge/checkChallengeTask exports were dead
+// code carrying a *divergent* scoring formula (100 + full time bonus) that
+// was never what players experienced. Deleted; the single source of truth
+// for task scoring is calculateTaskPoints below.
 
-export const checkChallengeTask = (gameState) => {
-    if (!gameState.currentChallenge || gameState.currentTaskIndex >= gameState.currentChallenge.tasks.length) {
-        return false;
-    }
-    
-    const task = gameState.currentChallenge.tasks[gameState.currentTaskIndex];
-    if (task.validation(gameState)) {
-        // Task completed
-        gameState.challengeProgressValue++;
-        
-        // Calculate score based on time
-        const elapsed = Math.floor((Date.now() - gameState.challengeStartTime) / 1000);
-        const timeBonus = Math.max(0, gameState.currentChallenge.timeLimit - elapsed);
-        const taskScore = 100 + timeBonus;
-        gameState.challengeScoreValue += taskScore;
-        
-        gameState.currentTaskIndex++;
-        
-        if (gameState.currentTaskIndex >= gameState.currentChallenge.tasks.length) {
-            // All tasks completed
-            return { completed: true, taskCompleted: true };
-        } else {
-            // Show next task
-            return { completed: false, taskCompleted: true, nextTask: gameState.currentChallenge.tasks[gameState.currentTaskIndex] };
-        }
-    }
-    
-    return { completed: false, taskCompleted: false };
+/**
+ * Points awarded for completing a challenge task: base 10 plus 1 point per
+ * 10 seconds remaining. Single source of truth for task scoring (TD-6).
+ */
+export const calculateTaskPoints = (challenge, challengeStartTime) => {
+    const timeRemaining = getChallengeTimeRemaining({
+        currentChallenge: challenge,
+        challengeStartTime
+    });
+    return 10 + Math.max(0, Math.floor(timeRemaining / 10));
 };
 
 export const getCurrentTask = (gameState) => {

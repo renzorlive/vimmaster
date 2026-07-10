@@ -20,7 +20,7 @@ import {
 
 import { levels, loadLevel, getCurrentLevelFromGameState, getLevelCount, isLastLevel } from './levels.js';
 import { isInPracticeMode, getCurrentLessonSpec } from './cheat-mode.js';
-import { challenges, startChallenge, endChallenge, checkChallengeTask, getChallengeTimeRemaining, getChallengeProgress } from './challenges.js';
+import { challenges, startChallenge, getChallengeTimeRemaining, calculateTaskPoints } from './challenges.js';
 import { handleNormalMode, handleInsertMode, handleSearchMode } from './vim-commands.js';
 import { 
     renderEditor, updateStatusBar, updateInstructions, updateLevelIndicator, 
@@ -60,12 +60,8 @@ export function checkWinCondition() {
             if (validationResult) {
                 console.log('🔍 Challenge task completed!');
                 
-                                 // Award points for completing task
-                 const timeBonus = Math.max(0, Math.floor(getChallengeTimeRemaining({
-                     currentChallenge: challenge,
-                     challengeStartTime: getChallengeStartTime()
-                 }) / 10)); // 1 point per 10 seconds remaining
-                 const taskPoints = 10 + timeBonus;
+                 // Award points via the single scoring source of truth (TD-6)
+                 const taskPoints = calculateTaskPoints(challenge, getChallengeStartTime());
                  setChallengeScoreValue(getChallengeScoreValue() + taskPoints);
                  
                  console.log('🔍 Task completed! Points awarded:', taskPoints, 'Total score:', getChallengeScoreValue());
@@ -180,7 +176,19 @@ export function checkWinCondition() {
             
             setXp(getXp() + earnedXp);
             setCombo(getCombo() + 1);
-            
+
+            // Persist progress at the moment of completion (TD-3): the dead
+            // window.checkWinCondition wrapper never ran, so wins relied on
+            // the 30s interval save and could be lost on a quick tab close.
+            try {
+                autoSaveProgress();
+                if (typeof window.updateProgressSummary === 'function') {
+                    window.updateProgressSummary();
+                }
+            } catch (error) {
+                console.warn('Failed to auto-save progress on level completion:', error);
+            }
+
             // Check if this is the final level
             if (getCurrentLevel() === levels.length - 1) {
                 // Final level completed - show celebration directly
