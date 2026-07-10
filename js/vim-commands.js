@@ -179,10 +179,13 @@ export function handleNormalMode(e) {
         for (let i = 0; i < count; i++) {
             const removedLine = removeContentLine(cursor.row);
             setYankedLine(removedLine);
-            if (content.length === 0) addContentLine("");
-            if (cursor.row >= content.length) setCursorRow(content.length - 1);
+            // Fresh read per iteration — see TD-4b note on 'x'
+            const remaining = getContent().length;
+            if (remaining === 0) addContentLine("");
+            if (cursor.row >= remaining) setCursorRow(Math.max(0, remaining - 1));
         }
         setCursorCol(0);
+        setCountBuffer('');
         clearCommandHistory();
         clearCommandLog();
         return; // Exit early after processing compound command
@@ -190,7 +193,8 @@ export function handleNormalMode(e) {
         pushUndo();
         const count = countBuffer ? Math.max(1, parseInt(countBuffer, 10)) : 1;
         for (let i = 0; i < count; i++) {
-            let line = content[cursor.row];
+            // Fresh read per iteration — see TD-4b note on 'x'
+            let line = getContent()[cursor.row];
             let start = cursor.col;
             let endOfWord = line.substring(start).search(/\s|$/);
             if (endOfWord === -1) { endOfWord = line.length; } else { endOfWord += start; }
@@ -198,6 +202,7 @@ export function handleNormalMode(e) {
             if (startOfNextWord === -1) { startOfNextWord = line.length; } else { startOfNextWord += endOfWord; }
             updateContentLine(cursor.row, line.slice(0, start) + line.slice(startOfNextWord));
         }
+        setCountBuffer('');
         clearCommandHistory();
         clearCommandLog();
         return; // Exit early after processing compound command
@@ -219,6 +224,7 @@ export function handleNormalMode(e) {
             updateContentLine(cursor.row, line.slice(0, start) + line.slice(end));
             setCursorCol(Math.min(start, content[cursor.row].length > 0 ? content[cursor.row].length - 1 : 0));
         }
+        setCountBuffer('');
         clearCommandHistory();
         clearCommandLog();
         return;
@@ -355,7 +361,10 @@ export function handleNormalMode(e) {
         pushUndo();
         const count = countBuffer ? Math.max(1, parseInt(countBuffer, 10)) : 1;
         for (let i = 0; i < count; i++) {
-            let line = content[cursor.row];
+            // Re-read the buffer each iteration: `content` is a snapshot from
+            // handler entry, so editing it repeatedly re-applies the same
+            // deletion (TD-4b — '2x' deleted one char)
+            const line = getContent()[cursor.row];
             if (cursor.col < line.length) {
                 updateContentLine(cursor.row, line.slice(0, cursor.col) + line.slice(cursor.col + 1));
             }
@@ -443,16 +452,29 @@ export function handleNormalMode(e) {
 
 
 
-    // Ensure cursor is within bounds
-    if (cursor.row >= content.length) setCursorRow(content.length - 1);
-    if (cursor.col > content[cursor.row].length) setCursorCol(content[cursor.row].length);
-    if (cursor.col < 0) setCursorCol(0);
-    if(mode === 'NORMAL' && cursor.col === content[cursor.row].length && content[cursor.row].length > 0) {
-        setCursorCol(cursor.col - 1);
+    // Ensure cursor is within bounds. Must evaluate FRESH state: the command
+    // above may have moved the cursor or edited the buffer, and clamping the
+    // entry-time snapshot corrupted valid motions (TD-4 — '0' was overwritten
+    // to line end whenever the cursor sat past EOL after 'j').
+    const freshContent = getContent();
+    const freshCursor = getCursor();
+    const row = Math.min(Math.max(freshCursor.row, 0), freshContent.length - 1);
+    if (row !== freshCursor.row) setCursorRow(row);
+    const lineLength = freshContent[row].length;
+    let col = Math.min(Math.max(freshCursor.col, 0), lineLength);
+    if (getMode() === 'NORMAL' && col === lineLength && lineLength > 0) {
+        col = lineLength - 1;
     }
+    if (col !== freshCursor.col) setCursorCol(col);
     
-    // Reset count buffer AFTER ALL commands have been processed
-    if (!/^[0-9]$/.test(key)) setCountBuffer('');
+    // Reset count buffer AFTER ALL commands have been processed — but keep
+    // it alive while a multi-key command is still being typed: clearing it
+    // on the operator's first key made counts work only for single-key
+    // commands ('2dd' deleted one line while '2x' worked — TD-4b family).
+    // Compound handlers that return early clear the count themselves.
+    const historyNow = getCommandHistory();
+    const awaitingCompound = ['d', 'di', 'c', 'ci', 'y', 'g'].some((prefix) => historyNow.endsWith(prefix));
+    if (!/^[0-9]$/.test(key) && !awaitingCompound) setCountBuffer('');
 }
 
 // Handle Insert Mode Commands
