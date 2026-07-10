@@ -26,5 +26,18 @@
     "Keep this line.",
     "Fix this here."
   ],
-  "focusCommand": "x"
+  "focusCommand": "x",
+  "initialCursor": {
+    "row": 0,
+    "col": 0
+  },
+  "solution": [
+    "j",
+    "d",
+    "d",
+    "9",
+    "l",
+    "d",
+    "w"
+  ]
 }

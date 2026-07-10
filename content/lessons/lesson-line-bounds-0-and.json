@@ -25,5 +25,12 @@
     "row": 0,
     "col": 38
   },
-  "focusCommand": "0 / $"
+  "focusCommand": "0 / $",
+  "initialCursor": {
+    "row": 0,
+    "col": 0
+  },
+  "solution": [
+    "$"
+  ]
 }

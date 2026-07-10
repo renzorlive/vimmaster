@@ -30,5 +30,16 @@
     "Keep this line too",
     "Keep this final line"
   ],
-  "focusCommand": "VIM"
+  "focusCommand": "VIM",
+  "initialCursor": {
+    "row": 1,
+    "col": 0
+  },
+  "solution": [
+    "d",
+    "d",
+    "j",
+    "d",
+    "d"
+  ]
 }

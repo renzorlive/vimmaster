@@ -32,5 +32,39 @@
     "Clean up this messy text.",
     "Final result should be clean sentences."
   ],
-  "focusCommand": "VIM"
+  "focusCommand": "VIM",
+  "initialCursor": {
+    "row": 0,
+    "col": 15
+  },
+  "solution": [
+    "d",
+    "w",
+    "1",
+    "9",
+    "l",
+    "d",
+    "w",
+    "j",
+    "0",
+    "1",
+    "9",
+    "l",
+    "d",
+    "w",
+    "j",
+    "0",
+    "1",
+    "6",
+    "l",
+    "d",
+    "w",
+    "j",
+    "0",
+    "2",
+    "0",
+    "l",
+    "d",
+    "w"
+  ]
 }

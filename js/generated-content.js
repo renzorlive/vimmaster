@@ -9,7 +9,7 @@ export const generatedContent = {
   "index": {
     "version": 1,
     "contentVersion": 1,
-    "generatedAt": "2026-07-09T22:15:00.192Z",
+    "generatedAt": "2026-07-10T01:27:40.325Z",
     "generator": "scripts/build-content.js",
     "regularLessons": [
       "lesson-how-to-exit-ex-commands",
@@ -80,7 +80,16 @@ export const generatedContent = {
         "q",
         "wq"
       ],
-      "focusCommand": ":q"
+      "focusCommand": ":q",
+      "initialCursor": {
+        "row": 0,
+        "col": 0
+      },
+      "solution": [
+        ":",
+        "q",
+        "Enter"
+      ]
     },
     "lesson-basic-movement": {
       "id": "lesson-basic-movement",
@@ -113,7 +122,19 @@ export const generatedContent = {
         "row": 5,
         "col": 39
       },
-      "focusCommand": "hjkl"
+      "focusCommand": "hjkl",
+      "initialCursor": {
+        "row": 1,
+        "col": 5
+      },
+      "solution": [
+        "4",
+        "j",
+        "0",
+        "3",
+        "9",
+        "l"
+      ]
     },
     "lesson-word-movement": {
       "id": "lesson-word-movement",
@@ -145,7 +166,19 @@ export const generatedContent = {
         "row": 4,
         "col": 28
       },
-      "focusCommand": "w"
+      "focusCommand": "w",
+      "initialCursor": {
+        "row": 0,
+        "col": 0
+      },
+      "solution": [
+        "4",
+        "j",
+        "w",
+        "w",
+        "w",
+        "e"
+      ]
     },
     "lesson-line-jumps": {
       "id": "lesson-line-jumps",
@@ -178,7 +211,17 @@ export const generatedContent = {
         "row": 5,
         "col": 30
       },
-      "focusCommand": "gg / G"
+      "focusCommand": "gg / G",
+      "initialCursor": {
+        "row": 2,
+        "col": 0
+      },
+      "solution": [
+        "G",
+        "3",
+        "0",
+        "l"
+      ]
     },
     "lesson-insert-mode": {
       "id": "lesson-insert-mode",
@@ -210,7 +253,27 @@ export const generatedContent = {
         "line": 4,
         "text": "Learning VIM is awesome!"
       },
-      "focusCommand": "i"
+      "focusCommand": "i",
+      "initialCursor": {
+        "row": 4,
+        "col": 11
+      },
+      "solution": [
+        "a",
+        " ",
+        "i",
+        "s",
+        " ",
+        "a",
+        "w",
+        "e",
+        "s",
+        "o",
+        "m",
+        "e",
+        "!",
+        "Escape"
+      ]
     },
     "lesson-delete-basics": {
       "id": "lesson-delete-basics",
@@ -240,7 +303,20 @@ export const generatedContent = {
         "Keep this line.",
         "Fix this here."
       ],
-      "focusCommand": "x"
+      "focusCommand": "x",
+      "initialCursor": {
+        "row": 0,
+        "col": 0
+      },
+      "solution": [
+        "j",
+        "d",
+        "d",
+        "9",
+        "l",
+        "d",
+        "w"
+      ]
     },
     "lesson-yank-put-copy-paste": {
       "id": "lesson-yank-put-copy-paste",
@@ -273,7 +349,17 @@ export const generatedContent = {
         "And put it below this line.",
         "Yank this line!"
       ],
-      "focusCommand": "p"
+      "focusCommand": "p",
+      "initialCursor": {
+        "row": 1,
+        "col": 0
+      },
+      "solution": [
+        "y",
+        "y",
+        "j",
+        "p"
+      ]
     },
     "lesson-line-bounds-0-and": {
       "id": "lesson-line-bounds-0-and",
@@ -302,7 +388,14 @@ export const generatedContent = {
         "row": 0,
         "col": 38
       },
-      "focusCommand": "0 / $"
+      "focusCommand": "0 / $",
+      "initialCursor": {
+        "row": 0,
+        "col": 0
+      },
+      "solution": [
+        "$"
+      ]
     },
     "lesson-append-and-open-lines": {
       "id": "lesson-append-and-open-lines",
@@ -332,7 +425,28 @@ export const generatedContent = {
         "Inserted here",
         "Second line."
       ],
-      "focusCommand": "a"
+      "focusCommand": "a",
+      "initialCursor": {
+        "row": 0,
+        "col": 5
+      },
+      "solution": [
+        "o",
+        "I",
+        "n",
+        "s",
+        "e",
+        "r",
+        "t",
+        "e",
+        "d",
+        " ",
+        "h",
+        "e",
+        "r",
+        "e",
+        "Escape"
+      ]
     },
     "lesson-change-word-cw": {
       "id": "lesson-change-word-cw",
@@ -360,7 +474,20 @@ export const generatedContent = {
         "line": 0,
         "text": "This is a good example."
       },
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 0,
+        "col": 10
+      },
+      "solution": [
+        "c",
+        "w",
+        "g",
+        "o",
+        "o",
+        "d",
+        "Escape"
+      ]
     },
     "lesson-delete-end-replace": {
       "id": "lesson-delete-end-replace",
@@ -389,7 +516,18 @@ export const generatedContent = {
         "Keep this → ",
         "Replace this !"
       ],
-      "focusCommand": "D"
+      "focusCommand": "D",
+      "initialCursor": {
+        "row": 0,
+        "col": 12
+      },
+      "solution": [
+        "D",
+        "j",
+        "$",
+        "r",
+        "!"
+      ]
     },
     "lesson-counts-move-faster": {
       "id": "lesson-counts-move-faster",
@@ -417,7 +555,15 @@ export const generatedContent = {
         "row": 0,
         "col": 14
       },
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 0,
+        "col": 0
+      },
+      "solution": [
+        "3",
+        "w"
+      ]
     },
     "lesson-undo-redo": {
       "id": "lesson-undo-redo",
@@ -447,7 +593,17 @@ export const generatedContent = {
         "Top line.",
         "Bottom line."
       ],
-      "focusCommand": "u"
+      "focusCommand": "u",
+      "initialCursor": {
+        "row": 1,
+        "col": 0
+      },
+      "solution": [
+        "d",
+        "d",
+        "u",
+        "Ctrl+r"
+      ]
     },
     "lesson-search-forward": {
       "id": "lesson-search-forward",
@@ -477,7 +633,23 @@ export const generatedContent = {
         "row": 1,
         "col": 27
       },
-      "focusCommand": "/"
+      "focusCommand": "/",
+      "initialCursor": {
+        "row": 2,
+        "col": 0
+      },
+      "solution": [
+        "/",
+        "t",
+        "a",
+        "r",
+        "g",
+        "e",
+        "t",
+        "Enter",
+        "n",
+        "n"
+      ]
     },
     "lesson-search-backward": {
       "id": "lesson-search-backward",
@@ -507,7 +679,21 @@ export const generatedContent = {
         "row": 0,
         "col": 0
       },
-      "focusCommand": "?"
+      "focusCommand": "?",
+      "initialCursor": {
+        "row": 2,
+        "col": 5
+      },
+      "solution": [
+        "?",
+        "a",
+        "l",
+        "p",
+        "h",
+        "a",
+        "Enter",
+        "N"
+      ]
     },
     "lesson-search-navigation-n-n": {
       "id": "lesson-search-navigation-n-n",
@@ -537,7 +723,20 @@ export const generatedContent = {
         "row": 2,
         "col": 13
       },
-      "focusCommand": "n"
+      "focusCommand": "n",
+      "initialCursor": {
+        "row": 0,
+        "col": 0
+      },
+      "solution": [
+        "/",
+        "f",
+        "o",
+        "o",
+        "Enter",
+        "n",
+        "n"
+      ]
     },
     "lesson-delete-inner-word-diw": {
       "id": "lesson-delete-inner-word-diw",
@@ -664,7 +863,17 @@ export const generatedContent = {
         "row": 6,
         "col": 8
       },
-      "focusCommand": "hjkl"
+      "focusCommand": "hjkl",
+      "initialCursor": {
+        "row": 1,
+        "col": 5
+      },
+      "solution": [
+        "5",
+        "j",
+        "3",
+        "l"
+      ]
     },
     "lesson-practice-word-motion-practice": {
       "id": "lesson-practice-word-motion-practice",
@@ -697,7 +906,19 @@ export const generatedContent = {
         "row": 4,
         "col": 28
       },
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 0,
+        "col": 0
+      },
+      "solution": [
+        "4",
+        "j",
+        "w",
+        "w",
+        "w",
+        "e"
+      ]
     },
     "lesson-practice-line-jump-practice": {
       "id": "lesson-practice-line-jump-practice",
@@ -731,7 +952,17 @@ export const generatedContent = {
         "row": 5,
         "col": 30
       },
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 2,
+        "col": 0
+      },
+      "solution": [
+        "G",
+        "3",
+        "0",
+        "l"
+      ]
     },
     "lesson-practice-line-boundary-practice": {
       "id": "lesson-practice-line-boundary-practice",
@@ -763,7 +994,14 @@ export const generatedContent = {
         "row": 0,
         "col": 0
       },
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 0,
+        "col": 10
+      },
+      "solution": [
+        "0"
+      ]
     },
     "lesson-practice-insert-mode-practice": {
       "id": "lesson-practice-insert-mode-practice",
@@ -794,9 +1032,35 @@ export const generatedContent = {
       ],
       "targetText": {
         "line": 4,
-        "text": "Learning VIM INSERTED APPENDED"
+        "text": "Complete the sentence: Learning VIM INSERTED APPENDED"
       },
-      "focusCommand": "i"
+      "focusCommand": "i",
+      "initialCursor": {
+        "row": 4,
+        "col": 34
+      },
+      "solution": [
+        "a",
+        " ",
+        "I",
+        "N",
+        "S",
+        "E",
+        "R",
+        "T",
+        "E",
+        "D",
+        " ",
+        "A",
+        "P",
+        "P",
+        "E",
+        "N",
+        "D",
+        "E",
+        "D",
+        "Escape"
+      ]
     },
     "lesson-practice-delete-character-practice": {
       "id": "lesson-practice-delete-character-practice",
@@ -825,12 +1089,46 @@ export const generatedContent = {
         "And: 'Removve extra letters'"
       ],
       "targetContent": [
-        "Delete the  this",
-        "Use x to remove the  character",
+        "Delete the from this line: 'Delete this'",
+        "Use x to remove the character",
         "Also fix: 'Fix this typo'",
         "And: 'Remove extra letters'"
       ],
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 0,
+        "col": 7
+      },
+      "solution": [
+        "4",
+        "l",
+        "x",
+        "x",
+        "2",
+        "4",
+        "l",
+        "x",
+        "x",
+        "0",
+        "j",
+        "2",
+        "0",
+        "l",
+        "x",
+        "x",
+        "0",
+        "j",
+        "1",
+        "4",
+        "l",
+        "x",
+        "0",
+        "j",
+        "1",
+        "1",
+        "l",
+        "x"
+      ]
     },
     "lesson-practice-delete-word-practice": {
       "id": "lesson-practice-delete-word-practice",
@@ -866,7 +1164,41 @@ export const generatedContent = {
         "Clean up this messy text.",
         "Final result should be clean sentences."
       ],
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 0,
+        "col": 15
+      },
+      "solution": [
+        "d",
+        "w",
+        "1",
+        "9",
+        "l",
+        "d",
+        "w",
+        "j",
+        "0",
+        "1",
+        "9",
+        "l",
+        "d",
+        "w",
+        "j",
+        "0",
+        "1",
+        "6",
+        "l",
+        "d",
+        "w",
+        "j",
+        "0",
+        "2",
+        "0",
+        "l",
+        "d",
+        "w"
+      ]
     },
     "lesson-practice-delete-line-practice": {
       "id": "lesson-practice-delete-line-practice",
@@ -900,7 +1232,18 @@ export const generatedContent = {
         "Keep this line too",
         "Keep this final line"
       ],
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 1,
+        "col": 0
+      },
+      "solution": [
+        "d",
+        "d",
+        "j",
+        "d",
+        "d"
+      ]
     },
     "lesson-practice-delete-to-end-practice": {
       "id": "lesson-practice-delete-to-end-practice",
@@ -934,7 +1277,32 @@ export const generatedContent = {
         "Save this text",
         "Maintain this"
       ],
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 0,
+        "col": 15
+      },
+      "solution": [
+        "D",
+        "j",
+        "0",
+        "1",
+        "4",
+        "l",
+        "D",
+        "j",
+        "0",
+        "1",
+        "5",
+        "l",
+        "D",
+        "j",
+        "0",
+        "1",
+        "4",
+        "l",
+        "D"
+      ]
     },
     "lesson-practice-replace-character-practice": {
       "id": "lesson-practice-replace-character-practice",
@@ -968,7 +1336,31 @@ export const generatedContent = {
         "Replace characters",
         "Fix typos quickly"
       ],
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 0,
+        "col": 2
+      },
+      "solution": [
+        "r",
+        "i",
+        "j",
+        "0",
+        "l",
+        "r",
+        "I",
+        "j",
+        "0",
+        "2",
+        "l",
+        "r",
+        "p",
+        "j",
+        "0",
+        "l",
+        "r",
+        "i"
+      ]
     },
     "lesson-practice-change-word-practice": {
       "id": "lesson-practice-change-word-practice",
@@ -1002,7 +1394,55 @@ export const generatedContent = {
         "VIM is a great editor",
         "Programming is fun activity"
       ],
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 0,
+        "col": 4
+      },
+      "solution": [
+        "c",
+        "w",
+        "b",
+        "e",
+        "s",
+        "t",
+        "Escape",
+        "j",
+        "0",
+        "1",
+        "4",
+        "l",
+        "c",
+        "w",
+        "g",
+        "o",
+        "o",
+        "d",
+        "Escape",
+        "j",
+        "0",
+        "9",
+        "l",
+        "c",
+        "w",
+        "g",
+        "r",
+        "e",
+        "a",
+        "t",
+        "Escape",
+        "j",
+        "0",
+        "1",
+        "5",
+        "l",
+        "c",
+        "w",
+        "f",
+        "u",
+        "n",
+        "Escape"
+      ]
     },
     "lesson-practice-yank-and-paste-practice": {
       "id": "lesson-practice-yank-and-paste-practice",
@@ -1040,7 +1480,21 @@ export const generatedContent = {
         "",
         "Don't duplicate this line"
       ],
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 0,
+        "col": 0
+      },
+      "solution": [
+        "y",
+        "y",
+        "p",
+        "3",
+        "j",
+        "y",
+        "y",
+        "p"
+      ]
     },
     "lesson-practice-undo-redo-practice": {
       "id": "lesson-practice-undo-redo-practice",
@@ -1072,7 +1526,18 @@ export const generatedContent = {
         "row": 0,
         "col": 0
       },
-      "focusCommand": "u"
+      "focusCommand": "u",
+      "initialCursor": {
+        "row": 1,
+        "col": 0
+      },
+      "solution": [
+        "d",
+        "d",
+        "u",
+        "g",
+        "g"
+      ]
     },
     "lesson-practice-forward-search-practice": {
       "id": "lesson-practice-forward-search-practice",
@@ -1106,7 +1571,25 @@ export const generatedContent = {
         "row": 4,
         "col": 20
       },
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 0,
+        "col": 0
+      },
+      "solution": [
+        "/",
+        "t",
+        "a",
+        "r",
+        "g",
+        "e",
+        "t",
+        "Enter",
+        "n",
+        "n",
+        "n",
+        "n"
+      ]
     },
     "lesson-practice-backward-search-practice": {
       "id": "lesson-practice-backward-search-practice",
@@ -1138,9 +1621,22 @@ export const generatedContent = {
       ],
       "target": {
         "row": 4,
-        "col": 20
+        "col": 19
       },
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 5,
+        "col": 0
+      },
+      "solution": [
+        "?",
+        "s",
+        "t",
+        "a",
+        "r",
+        "t",
+        "Enter"
+      ]
     },
     "lesson-practice-search-navigation-practice": {
       "id": "lesson-practice-search-navigation-practice",
@@ -1173,7 +1669,21 @@ export const generatedContent = {
         "row": 2,
         "col": 10
       },
-      "focusCommand": "n"
+      "focusCommand": "n",
+      "initialCursor": {
+        "row": 0,
+        "col": 0
+      },
+      "solution": [
+        "/",
+        "w",
+        "o",
+        "r",
+        "d",
+        "Enter",
+        "n",
+        "n"
+      ]
     },
     "lesson-practice-ex-commands-practice": {
       "id": "lesson-practice-ex-commands-practice",
@@ -1205,7 +1715,16 @@ export const generatedContent = {
         "line": 3,
         "text": "Type :q and press Enter to complete this lesson"
       },
-      "focusCommand": "VIM"
+      "focusCommand": "VIM",
+      "initialCursor": {
+        "row": 0,
+        "col": 0
+      },
+      "solution": [
+        ":",
+        "q",
+        "Enter"
+      ]
     }
   }
 };

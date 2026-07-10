@@ -26,5 +26,14 @@
     "q",
     "wq"
   ],
-  "focusCommand": ":q"
+  "focusCommand": ":q",
+  "initialCursor": {
+    "row": 0,
+    "col": 0
+  },
+  "solution": [
+    ":",
+    "q",
+    "Enter"
+  ]
 }

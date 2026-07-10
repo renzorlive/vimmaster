@@ -27,7 +27,33 @@
   ],
   "targetText": {
     "line": 4,
-    "text": "Learning VIM INSERTED APPENDED"
+    "text": "Complete the sentence: Learning VIM INSERTED APPENDED"
   },
-  "focusCommand": "i"
+  "focusCommand": "i",
+  "initialCursor": {
+    "row": 4,
+    "col": 34
+  },
+  "solution": [
+    "a",
+    " ",
+    "I",
+    "N",
+    "S",
+    "E",
+    "R",
+    "T",
+    "E",
+    "D",
+    " ",
+    "A",
+    "P",
+    "P",
+    "E",
+    "N",
+    "D",
+    "E",
+    "D",
+    "Escape"
+  ]
 }

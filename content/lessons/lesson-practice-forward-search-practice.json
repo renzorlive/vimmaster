@@ -30,5 +30,23 @@
     "row": 4,
     "col": 20
   },
-  "focusCommand": "VIM"
+  "focusCommand": "VIM",
+  "initialCursor": {
+    "row": 0,
+    "col": 0
+  },
+  "solution": [
+    "/",
+    "t",
+    "a",
+    "r",
+    "g",
+    "e",
+    "t",
+    "Enter",
+    "n",
+    "n",
+    "n",
+    "n"
+  ]
 }

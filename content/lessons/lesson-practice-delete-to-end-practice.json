@@ -30,5 +30,30 @@
     "Save this text",
     "Maintain this"
   ],
-  "focusCommand": "VIM"
+  "focusCommand": "VIM",
+  "initialCursor": {
+    "row": 0,
+    "col": 15
+  },
+  "solution": [
+    "D",
+    "j",
+    "0",
+    "1",
+    "4",
+    "l",
+    "D",
+    "j",
+    "0",
+    "1",
+    "5",
+    "l",
+    "D",
+    "j",
+    "0",
+    "1",
+    "4",
+    "l",
+    "D"
+  ]
 }

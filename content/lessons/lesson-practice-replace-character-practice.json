@@ -30,5 +30,29 @@
     "Replace characters",
     "Fix typos quickly"
   ],
-  "focusCommand": "VIM"
+  "focusCommand": "VIM",
+  "initialCursor": {
+    "row": 0,
+    "col": 2
+  },
+  "solution": [
+    "r",
+    "i",
+    "j",
+    "0",
+    "l",
+    "r",
+    "I",
+    "j",
+    "0",
+    "2",
+    "l",
+    "r",
+    "p",
+    "j",
+    "0",
+    "l",
+    "r",
+    "i"
+  ]
 }
