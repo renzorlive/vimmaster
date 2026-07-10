@@ -1,18 +1,19 @@
 // VIM Master Game - Vim Command Handling
 
-import { 
-    getContent, getCursor, getMode, getCurrentLevel, getCommandHistory, getCommandLog, getYankedLine,
-    getReplacePending, getCountBuffer, getUndoStack, getRedoStack, getLevel12Undo,
-    getLevel12RedoAfterUndo, getLastExCommand, getSearchMode, getSearchQuery,
+import {
+    getContent, getCursor, getMode, getCurrentLevel,
+    getCommandHistory, getYankedLine, getReplacePending, getCountBuffer,
+    getRedoStack, getLevel12Undo, getSearchMode, getSearchQuery,
     getLastSearchQuery, getLastSearchDirection, getSearchMatches, getCurrentMatchIndex,
-    getUsedSearchInLevel, getNavCountSinceSearch, pushUndo, isEscapeKey,
-    setMode, setSearchMode, setCursorRow, setCursorCol, setContent, setYankedLine,
-    setCommandHistory, setCommandLog, setReplacePending, setLevel12Undo, setLevel12RedoAfterUndo,
+    getNavCountSinceSearch, pushUndo, isEscapeKey, setMode,
+    setSearchMode, setCursorRow, setCursorCol, setContent,
+    setYankedLine, setReplacePending, setLevel12Undo, setLevel12RedoAfterUndo,
     setUsedSearchInLevel, setNavCountSinceSearch, setCurrentMatchIndex, setSearchMatches,
     setLastSearchQuery, setLastSearchDirection, setSearchQuery, updateContentLine,
     removeContentLine, insertContentLine, addContentLine, appendCommandHistory,
-    appendCommandLog, clearCommandHistory, clearCommandLog, popUndo, pushRedo,
-    setCountBuffer, setCountBufferAppend, setLastExCommand, addPracticedCommand
+    appendCommandLog, clearCommandHistory, clearCommandLog, popUndo,
+    pushRedo, setCountBuffer, setCountBufferAppend, setLastExCommand,
+    addPracticedCommand
 } from './game-state.js';
 
 import { levels } from './levels.js';
@@ -33,30 +34,22 @@ export function handleNormalMode(e) {
     e.preventDefault();
     const key = e.key;
     const ctrlKey = e.ctrlKey;
-    const shiftKey = e.shiftKey;
-    const altKey = e.altKey;
     
     // Get current state
     let content = getContent();
     let cursor = getCursor();
     let mode = getMode();
     let commandHistory = getCommandHistory();
-    let commandLog = getCommandLog();
     let countBuffer = getCountBuffer();
     let replacePending = getReplacePending();
-    let searchMode = getSearchMode();
-    let searchQuery = getSearchQuery();
     let lastSearchQuery = getLastSearchQuery();
     let lastSearchDirection = getLastSearchDirection();
     let searchMatches = getSearchMatches();
     let currentMatchIndex = getCurrentMatchIndex();
-    let usedSearchInLevel = getUsedSearchInLevel();
     let navCountSinceSearch = getNavCountSinceSearch();
     let yankedLine = getYankedLine();
-    let undoStack = getUndoStack();
     let redoStack = getRedoStack();
     let level12Undo = getLevel12Undo();
-    let level12RedoAfterUndo = getLevel12RedoAfterUndo();
     let currentLevel = getCurrentLevel();
     
     // Count buffer

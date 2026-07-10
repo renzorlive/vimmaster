@@ -1,11 +1,14 @@
 // VIM Master Game - Progress Save/Load System
 
 import {
-    getBadges, getPracticedCommands, getCurrentLevel, getChallengeMode, getChallengeScoreValue, getXp, getCombo,
-    setBadges, setPracticedCommands, setCurrentLevel, setChallengeMode, setChallengeScoreValue, setXp, setCombo
+    getBadges, getPracticedCommands, getCurrentLevel, getChallengeMode,
+    getChallengeScoreValue, getXp, getCombo, setBadges,
+    setPracticedCommands, setCurrentLevel, setChallengeMode, setChallengeScoreValue,
+    setXp, setCombo
 } from './game-state.js';
 
 import { levels } from './levels.js';
+import { logger, CATEGORIES } from './logger.js';
 
 // Progress System Class
 class ProgressSystem {
@@ -42,7 +45,7 @@ class ProgressSystem {
             // Add prefix for easy identification
             return this.exportPrefix + base64String;
         } catch (error) {
-            console.error('Export failed:', error);
+            logger.error(CATEGORIES.PROGRESS, 'Export failed', { error: error.message });
             throw new Error('Failed to export progress data');
         }
     }
@@ -69,7 +72,7 @@ class ProgressSystem {
             let jsonString;
             try {
                 jsonString = atob(code);
-            } catch (error) {
+            } catch {
                 return { success: false, message: 'Invalid import code encoding' };
             }
 
@@ -77,7 +80,7 @@ class ProgressSystem {
             let progressData;
             try {
                 progressData = JSON.parse(jsonString);
-            } catch (error) {
+            } catch {
                 return { success: false, message: 'Invalid import code data' };
             }
 
@@ -99,7 +102,7 @@ class ProgressSystem {
             };
 
         } catch (error) {
-            console.error('Import failed:', error);
+            logger.error(CATEGORIES.PROGRESS, 'Import failed', { error: error.message });
             return { success: false, message: 'Failed to import progress data' };
         }
     }
@@ -117,7 +120,6 @@ class ProgressSystem {
         
         // Handle challenge points - if not present, default to 0
         if (data.challengePoints === undefined) {
-            console.log('🔍 DEBUG: Challenge points not found in progress data, defaulting to 0');
             data.challengePoints = 0;
         }
         
@@ -191,7 +193,7 @@ class ProgressSystem {
                 raw
             }));
         } catch (error) {
-            console.warn('Failed to back up progress data:', error);
+            logger.warn(CATEGORIES.STORAGE, 'Failed to back up progress data', { error: error.message });
         }
     }
 
@@ -200,7 +202,6 @@ class ProgressSystem {
      * @param {Object} data - Validated progress data
      */
     applyProgressData(data) {
-        console.log('🔍 DEBUG: applyProgressData - applying challenge points:', data.challengePoints);
         
         // Apply badges
         setBadges(data.badges);
@@ -222,7 +223,6 @@ class ProgressSystem {
         setXp(data.xp || 0);
         setCombo(data.combo || 0);
         
-        console.log('🔍 DEBUG: applyProgressData - after setting, getChallengeScoreValue():', getChallengeScoreValue());
     }
 
     /**
@@ -233,7 +233,7 @@ class ProgressSystem {
         try {
             localStorage.setItem(this.storageKey, JSON.stringify(data));
         } catch (error) {
-            console.warn('Failed to save progress to localStorage:', error);
+            logger.warn(CATEGORIES.STORAGE, 'Failed to save progress to localStorage', { error: error.message });
         }
     }
 
@@ -248,7 +248,7 @@ class ProgressSystem {
                 return JSON.parse(stored);
             }
         } catch (error) {
-            console.warn('Failed to load progress from localStorage:', error);
+            logger.warn(CATEGORIES.STORAGE, 'Failed to load progress from localStorage', { error: error.message });
         }
         return null;
     }
@@ -267,7 +267,7 @@ class ProgressSystem {
         try {
             raw = localStorage.getItem(this.storageKey);
         } catch (error) {
-            console.warn('Failed to access saved progress:', error);
+            logger.warn(CATEGORIES.STORAGE, 'Failed to access saved progress', { error: error.message });
             return { loaded: false, repaired: false, message: null };
         }
 
@@ -279,7 +279,7 @@ class ProgressSystem {
         try {
             stored = JSON.parse(raw);
         } catch (error) {
-            console.warn('Saved progress is not valid JSON:', error);
+            logger.warn(CATEGORIES.STORAGE, 'Saved progress is not valid JSON', { error: error.message });
         }
 
         if (stored) {
@@ -317,7 +317,6 @@ class ProgressSystem {
     autoSaveProgress() {
         try {
             const challengePoints = getChallengeScoreValue();
-            console.log('🔍 DEBUG: autoSaveProgress - challengePoints:', challengePoints);
             
             const currentProgress = {
                 version: this.version,
@@ -328,10 +327,9 @@ class ProgressSystem {
                 challengeMode: getChallengeMode(),
                 challengePoints: challengePoints || 0
             };
-            console.log('🔍 DEBUG: autoSaveProgress - saving progress:', currentProgress);
             this.saveToLocalStorage(currentProgress);
         } catch (error) {
-            console.warn('Auto-save failed:', error);
+            logger.warn(CATEGORIES.PROGRESS, 'Auto-save failed', { error: error.message });
         }
     }
 
@@ -356,11 +354,11 @@ class ProgressSystem {
                 setChallengeMode(false);
                 setChallengeScoreValue(0);
             } catch (error) {
-                console.warn('Failed to clear game state:', error);
+                logger.warn(CATEGORIES.PROGRESS, 'Failed to clear game state', { error: error.message });
             }
             
             return { success: true, message: 'Progress cleared successfully' };
-        } catch (error) {
+        } catch {
             return { success: false, message: 'Failed to clear progress' };
         }
     }
@@ -370,20 +368,11 @@ class ProgressSystem {
      * @returns {Object} Progress summary
      */
     getProgressSummary() {
-        console.log('🔍 DEBUG: ProgressSystem.getProgressSummary() called!');
-        console.log('🔍 DEBUG: getProgressSummary - getChallengeScoreValue function:', getChallengeScoreValue);
-        console.log('🔍 DEBUG: getProgressSummary - typeof getChallengeScoreValue:', typeof getChallengeScoreValue);
         
         const challengePoints = getChallengeScoreValue();
-        console.log('🔍 DEBUG: getProgressSummary - challengePoints:', challengePoints);
-        console.log('🔍 DEBUG: getProgressSummary - getChallengeScoreValue():', getChallengeScoreValue());
-        console.log('🔍 DEBUG: getProgressSummary - typeof challengePoints:', typeof challengePoints);
-        console.log('🔍 DEBUG: getProgressSummary - challengePoints === undefined:', challengePoints === undefined);
-        console.log('🔍 DEBUG: getProgressSummary - challengePoints === null:', challengePoints === null);
         
         // Ensure we always return a number
         const safeChallengePoints = (challengePoints !== undefined && challengePoints !== null) ? challengePoints : 0;
-        console.log('🔍 DEBUG: getProgressSummary - safeChallengePoints:', safeChallengePoints);
         
         const result = {
             currentLevel: getCurrentLevel(),
@@ -394,7 +383,6 @@ class ProgressSystem {
             lastSaved: this.getLastSavedTime()
         };
         
-        console.log('🔍 DEBUG: getProgressSummary - returning result:', result);
         return result;
     }
 
@@ -410,7 +398,7 @@ class ProgressSystem {
                 return new Date(data.timestamp).toLocaleString();
             }
         } catch (error) {
-            console.warn('Failed to get last saved time:', error);
+            logger.warn(CATEGORIES.STORAGE, 'Failed to get last saved time', { error: error.message });
         }
         return 'Never';
     }

@@ -54,7 +54,7 @@ There is no way to programmatically verify anything. Every other fix lands blind
 
 ## 🟡 Maintainability
 
-### TD-11 Shipped debug logging
+### TD-11 Shipped debug logging — ✅ FIXED (hygiene PR: ~110 console.logs deleted, warnings/errors routed through js/logger.js with categories, `no-console`/`no-unused-vars`/`no-empty`/`no-debugger` enforced as ESLint **errors** in CI)
 ~150 `console.log('🔍 DEBUG…')` calls across `event-handlers.js`, `challenges.js`, `progress-system.js`, `ui-components.js`, `cheat-mode.js`, `main.js` — several dump full buffer content **on every keystroke** (`updateUI`). Remove entirely; if diagnostics are wanted, gate behind a `DEBUG` flag.
 
 ### TD-12 Duplicated utility logic

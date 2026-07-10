@@ -80,9 +80,11 @@ describe('Regression: TD-0002 Lesson Start Position', () => {
         expect(currentCursor.row).toBe(1);
         expect(currentCursor.col).toBe(fixture.initialContent[1].length - 1);
         
-        // Should warn that clamping occurred
+        // Should warn that clamping occurred (via the structured logger,
+        // which passes metadata as a second console argument)
         expect(console.warn).toHaveBeenCalledWith(
-            expect.stringContaining('is outside the buffer — clamped to')
+            expect.stringContaining('is outside the buffer — clamped to'),
+            expect.anything()
         );
     });
 });
