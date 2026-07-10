@@ -14,26 +14,48 @@ body {
 }
 
 .line-number {
-    color: #858585;
+    color: #6b7280;
     text-align: right;
     padding-right: 1rem;
     user-select: none;
 }
 
+.editor-line {
+    border-radius: 0.25rem;
+    padding: 0.08rem 0.2rem;
+}
+
+.editor-line.active {
+    background: rgba(255, 255, 255, 0.035);
+}
+
 .cursor {
-    background-color: #f2c55c;
+    background-color: rgba(242, 197, 92, 0.96);
     color: #1e1e1e;
-    animation: blink 1s step-end infinite;
+    animation: blink 0.5s step-end infinite;
     border-radius: 2px;
-    box-shadow: 0 0 8px rgba(242, 197, 92, 0.6);
+    box-shadow: 0 0 6px rgba(242, 197, 92, 0.35);
 }
 
 @keyframes blink {
     50% {
         background-color: transparent;
-        outline: 1px solid #f2c55c;
+        outline: 1px solid rgba(242, 197, 92, 0.85);
         color: inherit;
-        box-shadow: 0 0 4px rgba(242, 197, 92, 0.3);
+        box-shadow: 0 0 3px rgba(242, 197, 92, 0.2);
+    }
+}
+
+.cursor.cursor-insert {
+    background-color: transparent;
+    border-left: 2px solid #f2c55c;
+    box-shadow: 0 0 10px rgba(242, 197, 92, 0.16);
+    animation: insertCursorBlink 0.5s step-end infinite;
+}
+
+@keyframes insertCursorBlink {
+    50% {
+        border-left-color: transparent;
     }
 }
 
@@ -410,6 +432,221 @@ input:focus {
 .cursor.search {
     background-color: #f59e0b;
     box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+/* First Impression Refresh */
+.hud-shell {
+    background: linear-gradient(180deg, rgba(17, 17, 17, 0.96), rgba(24, 24, 24, 0.92));
+    backdrop-filter: blur(12px);
+}
+
+.hud-chip,
+.hud-pill,
+.hud-action,
+.hud-link,
+.hud-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    white-space: nowrap;
+}
+
+.hud-chip,
+.hud-pill,
+.hud-hint {
+    border: 1px solid rgba(75, 85, 99, 0.85);
+    border-radius: 9999px;
+    background: rgba(31, 41, 55, 0.72);
+    padding: 0.45rem 0.8rem;
+    color: #d1d5db;
+}
+
+.hud-action,
+.hud-link {
+    border-radius: 9999px;
+    border: 1px solid rgba(75, 85, 99, 0.85);
+    background: rgba(31, 41, 55, 0.78);
+    color: #e5e7eb;
+    padding: 0.5rem 0.9rem;
+    font-weight: 700;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.hud-action:hover,
+.hud-link:hover {
+    background: rgba(55, 65, 81, 0.92);
+    border-color: rgba(250, 204, 21, 0.45);
+}
+
+.hud-kbd {
+    background: #374151;
+    border-radius: 0.35rem;
+    border: 1px solid rgba(156, 163, 175, 0.35);
+    color: #f3f4f6;
+    font-size: 0.72rem;
+    padding: 0.18rem 0.45rem;
+}
+
+.goal-card {
+    padding: 0.9rem 1rem;
+    margin-top: 0.25rem;
+}
+
+.goal-card #instructions {
+    line-height: 1.15;
+}
+
+.goal-card #instructions > div {
+    gap: 0.35rem;
+}
+
+.goal-card #instructions .text-5xl,
+.goal-card #instructions .text-6xl {
+    font-size: clamp(1.9rem, 4vw, 2.7rem) !important;
+    line-height: 1;
+}
+
+.goal-card #instructions .text-lg {
+    font-size: 1rem !important;
+    margin-bottom: 0.35rem !important;
+}
+
+.goal-card #instructions .text-sm {
+    font-size: 0.85rem !important;
+}
+
+.goal-card #instructions .my-3,
+.goal-card #instructions .mt-2 {
+    margin-top: 0.35rem !important;
+}
+
+.goal-card #instructions .py-3 {
+    padding-top: 0.6rem !important;
+    padding-bottom: 0.6rem !important;
+}
+
+#editor-container {
+    margin-top: 0.25rem;
+}
+
+#editor-container > .flex:first-child {
+    margin-bottom: 0.75rem;
+}
+
+#vim-editor-display {
+    min-height: min(320px, 46vh);
+}
+
+#status-bar {
+    min-height: 2.5rem;
+    letter-spacing: 0.06em;
+}
+
+.statusline {
+    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.98), rgba(234, 88, 12, 0.98));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 10px 24px rgba(0, 0, 0, 0.24);
+    color: #111827;
+}
+
+.status-mode {
+    display: inline-flex;
+    align-items: center;
+    min-width: 5.5rem;
+    justify-content: center;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+}
+
+.status-mode-ex {
+    color: #1d4ed8;
+}
+
+.status-mode-normal {
+    color: #111827;
+}
+
+.status-mode-insert {
+    color: #065f46;
+}
+
+.status-mode-visual {
+    color: #6d28d9;
+}
+
+.status-sep {
+    opacity: 0.55;
+}
+
+.status-search {
+    color: #1f2937;
+}
+
+#command-log {
+    min-height: 2.5rem;
+    display: flex;
+    align-items: center;
+}
+
+#level-selection {
+    min-height: 2.5rem;
+}
+
+#stats-bar {
+    box-shadow: inset 0 0 0 1px rgba(250, 204, 21, 0.08);
+}
+
+#editor-feedback {
+    min-width: min(320px, calc(100vw - 2rem));
+    max-width: 92vw;
+    border-radius: 0.9rem;
+    padding: 0.85rem 1rem;
+    background: rgba(17, 24, 39, 0.92);
+    color: #f9fafb;
+    border: 1px solid rgba(75, 85, 99, 0.85);
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(10px);
+    transform: translate(-50%, -8px) scale(0.96);
+    opacity: 0;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    text-align: center;
+    white-space: pre-line;
+    font-family: 'Fira Code', 'Consolas', monospace;
+    letter-spacing: 0.02em;
+}
+
+#editor-feedback.show {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+}
+
+#editor-feedback.success {
+    border-color: rgba(34, 197, 94, 0.65);
+    box-shadow: 0 18px 36px rgba(16, 185, 129, 0.2);
+}
+
+#editor-feedback.error {
+    border-color: rgba(239, 68, 68, 0.75);
+    box-shadow: 0 18px 36px rgba(239, 68, 68, 0.2);
+}
+
+@media (max-width: 768px) {
+    .hud-shell {
+        padding: 0.85rem;
+    }
+
+    .goal-card {
+        padding: 0.8rem 0.9rem;
+    }
+
+    #vim-editor-display {
+        min-height: 280px;
+    }
+
+    #editor-feedback {
+        top: 5.5rem;
+        min-width: min(260px, calc(100vw - 1rem));
+    }
 }
 
  / *   V 3   A n i m a t i o n s   * / 

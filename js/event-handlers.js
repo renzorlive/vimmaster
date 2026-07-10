@@ -23,7 +23,8 @@ import {
     renderEditor, updateStatusBar, updateInstructions, updateLevelIndicator,
     updateCommandLog, createLevelButtons, renderBadges, showModal,
     showCelebration, flashLevelComplete, updateChallengeUI, showChallengeContainer,
-    hideChallengeContainer, showBadgeToast, flashError, updateStatsBar
+    hideChallengeContainer, showBadgeToast, flashError, updateStatsBar,
+    showEditorFeedback
 } from './ui-components.js';
 import { autoSaveProgress } from './progress-system.js';
 import { evaluateWinCondition } from './win-evaluator.js';
@@ -150,6 +151,7 @@ export function checkWinCondition() {
             
             setXp(getXp() + earnedXp);
             setCombo(getCombo() + 1);
+            showEditorFeedback(`✔ Correct\n+${earnedXp} XP\nCombo x${getCombo()}`, 'success');
 
             // Persist progress at the moment of completion (TD-3): the dead
             // window.checkWinCondition wrapper never ran, so wins relied on
@@ -187,6 +189,7 @@ export function checkWinCondition() {
         // If an Ex command was just entered and failed to win
         if (state.lastExCommand) {
             flashError();
+            showEditorFeedback('✖ Not quite', 'error');
             setCombo(0);
             updateStatsBar(0, getXp());
             setLastExCommand(''); // Reset it so it doesn't flash continuously
@@ -365,7 +368,20 @@ export function updateUI() {
     
     try {
         renderEditor(getContent(), getCursor(), getMode());
-        updateStatusBar(getMode(), getSearchMode(), getSearchQuery(), getLastSearchDirection(), getSearchMatches(), getCurrentMatchIndex(), getCommandHistory());
+        updateStatusBar(
+            getMode(),
+            getSearchMode(),
+            getSearchQuery(),
+            getLastSearchDirection(),
+            getSearchMatches(),
+            getCurrentMatchIndex(),
+            getCommandHistory(),
+            getCursor(),
+            getCurrentLevel(),
+            levels.length,
+            getXp(),
+            getCombo()
+        );
         
         // Use centralized instructions rendering
         updateInstructions();

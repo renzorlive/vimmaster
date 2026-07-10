@@ -12,7 +12,7 @@ let editorDisplay, statusBar, instructionsEl, levelIndicator, commandLogEl,
     nextLevelBtn, celebration, celebrationRestartBtn, levelSelectionContainer,
     challengeToggleBtn, challengeContainer, challengeInstructions, challengeTimer,
     challengeProgress, challengeTotal, challengeScore, badgeSection, badgeBar,
-    badgeCount, badgeToast, cheatPanel, cheatOverlay, cheatCloseBtn, cheatSearch, cheatContent;
+    badgeCount, badgeToast, feedbackToast, cheatPanel, cheatOverlay, cheatCloseBtn, cheatSearch, cheatContent;
 
 // Initialize DOM references
 export function initializeDOMReferences() {
@@ -42,6 +42,7 @@ export function initializeDOMReferences() {
     badgeBar = document.getElementById('badge-bar');
     badgeCount = document.getElementById('badge-count');
     badgeToast = document.getElementById('badge-toast');
+    feedbackToast = document.getElementById('editor-feedback');
     cheatPanel = document.getElementById('cheat-panel');
     cheatOverlay = document.getElementById('cheat-overlay');
     cheatCloseBtn = document.getElementById('cheat-close');
@@ -64,12 +65,13 @@ export function renderEditor(content, cursor, mode) {
     };
     
     content.forEach((line, rowIndex) => {
-        html += `<div class="flex"><span class="line-number w-10">${rowIndex + 1}</span><span class="flex-1">`;
+        const isActiveLine = rowIndex === cursor.row;
+        html += `<div class="editor-line${isActiveLine ? ' active' : ''} flex"><span class="line-number w-10">${rowIndex + 1}</span><span class="flex-1">`;
         for (let colIndex = 0; colIndex < line.length; colIndex++) {
             const char = line[colIndex];
             const safeChar = escapeHtml(char);
             if (rowIndex === cursor.row && colIndex === cursor.col && mode === 'NORMAL') {
-                html += `<span class="cursor">${safeChar}</span>`;
+                html += `<span class="cursor cursor-normal">${safeChar}</span>`;
             } else {
                 if (getLastSearchQuery() && isInMatch(rowIndex, colIndex)) {
                     html += `<span class="bg-yellow-800/60">${safeChar}</span>`;
@@ -80,9 +82,9 @@ export function renderEditor(content, cursor, mode) {
         }
         if (rowIndex === cursor.row && (cursor.col === line.length || line.length === 0)) {
              if (mode === 'NORMAL') {
-                html += `<span class="cursor">&nbsp;</span>`;
+                html += `<span class="cursor cursor-normal">&nbsp;</span>`;
              } else {
-                html += `<span class="inline-block w-px h-6 bg-yellow-400 animate-pulse -mb-1"></span>`;
+                html += `<span class="cursor cursor-insert inline-block w-px h-6 -mb-1"></span>`;
              }
         }
         html += `</span></div>`;
@@ -91,30 +93,36 @@ export function renderEditor(content, cursor, mode) {
 }
 
 // Status Bar Updates
-export function updateStatusBar(mode, searchMode, searchQuery, lastSearchDirection, searchMatches, currentMatchIndex, commandHistory = '') {
+export function updateStatusBar(mode, searchMode, searchQuery, lastSearchDirection, searchMatches, currentMatchIndex, commandHistory = '', cursor = { row: 0, col: 0 }, currentLevel = 0, totalLevels = 0, xp = 0, combo = 0) {
     if (!statusBar) return;
-    
-    let text = '';
-    let bgColor = mode === 'NORMAL' ? 'bg-yellow-400 text-gray-900' : 'bg-green-400 text-gray-900';
 
-    if (commandHistory && commandHistory.startsWith(':')) {
-        text = commandHistory;
-        bgColor = 'bg-blue-400 text-gray-900';
-    } else {
-        text = `-- ${mode.toUpperCase()} --`;
-        if (searchMode) {
-            const prefix = lastSearchDirection === 'backward' ? '?' : '/';
-            text += ` ${prefix}${searchQuery}`;
-        } else if (getLastSearchQuery()) {
-            const total = searchMatches.length;
-            const current = currentMatchIndex >= 0 ? currentMatchIndex + 1 : 0;
-            const dir = lastSearchDirection === 'backward' ? '?' : '/';
-            text += ` ${dir}${getLastSearchQuery()} ${current}/${total}`;
-        }
-    }
-    
-    statusBar.textContent = text;
-    statusBar.className = `status-bar px-2 py-1 rounded-md text-sm ${bgColor}`;
+    const modeLabel = commandHistory && commandHistory.startsWith(':')
+        ? commandHistory
+        : mode.toUpperCase();
+    const modeClass = commandHistory && commandHistory.startsWith(':')
+        ? 'status-mode-ex'
+        : `status-mode-${mode.toLowerCase()}`;
+    const lessonLabel = totalLevels > 0 ? `Lesson ${currentLevel + 1}/${totalLevels}` : 'Lesson --';
+    const cursorLabel = `Ln ${cursor.row + 1}, Col ${cursor.col + 1}`;
+    const xpLabel = `XP ${xp}`;
+    const comboLabel = `Combo x${combo}`;
+    const searchLabel = searchMode
+        ? `${lastSearchDirection === 'backward' ? '?' : '/'}${searchQuery}`
+        : (getLastSearchQuery() ? `${lastSearchDirection === 'backward' ? '?' : '/'}${getLastSearchQuery()} ${currentMatchIndex >= 0 ? currentMatchIndex + 1 : 0}/${searchMatches.length}` : '');
+
+    statusBar.innerHTML = `
+        <span class="status-mode ${modeClass}">${escapeHtml(modeLabel)}</span>
+        <span class="status-sep">│</span>
+        <span>${escapeHtml(lessonLabel)}</span>
+        <span class="status-sep">│</span>
+        <span>${escapeHtml(cursorLabel)}</span>
+        <span class="status-sep">│</span>
+        <span>${escapeHtml(xpLabel)}</span>
+        <span class="status-sep">│</span>
+        <span>${escapeHtml(comboLabel)}</span>
+        ${searchLabel ? `<span class="status-sep">│</span><span class="status-search">${escapeHtml(`Search ${searchLabel}`)}</span>` : ''}
+    `;
+    statusBar.className = `status-bar statusline px-3 py-2 rounded-md text-xs md:text-sm`;
 }
 
 // Instructions Updates
@@ -348,6 +356,22 @@ export function showBadgeToast(message) {
     setTimeout(() => badgeToast.classList.add('hidden'), 2200);
 }
 
+export function showEditorFeedback(message, variant = 'success') {
+    if (!feedbackToast) return;
+
+    feedbackToast.textContent = message;
+    feedbackToast.dataset.variant = variant;
+    feedbackToast.classList.remove('hidden', 'show', 'success', 'error');
+    feedbackToast.classList.add(variant);
+    requestAnimationFrame(() => feedbackToast.classList.add('show'));
+
+    window.clearTimeout(feedbackToast._hideTimer);
+    feedbackToast._hideTimer = window.setTimeout(() => {
+        feedbackToast.classList.remove('show');
+        window.setTimeout(() => feedbackToast.classList.add('hidden'), 180);
+    }, 420);
+}
+
 // Modal Functions
 export function showModal(title, message) {
     if (!modal || !modalTitle || !modalMessage) return;
@@ -475,7 +499,7 @@ export function getDOMReferences() {
         nextLevelBtn, celebration, celebrationRestartBtn, levelSelectionContainer,
         challengeToggleBtn, challengeContainer, challengeInstructions, challengeTimer,
         challengeProgress, challengeTotal, challengeScore, badgeSection, badgeBar,
-        badgeCount, badgeToast, cheatPanel, cheatOverlay, cheatCloseBtn, cheatSearch, cheatContent,
-        flashError, updateStatsBar
+        badgeCount, badgeToast, feedbackToast, cheatPanel, cheatOverlay, cheatCloseBtn, cheatSearch, cheatContent,
+        flashError, updateStatsBar, showEditorFeedback
     };
 }

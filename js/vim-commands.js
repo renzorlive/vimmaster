@@ -5,7 +5,7 @@ import {
     getCommandHistory, getYankedLine, getReplacePending, getCountBuffer,
     getRedoStack, getLevel12Undo, getSearchMode, getSearchQuery,
     getLastSearchQuery, getLastSearchDirection, getSearchMatches, getCurrentMatchIndex,
-    getNavCountSinceSearch, pushUndo, isEscapeKey, setMode,
+    getNavCountSinceSearch, getXp, getCombo, pushUndo, isEscapeKey, setMode,
     setSearchMode, setCursorRow, setCursorCol, setContent,
     setYankedLine, setReplacePending, setLevel12Undo, setLevel12RedoAfterUndo,
     setUsedSearchInLevel, setNavCountSinceSearch, setCurrentMatchIndex, setSearchMatches,
@@ -504,7 +504,20 @@ export function handleSearchMode(e) {
         const currentQuery = getSearchQuery();
         setSearchQuery(currentQuery.slice(0, -1));
         // Update status bar to show the updated search query
-        updateStatusBar(getMode(), getSearchMode(), getSearchQuery(), getLastSearchDirection(), getSearchMatches(), getCurrentMatchIndex(), getCommandHistory());
+        updateStatusBar(
+            getMode(),
+            getSearchMode(),
+            getSearchQuery(),
+            getLastSearchDirection(),
+            getSearchMatches(),
+            getCurrentMatchIndex(),
+            getCommandHistory(),
+            getCursor(),
+            getCurrentLevel(),
+            levels.length,
+            getXp(),
+            getCombo()
+        );
         return;
     }
     if (key === 'Enter') {
@@ -522,7 +535,20 @@ export function handleSearchMode(e) {
         const currentQuery = getSearchQuery();
         setSearchQuery(currentQuery + key);
         // Update status bar to show the updated search query
-        updateStatusBar(getMode(), getSearchMode(), getSearchQuery(), getLastSearchDirection(), getSearchMatches(), getCurrentMatchIndex(), getCommandHistory());
+        updateStatusBar(
+            getMode(),
+            getSearchMode(),
+            getSearchQuery(),
+            getLastSearchDirection(),
+            getSearchMatches(),
+            getCurrentMatchIndex(),
+            getCommandHistory(),
+            getCursor(),
+            getCurrentLevel(),
+            levels.length,
+            getXp(),
+            getCombo()
+        );
     }
 }
 
