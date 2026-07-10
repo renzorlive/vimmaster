@@ -37,6 +37,7 @@
                             <div id="session-progress" class="mt-2 h-2 w-40 md:w-52 overflow-hidden rounded-full border border-gray-700/80 bg-gray-800/80 ml-0 md:ml-auto">
                                 <div id="session-progress-fill" class="h-full w-0 rounded-full bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 transition-all duration-300 ease-out"></div>
                             </div>
+                            <div id="streak-pill" class="hud-chip hidden text-xs md:text-sm mt-2 ml-0 md:ml-auto"></div>
                             <div id="minimal-progress" class="text-[10px] md:text-xs text-yellow-500/90 mt-1 font-mono hidden tracking-[0.25em]"></div>
                         </div>
                     </div>
@@ -66,6 +67,8 @@
                 </div>
             </div>
         </header>
+
+        <section id="retention-panel" class="hidden"></section>
 
         <!-- Hidden Legacy Progress Management (kept for script compatibility) -->
         <div class="hidden" id="progress-toggle">

@@ -26,6 +26,9 @@ import {
     hideChallengeContainer, showBadgeToast, flashError, updateStatsBar,
     showEditorFeedback
 } from './ui-components.js';
+import {
+    noteMistake, noteLessonComplete, recordCompletionState, getSessionMetrics
+} from './retention-state.js';
 import { autoSaveProgress } from './progress-system.js';
 import { evaluateWinCondition } from './win-evaluator.js';
 import { logger, CATEGORIES } from './logger.js';
@@ -152,6 +155,21 @@ export function checkWinCondition() {
             setXp(getXp() + earnedXp);
             setCombo(getCombo() + 1);
             showEditorFeedback(`✔ Correct\n+${earnedXp} XP\nCombo x${getCombo()}`, 'success');
+            noteLessonComplete({
+                earnedXp,
+                combo: getCombo(),
+                progressSummary: {
+                    currentLevel: getCurrentLevel(),
+                    totalLevels: levels.length,
+                    badgesEarned: getBadges().size,
+                    commandsPracticed: getPracticedCommands().size,
+                    challengePoints: getChallengeScoreValue()
+                },
+                lessonName: level.name,
+                focusCommand: level.focusCommand ? level.focusCommand : (level.solution ? level.solution.join('') : ''),
+                finalLevel: getCurrentLevel() === levels.length - 1
+            });
+            const sessionMetrics = getSessionMetrics();
 
             // Persist progress at the moment of completion (TD-3): the dead
             // window.checkWinCondition wrapper never ran, so wins relied on
@@ -168,6 +186,7 @@ export function checkWinCondition() {
             // Check if this is the final level
             if (getCurrentLevel() === levels.length - 1) {
                 // Final level completed - show celebration directly
+                recordCompletionState(true);
                 showCelebration();
             } else {
                 // Regular level completed - show level completion modal
@@ -180,6 +199,8 @@ export function checkWinCondition() {
                         <div class="bg-gray-800/90 border border-gray-700 rounded-xl font-mono text-green-400 text-3xl md:text-4xl text-center inline-block px-4 py-3 tracking-tight shadow-inner">${focusCmd}</div>
                         <div class="text-gray-300 text-sm mt-4 mb-3">${level.instructions || 'You completed the lesson!'}</div>
                         <div class="flex flex-wrap justify-center gap-3 text-sm">
+                            <div class="px-3 py-2 rounded-full bg-gray-800/80 border border-gray-700 text-yellow-300 font-semibold">Accuracy ${sessionMetrics.accuracy}%</div>
+                            <div class="px-3 py-2 rounded-full bg-gray-800/80 border border-gray-700 text-blue-300 font-semibold">${sessionMetrics.lessonSeconds}s</div>
                             <div class="px-3 py-2 rounded-full bg-gray-800/80 border border-gray-700 text-yellow-300 font-semibold">+${earnedXp} XP</div>
                             <div class="px-3 py-2 rounded-full bg-gray-800/80 border border-gray-700 text-orange-300 font-semibold">Combo x${getCombo()}</div>
                         </div>
@@ -198,6 +219,7 @@ export function checkWinCondition() {
         if (state.lastExCommand) {
             flashError();
             showEditorFeedback('✖ Not quite', 'error');
+            noteMistake();
             setCombo(0);
             updateStatsBar(0, getXp());
             setLastExCommand(''); // Reset it so it doesn't flash continuously
@@ -416,6 +438,10 @@ export function updateUI() {
         import('./game-state.js').then(module => {
             updateStatsBar(module.getCombo(), module.getXp());
         });
+
+        if (typeof window.updateRetentionSummary === 'function') {
+            window.updateRetentionSummary();
+        }
         
     } finally {
         _isUpdatingUI = false;

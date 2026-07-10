@@ -10,7 +10,8 @@ import { levels, loadLevel } from './levels.js';
 import { handleNormalMode, handleInsertMode, handleSearchMode } from './vim-commands.js';
 import {
     initializeDOMReferences, updateLevelIndicator, createLevelButtons, hideModal,
-    showCelebration, hideCelebration, initOnboarding
+    showCelebration, hideCelebration, initOnboarding, renderRetentionPanel,
+    updateStreakPill
 } from './ui-components.js';
 import {
     openCheat, closeCheat, renderCheatList, isInPracticeMode,
@@ -24,6 +25,10 @@ import {
     progressSystem, exportProgress, importProgress, autoLoadProgress,
     autoSaveProgress, clearProgress
 } from './progress-system.js';
+import {
+    initializeRetentionState, getRetentionViewModel, captureResumeSnapshot,
+    markSessionExit, resetRetentionState, noteLessonStart
+} from './retention-state.js';
 
 
 
@@ -43,6 +48,8 @@ function initializeGame() {
 
     // Resume at the saved level, or start at the first level
     loadLevel(progressResult.loaded ? getCurrentLevel() : 0);
+    initializeRetentionState(getCurrentProgressSummary(), getCurrentLessonName(), getCurrentFocusCommand());
+    updateRetentionUI();
 
     // Level count in the feature list is derived, never hardcoded
     const featureLevelCount = document.getElementById('feature-level-count');
@@ -61,6 +68,11 @@ function initializeGame() {
     
     // Setup auto-save
     setupAutoSave();
+
+    window.addEventListener('beforeunload', () => {
+        syncRetentionSnapshot();
+        markSessionExit(getCurrentProgressSummary(), getCurrentLessonName(), getCurrentFocusCommand());
+    });
 }
 
 // Setup event listeners
@@ -72,6 +84,7 @@ function setupEventListeners() {
     const celebrationRestartBtn = document.getElementById('celebration-restart');
     const levelSelectionContainer = document.getElementById('level-selection');
     const challengeToggleBtn = document.getElementById('challenge-toggle');
+    const retentionPanel = document.getElementById('retention-panel');
     const cheatOverlay = document.getElementById('cheat-overlay');
     const cheatCloseBtn = document.getElementById('cheat-close');
     const cheatSearch = document.getElementById('cheat-search');
@@ -167,6 +180,8 @@ function setupEventListeners() {
                 if (result.success) {
                     showProgressMessage(result.message, 'success');
                     updateProgressSummary();
+                    localStorage.removeItem('vimMasterRetentionState');
+                    resetRetentionState();
                     
                     // Reset game state
                     resetGameState();
@@ -252,6 +267,22 @@ function setupEventListeners() {
     if (editorContainer) {
         editorContainer.addEventListener('click', () => {
             if (editorInput) editorInput.focus();
+        });
+    }
+
+    if (retentionPanel) {
+        retentionPanel.addEventListener('click', (e) => {
+            const target = e.target;
+            if (!(target instanceof HTMLElement)) return;
+
+            if (target.id === 'resume-learning-btn') {
+                if (editorInput) editorInput.focus();
+                editorContainer?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            if (target.id === 'resume-practice-btn') {
+                challengeToggleBtn?.click();
+            }
         });
     }
 
@@ -414,7 +445,7 @@ function updateProgressSummary() {
     const lastSavedTime = document.getElementById('last-saved-time');
     
     if (progressSummary && lastSavedTime) {
-        const summary = progressSystem.getProgressSummary();
+        const summary = getCurrentProgressSummary();
         
         // Ensure challengePoints is always a number
         const challengePoints = (summary.challengePoints !== undefined && summary.challengePoints !== null) ? summary.challengePoints : 0;
@@ -422,6 +453,8 @@ function updateProgressSummary() {
         progressSummary.textContent = `Level ${summary.currentLevel + 1} • ${summary.badgesEarned} badges • ${summary.commandsPracticed} commands practiced • ${challengePoints} challenge points`;
         lastSavedTime.textContent = summary.lastSaved;
     }
+
+    updateRetentionUI();
 }
 
 function showProgressMessage(message, type = 'info') {
@@ -463,6 +496,40 @@ function setupAutoSave() {
     }, 5000); // Update every 5 seconds
 }
 
+function getCurrentLesson() {
+    return levels[getCurrentLevel()] || null;
+}
+
+function getCurrentLessonName() {
+    const lesson = getCurrentLesson();
+    return lesson ? lesson.name : '';
+}
+
+function getCurrentFocusCommand() {
+    const lesson = getCurrentLesson();
+    if (!lesson) return '';
+    return lesson.focusCommand ? lesson.focusCommand : (lesson.solution ? lesson.solution.join('') : '');
+}
+
+function getCurrentProgressSummary() {
+    return progressSystem.getProgressSummary();
+}
+
+function syncRetentionSnapshot() {
+    const summary = getCurrentProgressSummary();
+    captureResumeSnapshot(summary, getCurrentLessonName(), getCurrentFocusCommand());
+}
+
+function updateRetentionUI() {
+    const summary = getCurrentProgressSummary();
+    const lesson = getCurrentLesson();
+    noteLessonStart(summary.currentLevel ?? 0, lesson ? lesson.name : '', getCurrentFocusCommand());
+    const model = getRetentionViewModel(summary, lesson ? lesson.name : '', getCurrentFocusCommand());
+    captureResumeSnapshot(summary, lesson ? lesson.name : '', getCurrentFocusCommand());
+    renderRetentionPanel(model);
+    updateStreakPill(model.streakDays, model.welcomeBack);
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     initializeGame();
@@ -472,6 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Make updateProgressSummary globally available
     window.updateProgressSummary = updateProgressSummary;
+    window.updateRetentionSummary = updateRetentionUI;
     
     // Focus the editor
     const editorInput = document.getElementById('vim-editor-input');
