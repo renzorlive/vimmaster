@@ -17,8 +17,8 @@ global.document = {
 
 // Now we can safely import game modules
 import { StaticContentProvider } from '../../js/content-provider.js';
-import { loadLevel } from '../../js/levels.js'; // To actually set up the UI state
-import { resetGameState, getContent, getCursor, getMode, getLastExCommand, getUsedSearchInLevel, getNavCountSinceSearch, getLastSearchQuery, getLastSearchDirection, getLevel12RedoAfterUndo, setContent, setMode, setCursor } from '../../js/game-state.js';
+import { levels } from '../../js/levels.js';
+import { resetGameState, getContent, getCursor, getMode, getLastExCommand, getUsedSearchInLevel, getNavCountSinceSearch, getLastSearchQuery, getLastSearchDirection, getLevel12RedoAfterUndo, setContent, setMode, setCursor, setCurrentLevel } from '../../js/game-state.js';
 import { evaluateWinCondition } from '../../js/win-evaluator.js';
 import { replay } from './replay.js';
 
@@ -33,11 +33,21 @@ let totalFailed = 0;
 
 console.log('\n🌟 Running VIM Master Golden Suite 🌟\n');
 
-for (const testCase of manifest) {
+// Every lesson that ships a `solution` is golden-verified automatically —
+// a lesson that cannot be beaten cannot be merged (docs/ContentSystem.md).
+// Manifest entries add extra assertions (finalBuffer/finalCursor/finalMode)
+// on top of the win-condition check.
+const manifestIds = new Set(manifest.map((t) => t.lessonId));
+const allLessons = [...provider.getAllRegularLessons(), ...provider.getAllPracticeLessons()];
+const autoCases = allLessons
+    .filter((lesson) => Array.isArray(lesson.solution) && !manifestIds.has(lesson.id))
+    .map((lesson) => ({ lessonId: lesson.id, description: `${lesson.name} (auto)`, solution: lesson.solution }));
+
+for (const testCase of [...manifest, ...autoCases]) {
     const { lessonId, description, solution, finalBuffer, finalCursor, finalMode, maxSteps = 150 } = testCase;
-    
+
     const lesson = provider.getLesson(lessonId);
-    
+
     if (!lesson) {
         console.log(`\x1b[31m✗ FAIL\x1b[0m ${description || lessonId} (Lesson not found in generated-content.js)`);
         totalFailed++;
@@ -46,7 +56,13 @@ for (const testCase of manifest) {
 
     // Reset Engine State
     resetGameState();
-    
+
+    // Name-keyed engine behavior (Undo/Redo flags, search levels — TD-7)
+    // reads levels[currentLevel], so point it at this lesson when it is a
+    // regular level.
+    const levelIndex = levels.findIndex((l) => l.id === lesson.id);
+    setCurrentLevel(levelIndex >= 0 ? levelIndex : 0);
+
     // We bypass loadLevel and manually set up the engine state since loadLevel relies on array indexing
     setContent(lesson.initialContent || []);
     if (lesson.initialCursor) {

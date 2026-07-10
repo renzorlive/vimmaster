@@ -28,5 +28,25 @@
     "line": 4,
     "text": "Learning VIM is awesome!"
   },
-  "focusCommand": "i"
+  "focusCommand": "i",
+  "initialCursor": {
+    "row": 4,
+    "col": 11
+  },
+  "solution": [
+    "a",
+    " ",
+    "i",
+    "s",
+    " ",
+    "a",
+    "w",
+    "e",
+    "s",
+    "o",
+    "m",
+    "e",
+    "!",
+    "Escape"
+  ]
 }

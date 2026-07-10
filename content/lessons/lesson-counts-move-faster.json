@@ -24,5 +24,13 @@
     "row": 0,
     "col": 14
   },
-  "focusCommand": "VIM"
+  "focusCommand": "VIM",
+  "initialCursor": {
+    "row": 0,
+    "col": 0
+  },
+  "solution": [
+    "3",
+    "w"
+  ]
 }

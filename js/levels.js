@@ -35,6 +35,13 @@ export const levels = loadRegularLessons();
 // Exactly one of these must be present on every lesson — it is the objective.
 const WIN_CONDITION_PROPS = ['target', 'targetText', 'targetContent', 'exCommands'];
 
+// Lesson properties that are defined by the content schema but consumed
+// outside runtime initialization: `solution` is replayed by the Golden
+// Suite in CI, the rest are read by the UI/content tooling. Acknowledged
+// here so the consumption invariant only flags genuinely unknown fields.
+// Keep in sync with ALLOWED_FIELDS in tests/contract/rules/unknown-fields.js.
+const PASSIVE_LESSON_PROPS = ['id', 'version', 'metadata', 'focusCommand', 'solution', 'startCursor'];
+
 export const initializeLessonState = (lesson) => {
     // --- lesson validates -------------------------------------------------
     if (!lesson || !Array.isArray(lesson.initialContent) || lesson.initialContent.length === 0) {
@@ -72,12 +79,21 @@ export const initializeLessonState = (lesson) => {
     };
 
     // --- cursor positioned --------------------------------------------------
-    // setup() customizes the defaults and its result IS applied — lesson
-    // configuration is never silently ignored.
+    // Declarative start position from content (JSON lessons)…
+    const initialCursor = read('initialCursor');
+    if (initialCursor && typeof initialCursor === 'object') {
+        init.cursor = { row: initialCursor.row, col: initialCursor.col };
+    }
+
+    // …then legacy setup() may customize further; its result IS applied —
+    // lesson configuration is never silently ignored.
     const setup = read('setup');
     if (typeof setup === 'function') {
         setup(init);
     }
+
+    // Schema fields consumed outside runtime init (CI, UI, tooling)
+    PASSIVE_LESSON_PROPS.forEach(read);
 
     // Clamp the requested cursor into the buffer: a bad position is
     // corrected and reported, never silently accepted (corrective, not

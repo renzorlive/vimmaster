@@ -28,5 +28,17 @@
     "row": 4,
     "col": 28
   },
-  "focusCommand": "w"
+  "focusCommand": "w",
+  "initialCursor": {
+    "row": 0,
+    "col": 0
+  },
+  "solution": [
+    "4",
+    "j",
+    "w",
+    "w",
+    "w",
+    "e"
+  ]
 }

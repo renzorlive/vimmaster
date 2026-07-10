@@ -3,6 +3,19 @@
 All notable changes to VIMMaster are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: semver, starting with the first tagged release.
 
+## [Unreleased]
+
+### Added
+- **Every lesson is now provably solvable (PR24):** all 35 lessons carry a `solution` key sequence; the Golden Suite auto-verifies every lesson with a solution (35/35 passing), and contract rule L007 is promoted from warning to **error** — a lesson without a working solution cannot be merged.
+- Lesson start positions restored as declarative `initialCursor` in every lesson JSON (they were lost in the content extraction; the engine ignored the field entirely, so all lessons started at `{0,0}` — caught by the ADR-0005 consumption invariant).
+- The lesson initializer now consumes the full content schema (`initialCursor` applied; `id`/`version`/`metadata`/`focusCommand`/`solution` acknowledged), eliminating per-load invariant warnings.
+
+### Fixed
+- `lesson-practice-insert-mode-practice` was unwinnable (target text omitted the line's prefix — inherited from the original cheat-mode data); target, start cursor, and solution corrected.
+- `lesson-practice-delete-character-practice` had an unachievable target buffer; replaced with an x-achievable target.
+- `lesson-practice-backward-search-practice` target was one column past the search match; aligned to the match start.
+- Two engine defects discovered by the Golden Suite are documented as TD-4 (confirmed: `0` silently fails when the cursor is past EOL after `j`) and TD-4b (`2x` deletes one char — counted edits loop over a stale buffer copy) in docs/TechnicalDebt.md.
+
 ## [v3.0.0] - Community Alpha
 
 ### Added

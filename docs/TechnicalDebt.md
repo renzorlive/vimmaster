@@ -20,7 +20,11 @@ Each item is small enough to be one reviewable PR unless noted.
 
 ### TD-4 Stale-state bounds clamp in normal mode
 `js/vim-commands.js:404-410` clamps `cursor` captured at function entry, not the post-command cursor, so the safety net evaluates stale values.
+**Confirmed consequence (found by the Golden Suite, PR24):** with the cursor past EOL after `j` onto a shorter line, pressing `0` moves to col 0 but the stale clamp then overwrites it to the line end — `0` silently fails. Golden solutions work around it by moving to col 0 *before* changing rows.
 **Fix:** re-read cursor via `getCursor()` before clamping (or fix properly during the pure-core refactor).
+
+### TD-4b Counted edits loop over a stale buffer copy
+Found by the Golden Suite (PR24): the count loops for `x` (and `dw`) re-read `content[cursor.row]` from the *local copy* captured at handler entry, so each iteration re-applies the same single-char deletion to the original line — `2x` deletes **one** character. Golden solutions avoid counted `x`; fix belongs to the pure-core refactor (or re-read via `getContent()` per iteration).
 
 ### TD-5 `0` is unreachable as a motion
 `vim-commands.js:64-70` routes `0` into the count buffer unless the buffer is empty, then line 239 also treats `0` as "go to line start" — but only when the count buffer is empty, and `$`'s handler at line 240 runs even when `$` was typed during a pending count. Behavior around `10j`, `0`, `d0` is inconsistent. Verify with tests once the core is testable.

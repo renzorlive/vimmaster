@@ -26,5 +26,18 @@
     "row": 2,
     "col": 13
   },
-  "focusCommand": "n"
+  "focusCommand": "n",
+  "initialCursor": {
+    "row": 0,
+    "col": 0
+  },
+  "solution": [
+    "/",
+    "f",
+    "o",
+    "o",
+    "Enter",
+    "n",
+    "n"
+  ]
 }

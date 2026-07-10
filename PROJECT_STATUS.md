@@ -2,26 +2,28 @@
 
 > One page, always current: where the project is *right now*. Updated with every milestone; if this file contradicts anything else, this file is stale — please open an issue.
 
-**Last updated:** 2026-07-09
+**Last updated:** 2026-07-10
 
 | | |
 |---|---|
-| **Current version** | pre-1.0 (unversioned; semver starts with the first tagged release in Phase 0.5) |
-| **Current phase** | ✅ Phase 0.5 docs/infra complete → ▶️ **entering Phase 0 — Stabilize** ([ROADMAP.md](ROADMAP.md)) |
-| **Current sprint** | Critical bug fixes, one PR each |
-| **Current focus** | TD-1 ✅ · TD-2 ✅ ([ADR-0005](docs/adr/0005-lesson-initialization-pipeline.md)) — next up: **Phase 0.6 — logger** (replace ~150 debug logs), then testing, then CI |
-| **Next milestone** | *Stable v0.1*: all Phase 0 boxes checked — 5 bug fixes, debug logging stripped, SEO meta tags |
-| **Release target** | v1.0 after Phases 0–3 (engine rewrite + content system + platform pages) — no date commitment; quality gates over deadlines |
+| **Current version** | v3.0.0 — Community Alpha (see [CHANGELOG.md](CHANGELOG.md)) |
+| **Current phase** | ✅ Phase 0 (bugs) · ✅ tooling/tests (unit + contract + golden + regression) · ✅ **content extraction** (35 JSON lessons in `/content/lessons`) → ▶️ Community Alpha hardening ([ROADMAP.md](ROADMAP.md)) |
+| **Current sprint** | PR24: every lesson provably solvable — `solution` in all 35 lessons, Golden Suite auto-verifies each (35/35), L007 promoted to ERROR |
+| **Current focus** | Community Alpha release readiness; next candidates: TD-3/TD-6 bug fixes, TD-4/TD-4b engine fixes with regression tests, lint-warning burn-down (~192) |
+| **Next milestone** | Community Alpha announcement once the release checklist in QUALITY.md is green |
+| **Release target** | v1.0 after the pure-core engine rewrite + platform pages — no date commitment; quality gates over deadlines |
 
 ## Known issues (top of the list)
 
 | # | Issue | Severity |
 |---|---|---|
-| TD-1 | ~~Progress save rejected & deleted after the final level~~ ✅ fixed — [PM-0001](docs/postmortems/PM-0001-save-corruption.md) | ✅ |
-| TD-2 | ~~Per-level cursor start positions silently ignored~~ ✅ fixed — [ADR-0005](docs/adr/0005-lesson-initialization-pipeline.md) | ✅ |
+| TD-1 | ~~Progress save rejected & deleted after the final level~~ ✅ fixed — [PM-0001](docs/postmortems/PM-0001-save-corruption.md), regression-tested | ✅ |
+| TD-2 | ~~Per-level cursor start positions silently ignored~~ ✅ fixed — [ADR-0005](docs/adr/0005-lesson-initialization-pipeline.md), regression-tested | ✅ |
 | TD-3 | Auto-save on level completion never fires (dead `window` hook) | 🔴 |
+| TD-4 | Stale cursor clamp — confirmed: `0` silently fails when cursor is past EOL after `j` | 🔴 |
+| TD-4b | Counted edits loop over a stale buffer — `2x` deletes one char | 🔴 |
 | TD-6 | Duplicate, divergent challenge scoring implementations | 🔴 |
-| TD-11 | ~150 debug `console.log`s ship to production, some per-keystroke | 🟡 |
+| TD-11 | Debug `console.log`s ship to production | 🟡 |
 
 Full register with file/line references: [docs/TechnicalDebt.md](docs/TechnicalDebt.md).
 

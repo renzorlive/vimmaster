@@ -24,5 +24,18 @@
     "line": 0,
     "text": "This is a good example."
   },
-  "focusCommand": "VIM"
+  "focusCommand": "VIM",
+  "initialCursor": {
+    "row": 0,
+    "col": 10
+  },
+  "solution": [
+    "c",
+    "w",
+    "g",
+    "o",
+    "o",
+    "d",
+    "Escape"
+  ]
 }

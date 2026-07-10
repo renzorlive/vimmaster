@@ -29,5 +29,15 @@
     "And put it below this line.",
     "Yank this line!"
   ],
-  "focusCommand": "p"
+  "focusCommand": "p",
+  "initialCursor": {
+    "row": 1,
+    "col": 0
+  },
+  "solution": [
+    "y",
+    "y",
+    "j",
+    "p"
+  ]
 }

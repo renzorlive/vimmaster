@@ -25,10 +25,44 @@
     "And: 'Removve extra letters'"
   ],
   "targetContent": [
-    "Delete the  this",
-    "Use x to remove the  character",
+    "Delete the from this line: 'Delete this'",
+    "Use x to remove the character",
     "Also fix: 'Fix this typo'",
     "And: 'Remove extra letters'"
   ],
-  "focusCommand": "VIM"
+  "focusCommand": "VIM",
+  "initialCursor": {
+    "row": 0,
+    "col": 7
+  },
+  "solution": [
+    "4",
+    "l",
+    "x",
+    "x",
+    "2",
+    "4",
+    "l",
+    "x",
+    "x",
+    "0",
+    "j",
+    "2",
+    "0",
+    "l",
+    "x",
+    "x",
+    "0",
+    "j",
+    "1",
+    "4",
+    "l",
+    "x",
+    "0",
+    "j",
+    "1",
+    "1",
+    "l",
+    "x"
+  ]
 }

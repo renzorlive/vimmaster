@@ -26,5 +26,26 @@
     "Inserted here",
     "Second line."
   ],
-  "focusCommand": "a"
+  "focusCommand": "a",
+  "initialCursor": {
+    "row": 0,
+    "col": 5
+  },
+  "solution": [
+    "o",
+    "I",
+    "n",
+    "s",
+    "e",
+    "r",
+    "t",
+    "e",
+    "d",
+    " ",
+    "h",
+    "e",
+    "r",
+    "e",
+    "Escape"
+  ]
 }

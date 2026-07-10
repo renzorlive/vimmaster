@@ -34,5 +34,19 @@
     "",
     "Don't duplicate this line"
   ],
-  "focusCommand": "VIM"
+  "focusCommand": "VIM",
+  "initialCursor": {
+    "row": 0,
+    "col": 0
+  },
+  "solution": [
+    "y",
+    "y",
+    "p",
+    "3",
+    "j",
+    "y",
+    "y",
+    "p"
+  ]
 }
