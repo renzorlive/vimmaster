@@ -173,10 +173,18 @@ export function checkWinCondition() {
                 // Regular level completed - show level completion modal
                 const focusCmd = level.focusCommand ? level.focusCommand : (level.solution ? level.solution.join('') : '');
                 
-                let title = `✔ You learned`;
-                let message = `<div class="bg-gray-800 p-4 rounded font-mono text-green-400 text-4xl text-center inline-block my-4 tracking-tight shadow-inner">${focusCmd}</div>`;
-                message += `<div class="text-gray-300 text-sm mb-4">${level.instructions || 'You completed the lesson!'}</div>`;
-                message += `<div class="text-yellow-400 font-bold text-lg animate-bounce">+${earnedXp} XP</div>`;
+                let title = `✓ Lesson Complete`;
+                let message = `
+                    <div class="lesson-complete-summary">
+                        <div class="text-xs uppercase tracking-[0.35em] text-gray-400 mb-2">Next step unlocked</div>
+                        <div class="bg-gray-800/90 border border-gray-700 rounded-xl font-mono text-green-400 text-3xl md:text-4xl text-center inline-block px-4 py-3 tracking-tight shadow-inner">${focusCmd}</div>
+                        <div class="text-gray-300 text-sm mt-4 mb-3">${level.instructions || 'You completed the lesson!'}</div>
+                        <div class="flex flex-wrap justify-center gap-3 text-sm">
+                            <div class="px-3 py-2 rounded-full bg-gray-800/80 border border-gray-700 text-yellow-300 font-semibold">+${earnedXp} XP</div>
+                            <div class="px-3 py-2 rounded-full bg-gray-800/80 border border-gray-700 text-orange-300 font-semibold">Combo x${getCombo()}</div>
+                        </div>
+                        <div class="text-blue-300 text-xs mt-4 uppercase tracking-[0.25em]">Continue when ready</div>
+                    </div>`;
                 
                 if (getCurrentLevel() === 3) {
                     message += `<div class="mt-4 pt-4 border-t border-gray-700/50 text-blue-400 font-bold fade-in-up">🎉 New mode unlocked: Practice Arena</div>`;

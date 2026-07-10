@@ -12,7 +12,7 @@ let editorDisplay, statusBar, instructionsEl, levelIndicator, commandLogEl,
     nextLevelBtn, celebration, celebrationRestartBtn, levelSelectionContainer,
     challengeToggleBtn, challengeContainer, challengeInstructions, challengeTimer,
     challengeProgress, challengeTotal, challengeScore, badgeSection, badgeBar,
-    badgeCount, badgeToast, feedbackToast, cheatPanel, cheatOverlay, cheatCloseBtn, cheatSearch, cheatContent;
+    badgeCount, badgeToast, feedbackToast, sessionProgressFill, cheatPanel, cheatOverlay, cheatCloseBtn, cheatSearch, cheatContent;
 
 // Initialize DOM references
 export function initializeDOMReferences() {
@@ -43,6 +43,7 @@ export function initializeDOMReferences() {
     badgeCount = document.getElementById('badge-count');
     badgeToast = document.getElementById('badge-toast');
     feedbackToast = document.getElementById('editor-feedback');
+    sessionProgressFill = document.getElementById('session-progress-fill');
     cheatPanel = document.getElementById('cheat-panel');
     cheatOverlay = document.getElementById('cheat-overlay');
     cheatCloseBtn = document.getElementById('cheat-close');
@@ -203,7 +204,25 @@ export function updateLevelIndicator(currentLevel, totalLevels) {
     if (!levelIndicator) {
         return;
     }
+
+    if (currentLevel < 0 || totalLevels <= 0) {
+        levelIndicator.textContent = '';
+        const minimalProgress = document.getElementById('minimal-progress');
+        if (minimalProgress) {
+            minimalProgress.classList.add('hidden');
+        }
+        if (sessionProgressFill) {
+            sessionProgressFill.style.width = '0%';
+        }
+        return;
+    }
+
     levelIndicator.textContent = `Level: ${currentLevel + 1} / ${totalLevels}`;
+
+    if (sessionProgressFill && totalLevels > 0 && currentLevel >= 0) {
+        const progress = Math.max(0, Math.min(100, ((currentLevel + 1) / totalLevels) * 100));
+        sessionProgressFill.style.width = `${progress}%`;
+    }
     
     // Minimal progress indicator
     const minimalProgress = document.getElementById('minimal-progress');
@@ -290,9 +309,56 @@ export function updateStatsBar(combo, xp) {
     const xpDisplay = document.getElementById('xp-display');
     
     if (statsBar && comboDisplay && xpDisplay) {
-        comboDisplay.textContent = combo;
-        xpDisplay.textContent = xp;
+        animateStatValue(xpDisplay, xp, 250, 'xp');
+        animateStatValue(comboDisplay, combo, 180, 'combo');
     }
+}
+
+function prefersReducedMotion() {
+    return typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function animateStatValue(element, targetValue, duration, kind) {
+    if (!element) return;
+
+    const nextValue = Number.isFinite(targetValue) ? Math.max(0, Math.trunc(targetValue)) : 0;
+    const currentValue = Number(element.dataset.value ?? element.textContent ?? 0) || 0;
+
+    if (currentValue === nextValue || prefersReducedMotion()) {
+        element.textContent = String(nextValue);
+        element.dataset.value = String(nextValue);
+        return;
+    }
+
+    const startTime = performance.now();
+    const startValue = currentValue;
+    const delta = nextValue - startValue;
+    const pulseTarget = kind === 'combo' ? element.closest('#stats-bar') || element : element;
+
+    if (kind === 'combo' && nextValue > startValue) {
+        pulseTarget.classList.remove('stat-pop');
+        void pulseTarget.offsetWidth;
+        pulseTarget.classList.add('stat-pop');
+        window.setTimeout(() => pulseTarget.classList.remove('stat-pop'), 220);
+    }
+
+    const step = (now) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(1, elapsed / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = Math.round(startValue + (delta * eased));
+        element.textContent = String(value);
+        element.dataset.value = String(value);
+
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        } else {
+            element.textContent = String(nextValue);
+            element.dataset.value = String(nextValue);
+        }
+    };
+
+    window.requestAnimationFrame(step);
 }
 
 // Command Log Updates
@@ -353,7 +419,14 @@ export function showBadgeToast(message) {
     
     badgeToast.textContent = message;
     badgeToast.classList.remove('hidden');
-    setTimeout(() => badgeToast.classList.add('hidden'), 2200);
+    badgeToast.classList.remove('show');
+    void badgeToast.offsetWidth;
+    badgeToast.classList.add('show');
+    window.clearTimeout(badgeToast._hideTimer);
+    badgeToast._hideTimer = window.setTimeout(() => {
+        badgeToast.classList.remove('show');
+        window.setTimeout(() => badgeToast.classList.add('hidden'), 180);
+    }, 1800);
 }
 
 export function showEditorFeedback(message, variant = 'success') {

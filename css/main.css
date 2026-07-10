@@ -72,6 +72,12 @@ body {
 
 .modal-content {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+}
+
+#modal-content {
+    backdrop-filter: blur(10px);
 }
 
 .level-complete-flash {
@@ -434,6 +440,16 @@ input:focus {
     box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
 }
 
+.stat-pop {
+    animation: statPop 220ms ease-out;
+}
+
+@keyframes statPop {
+    0% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.05); filter: brightness(1.15); }
+    100% { transform: scale(1); filter: brightness(1); }
+}
+
 /* First Impression Refresh */
 .hud-shell {
     background: linear-gradient(180deg, rgba(17, 17, 17, 0.96), rgba(24, 24, 24, 0.92));
@@ -596,6 +612,44 @@ input:focus {
     box-shadow: inset 0 0 0 1px rgba(250, 204, 21, 0.08);
 }
 
+#session-progress {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+#session-progress-fill {
+    box-shadow: 0 0 10px rgba(242, 197, 92, 0.28);
+}
+
+#badge-toast {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px) scale(0.98);
+    transition: opacity 180ms ease, transform 180ms ease;
+}
+
+#badge-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+}
+
+#badge-toast {
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+}
+
+#badge-toast::before {
+    content: "🏆";
+    display: inline-block;
+    margin-right: 0.55rem;
+    font-size: 1.2em;
+    vertical-align: middle;
+}
+
+.lesson-complete-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #editor-feedback {
     min-width: min(320px, calc(100vw - 2rem));
     max-width: 92vw;
@@ -646,6 +700,27 @@ input:focus {
     #editor-feedback {
         top: 5.5rem;
         min-width: min(260px, calc(100vw - 1rem));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .cursor,
+    .cursor.cursor-insert,
+    .stat-pop {
+        animation: none !important;
+    }
+
+    #session-progress-fill,
+    #badge-toast,
+    #editor-feedback {
+        transition: none !important;
     }
 }
 
