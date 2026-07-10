@@ -1,36 +1,33 @@
 // VIM Master Game - Event Handlers
 
-import { 
-    getContent, getCursor, getMode, getCurrentLevel, getCommandHistory, getCommandLog,
-    getYankedLine, getReplacePending, getCountBuffer, getUndoStack, getRedoStack,
-    getLevel12Undo, getLevel12RedoAfterUndo, getLastExCommand, getSearchMode,
-    getSearchQuery, getLastSearchQuery, getLastSearchDirection, getSearchMatches,
-    getCurrentMatchIndex, getUsedSearchInLevel, getNavCountSinceSearch, getBadges,
-    getPracticedCommands, getChallengeMode, getCurrentChallenge, getChallengeTimerInterval,
-    getChallengeStartTime, getChallengeScoreValue, getChallengeProgressValue, getCurrentTaskIndex,
-    cloneState, pushUndo, escapeHtml, isEscapeKey, resetGameState, resetChallengeState, resetLevelState,
-    setChallengeMode, setCurrentLevel, setContent, setCursor, setMode, setCommandHistory,
-    setCommandLog, setYankedLine, setReplacePending, setCountBuffer, setSearchMode,
-    setSearchQuery, setLastSearchQuery, setLastSearchDirection, setSearchMatches,
-    setCurrentMatchIndex, setUsedSearchInLevel, setNavCountSinceSearch, setLevel12Undo,
-    setLevel12RedoAfterUndo, setLastExCommand, setCurrentChallenge, setCurrentTaskIndex,
-    setChallengeScoreValue, setChallengeProgressValue, setChallengeStartTime,
-    setChallengeTimerInterval, addBadge, getXp, getCombo, setXp, setCombo
+import {
+    getContent, getCursor, getMode, getCurrentLevel,
+    getCommandHistory, getCommandLog, getYankedLine, getReplacePending,
+    getCountBuffer, getUndoStack, getRedoStack, getLevel12Undo,
+    getLevel12RedoAfterUndo, getLastExCommand, getSearchMode, getSearchQuery,
+    getLastSearchQuery, getLastSearchDirection, getSearchMatches, getCurrentMatchIndex,
+    getUsedSearchInLevel, getNavCountSinceSearch, getBadges, getPracticedCommands,
+    getChallengeMode, getCurrentChallenge, getChallengeTimerInterval, getChallengeStartTime,
+    getChallengeScoreValue, getChallengeProgressValue, getCurrentTaskIndex, resetChallengeState,
+    resetLevelState, setChallengeMode, setCurrentLevel, setContent,
+    setCursor, setMode, setLastExCommand, setCurrentChallenge,
+    setCurrentTaskIndex, setChallengeScoreValue, setChallengeProgressValue, setChallengeStartTime,
+    setChallengeTimerInterval, addBadge, getXp, getCombo,
+    setXp, setCombo
 } from './game-state.js';
 
-import { levels, loadLevel, getCurrentLevelFromGameState, getLevelCount, isLastLevel } from './levels.js';
-import { isInPracticeMode, getCurrentLessonSpec } from './cheat-mode.js';
-import { challenges, startChallenge, endChallenge, checkChallengeTask, getChallengeTimeRemaining, getChallengeProgress } from './challenges.js';
-import { handleNormalMode, handleInsertMode, handleSearchMode } from './vim-commands.js';
-import { 
-    renderEditor, updateStatusBar, updateInstructions, updateLevelIndicator, 
-    updateCommandLog, createLevelButtons, renderBadges, showModal, hideModal,
-    showCelebration, hideCelebration, flashLevelComplete, updateChallengeUI,
-    showChallengeContainer, hideChallengeContainer, showBadgeToast, flashError, updateStatsBar
+import { levels, loadLevel } from './levels.js';
+import { isInPracticeMode } from './cheat-mode.js';
+import { startChallenge, getChallengeTimeRemaining, calculateTaskPoints } from './challenges.js';
+import {
+    renderEditor, updateStatusBar, updateInstructions, updateLevelIndicator,
+    updateCommandLog, createLevelButtons, renderBadges, showModal,
+    showCelebration, flashLevelComplete, updateChallengeUI, showChallengeContainer,
+    hideChallengeContainer, showBadgeToast, flashError, updateStatsBar
 } from './ui-components.js';
-import { openCheat, closeCheat, renderCheatList } from './cheat-mode.js';
 import { autoSaveProgress } from './progress-system.js';
 import { evaluateWinCondition } from './win-evaluator.js';
+import { logger, CATEGORIES } from './logger.js';
 
 // Game Logic Functions
 export function checkWinCondition() {
@@ -39,8 +36,6 @@ export function checkWinCondition() {
         const challenge = getCurrentChallenge();
         const currentTask = challenge.tasks[getCurrentTaskIndex()];
         
-        console.log('🔍 Checking challenge task:', currentTask.instruction);
-        console.log('🔍 Current task index:', getCurrentTaskIndex());
         
         if (currentTask.validation) {
             // Create a gameState object for validation
@@ -50,32 +45,21 @@ export function checkWinCondition() {
                 getYankedLine: getYankedLine
             };
             
-            console.log('🔍 DEBUG: Running challenge validation for task:', currentTask.instruction);
-            console.log('🔍 DEBUG: Current content:', getContent());
-            console.log('🔍 DEBUG: Current cursor:', getCursor());
             
             const validationResult = currentTask.validation(gameState);
-            console.log('🔍 DEBUG: Validation result:', validationResult);
             
             if (validationResult) {
-                console.log('🔍 Challenge task completed!');
                 
-                                 // Award points for completing task
-                 const timeBonus = Math.max(0, Math.floor(getChallengeTimeRemaining({
-                     currentChallenge: challenge,
-                     challengeStartTime: getChallengeStartTime()
-                 }) / 10)); // 1 point per 10 seconds remaining
-                 const taskPoints = 10 + timeBonus;
+                 // Award points via the single scoring source of truth (TD-6)
+                 const taskPoints = calculateTaskPoints(challenge, getChallengeStartTime());
                  setChallengeScoreValue(getChallengeScoreValue() + taskPoints);
                  
-                 console.log('🔍 Task completed! Points awarded:', taskPoints, 'Total score:', getChallengeScoreValue());
                  
                  // Auto-save progress to persist challenge points
                  try {
                      autoSaveProgress();
-                     console.log('🔍 Progress auto-saved with challenge points');
                  } catch (error) {
-                     console.warn('Failed to auto-save progress:', error);
+                     logger.warn(CATEGORIES.PROGRESS, 'Failed to auto-save progress', { error: error.message });
                  }
                 
                 // Move to next task or complete challenge
@@ -102,7 +86,6 @@ export function checkWinCondition() {
                      return; // Don't show win condition yet
                  } else {
                      // Challenge completed!
-                     console.log('🔍 Challenge completed!');
                      hideChallengeContainer();
                      
                      // Disable challenge mode to stop timer
@@ -112,16 +95,11 @@ export function checkWinCondition() {
                      // Auto-save final challenge points
                      try {
                          autoSaveProgress();
-                         console.log('🔍 Final challenge points saved to progress');
                      } catch (error) {
-                         console.warn('Failed to save final challenge points:', error);
+                         logger.warn(CATEGORIES.PROGRESS, 'Failed to save final challenge points', { error: error.message });
                      }
                      
                      // Debug modal elements
-                     console.log('🔍 Modal elements check:');
-                     console.log('🔍 - modal:', document.getElementById('modal'));
-                     console.log('🔍 - modalTitle:', document.getElementById('modal-title'));
-                     console.log('🔍 - modalMessage:', document.getElementById('modal-message'));
                      
                      // Show completion modal with option to play again
                      showModal('🎉 Challenge Complete!', 
@@ -134,14 +112,6 @@ export function checkWinCondition() {
                          </button>`
                      );
                      
-                     console.log('🔍 showModal called, checking if modal is visible...');
-                     setTimeout(() => {
-                         const modal = document.getElementById('modal');
-                         if (modal) {
-                             console.log('🔍 Modal classes:', modal.className);
-                             console.log('🔍 Modal style:', modal.style.cssText);
-                         }
-                     }, 100);
                      
                      return;
                  }
@@ -180,7 +150,19 @@ export function checkWinCondition() {
             
             setXp(getXp() + earnedXp);
             setCombo(getCombo() + 1);
-            
+
+            // Persist progress at the moment of completion (TD-3): the dead
+            // window.checkWinCondition wrapper never ran, so wins relied on
+            // the 30s interval save and could be lost on a quick tab close.
+            try {
+                autoSaveProgress();
+                if (typeof window.updateProgressSummary === 'function') {
+                    window.updateProgressSummary();
+                }
+            } catch (error) {
+                logger.warn(CATEGORIES.PROGRESS, 'Failed to auto-save progress on level completion', { error: error.message });
+            }
+
             // Check if this is the final level
             if (getCurrentLevel() === levels.length - 1) {
                 // Final level completed - show celebration directly
@@ -243,7 +225,7 @@ export function maybeAwardBadges() {
                  if (typeof window.updateProgressSummary === 'function') {
                      window.updateProgressSummary();
                  }
-             } catch (error) {
+             } catch {
                  // Progress system not available, continue without auto-save
              }
          }, 1000);
@@ -275,14 +257,10 @@ export function resetLevel() {
 
 // Challenge Functions
 export function toggleChallengeMode() {
-    console.log('🔍 toggleChallengeMode called');
-    console.log('🔍 Current challenge mode:', getChallengeMode());
     
     setChallengeMode(!getChallengeMode());
-    console.log('🔍 New challenge mode:', getChallengeMode());
     
     if (getChallengeMode()) {
-        console.log('🔍 Starting challenge mode...');
         showChallengeContainer();
         
         const gameStateObj = {
@@ -308,17 +286,11 @@ export function toggleChallengeMode() {
             getContent, getCursor, getYankedLine
         };
         
-        console.log('🔍 Game state object created:', gameStateObj);
-        console.log('🔍 Current content before challenge:', getContent());
         
         const challenge = startChallenge(gameStateObj);
-        console.log('🔍 Challenge returned:', challenge);
         
         // Update the challenge UI with the challenge data
         if (challenge) {
-            console.log('🔍 Challenge name:', challenge.name);
-            console.log('🔍 Challenge content:', challenge.initialContent);
-            console.log('🔍 Current content after challenge:', getContent());
             
             updateChallengeUI(challenge, 0, 0, challenge.timeLimit);
             
@@ -327,7 +299,6 @@ export function toggleChallengeMode() {
                  // Check if challenge is still active
                  if (!getChallengeMode() || !getCurrentChallenge()) {
                      clearInterval(timerInterval);
-                     console.log('🔍 Timer stopped - challenge mode disabled or no current challenge');
                      return;
                  }
                  
@@ -336,12 +307,10 @@ export function toggleChallengeMode() {
                      challengeStartTime: getChallengeStartTime()
                  });
                  
-                 console.log('🔍 Timer tick - time remaining:', timeRemaining, 'seconds');
                  
                  if (timeRemaining <= 0) {
                      // Time's up - end the challenge
                      clearInterval(timerInterval);
-                     console.log('🔍 Time up! Ending challenge...');
                      
                      // Only show timeout modal if challenge hasn't been completed
                      if (getChallengeMode()) {
@@ -366,21 +335,17 @@ export function toggleChallengeMode() {
             setChallengeTimerInterval(timerInterval);
         }
         
-        console.log('🔍 About to call updateUI()');
         // Update the main UI to show challenge content
         updateUI();
-        console.log('🔍 updateUI() called, current content:', getContent());
         
         // Ensure editor gets focus for immediate input
         setTimeout(() => {
             const editorInput = document.getElementById('vim-editor-input');
             if (editorInput) {
                 editorInput.focus();
-                console.log('🔍 Editor focused for challenge mode');
             }
         }, 100);
     } else {
-        console.log('🔍 Exiting challenge mode...');
         hideChallengeContainer();
         // Return to current level
         loadLevel(getCurrentLevel());
@@ -393,15 +358,10 @@ let _isUpdatingUI = false; // Guard against infinite loops
 
 export function updateUI() {
     if (_isUpdatingUI) {
-        console.log('🔍 updateUI already running, skipping');
         return;
     }
     
     _isUpdatingUI = true;
-    console.log('🔍 updateUI called');
-    console.log('🔍 Current content in updateUI:', getContent());
-    console.log('🔍 Current cursor in updateUI:', getCursor());
-    console.log('🔍 Current mode in updateUI:', getMode());
     
     try {
         renderEditor(getContent(), getCursor(), getMode());
@@ -412,20 +372,15 @@ export function updateUI() {
         
         // Fix stuck challenge mode state - if we're not in practice mode and no current challenge, reset challenge mode
         if (getChallengeMode() && !isInPracticeMode() && !getCurrentChallenge()) {
-            console.log('🔍 DEBUG: Fixing stuck challenge mode state');
             setChallengeMode(false);
             setCurrentChallenge(null);
         }
         
         // Hide level indicator and buttons in challenge mode or practice mode
-        console.log('🔍 DEBUG: getChallengeMode():', getChallengeMode());
-        console.log('🔍 DEBUG: isInPracticeMode():', isInPracticeMode());
         if (getChallengeMode() || isInPracticeMode()) {
-            console.log('🔍 DEBUG: Hiding level indicator - in challenge or practice mode');
             updateLevelIndicator(-1, 0); // Hide level indicator
             // Don't create level buttons in challenge mode or practice mode
         } else {
-            console.log('🔍 DEBUG: Showing level indicator - current level:', getCurrentLevel(), 'total levels:', levels.length);
             updateLevelIndicator(getCurrentLevel(), levels.length);
             createLevelButtons(levels, getCurrentLevel());
         }
@@ -438,7 +393,6 @@ export function updateUI() {
             updateStatsBar(module.getCombo(), module.getXp());
         });
         
-        console.log('🔍 updateUI completed');
     } finally {
         _isUpdatingUI = false;
     }

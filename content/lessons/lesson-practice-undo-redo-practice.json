@@ -28,5 +28,16 @@
     "row": 0,
     "col": 0
   },
-  "focusCommand": "u"
+  "focusCommand": "u",
+  "initialCursor": {
+    "row": 1,
+    "col": 0
+  },
+  "solution": [
+    "d",
+    "d",
+    "u",
+    "g",
+    "g"
+  ]
 }

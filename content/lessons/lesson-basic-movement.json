@@ -29,5 +29,17 @@
     "row": 5,
     "col": 39
   },
-  "focusCommand": "hjkl"
+  "focusCommand": "hjkl",
+  "initialCursor": {
+    "row": 1,
+    "col": 5
+  },
+  "solution": [
+    "4",
+    "j",
+    "0",
+    "3",
+    "9",
+    "l"
+  ]
 }

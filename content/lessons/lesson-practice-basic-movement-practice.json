@@ -31,5 +31,15 @@
     "row": 6,
     "col": 8
   },
-  "focusCommand": "hjkl"
+  "focusCommand": "hjkl",
+  "initialCursor": {
+    "row": 1,
+    "col": 5
+  },
+  "solution": [
+    "5",
+    "j",
+    "3",
+    "l"
+  ]
 }

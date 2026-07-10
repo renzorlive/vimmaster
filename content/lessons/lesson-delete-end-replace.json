@@ -25,5 +25,16 @@
     "Keep this → ",
     "Replace this !"
   ],
-  "focusCommand": "D"
+  "focusCommand": "D",
+  "initialCursor": {
+    "row": 0,
+    "col": 12
+  },
+  "solution": [
+    "D",
+    "j",
+    "$",
+    "r",
+    "!"
+  ]
 }

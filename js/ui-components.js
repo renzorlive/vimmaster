@@ -1,8 +1,8 @@
 // VIM Master Game - UI Components (Updated)
 
 import { escapeHtml, getSearchMatches, getLastSearchQuery } from './game-state.js';
+import { logger, CATEGORIES } from './logger.js';
 // Static imports for core dependencies to avoid performance overhead
-import * as challengesModule from './challenges.js';
 import * as levelsModule from './levels.js';
 import * as gameStateModule from './game-state.js';
 
@@ -186,15 +186,13 @@ export function updateInstructions(customText) {
             }
         }
     }).catch(err => {
-        console.error("Error updating instructions", err);
+        logger.error(CATEGORIES.UI, 'Error updating instructions', { error: err.message });
     });
 }
 
 // Level Indicator Updates
 export function updateLevelIndicator(currentLevel, totalLevels) {
-    console.log('🔍 DEBUG: updateLevelIndicator called with:', { currentLevel, totalLevels });
     if (!levelIndicator) {
-        console.log('🔍 DEBUG: levelIndicator element not found!');
         return;
     }
     levelIndicator.textContent = `Level: ${currentLevel + 1} / ${totalLevels}`;
@@ -251,7 +249,6 @@ export function initOnboarding() {
 }
 
 export function progressiveUnlocking(currentLevel) {
-    const progressToggle = document.getElementById('progress-toggle');
     const profileBtn = document.getElementById('profile-btn');
     const practiceArena = document.getElementById('challenge-toggle');
     const cheatHints = document.getElementById('cheat-hints');

@@ -30,5 +30,15 @@
     "row": 5,
     "col": 30
   },
-  "focusCommand": "VIM"
+  "focusCommand": "VIM",
+  "initialCursor": {
+    "row": 2,
+    "col": 0
+  },
+  "solution": [
+    "G",
+    "3",
+    "0",
+    "l"
+  ]
 }

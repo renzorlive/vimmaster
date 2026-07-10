@@ -1,41 +1,28 @@
 // VIM Master Game - Main Entry Point
 
-import { 
-    getContent, getCursor, getMode, getCurrentLevel, getCommandHistory, getCommandLog, 
-    getYankedLine, getReplacePending, getCountBuffer, getUndoStack, getRedoStack,
-    getLevel12Undo, getLevel12RedoAfterUndo, getLastExCommand, getSearchMode,
-    getSearchQuery, getLastSearchQuery, getLastSearchDirection, getSearchMatches,
-    getCurrentMatchIndex, getUsedSearchInLevel, getNavCountSinceSearch, getBadges,
-    getPracticedCommands, getChallengeMode, getCurrentChallenge, getChallengeTimerInterval,
-    getChallengeStartTime, getChallengeScoreValue, getChallengeProgressValue, getCurrentTaskIndex,
-    cloneState, pushUndo, escapeHtml, isEscapeKey, resetGameState, resetChallengeState, resetLevelState,
-    setCurrentLevel, setContent, setCursor, setMode, setCommandHistory, setCommandLog,
-    setYankedLine, setReplacePending, setCountBuffer, setSearchMode, setSearchQuery,
-    setLastSearchQuery, setLastSearchDirection, setSearchMatches, setCurrentMatchIndex,
-    setUsedSearchInLevel, setNavCountSinceSearch, setLevel12Undo, setLevel12RedoAfterUndo,
-    setLastExCommand, setChallengeMode, setCurrentChallenge, setChallengeTimerInterval,
-    setChallengeStartTime, setChallengeScoreValue, setChallengeProgressValue, setCurrentTaskIndex,
+import {
+    getMode, getCurrentLevel, getSearchMode, getBadges,
+    getPracticedCommands, resetGameState, setCurrentLevel, setChallengeMode,
     setBadges, setPracticedCommands
 } from './game-state.js';
 
-import { levels, loadLevel, getLevelCount, isLastLevel } from './levels.js';
-import { challenges, startChallenge, endChallenge, checkChallengeTask } from './challenges.js';
+import { levels, loadLevel } from './levels.js';
 import { handleNormalMode, handleInsertMode, handleSearchMode } from './vim-commands.js';
-import { 
-    initializeDOMReferences, renderEditor, updateStatusBar, updateInstructions, 
-    updateLevelIndicator, updateCommandLog, createLevelButtons, renderBadges, 
-    showModal, hideModal, showCelebration, hideCelebration, flashLevelComplete,
-    updateChallengeUI, showChallengeContainer, hideChallengeContainer, showBadgeToast,
-    initOnboarding
+import {
+    initializeDOMReferences, updateLevelIndicator, createLevelButtons, hideModal,
+    showCelebration, hideCelebration, initOnboarding
 } from './ui-components.js';
-import { openCheat, closeCheat, renderCheatList, isInPracticeMode, checkPracticeCompletion } from './cheat-mode.js';
-import { 
-    checkWinCondition, maybeAwardBadges, nextLevel, previousLevel, resetLevel,
-    toggleChallengeMode, updateUI
+import {
+    openCheat, closeCheat, renderCheatList, isInPracticeMode,
+    checkPracticeCompletion
+} from './cheat-mode.js';
+import {
+    checkWinCondition, nextLevel, resetLevel, toggleChallengeMode,
+    updateUI
 } from './event-handlers.js';
-import { 
-    progressSystem, exportProgress, importProgress, autoLoadProgress, 
-    autoSaveProgress, clearProgress, getProgressSummary 
+import {
+    progressSystem, exportProgress, importProgress, autoLoadProgress,
+    autoSaveProgress, clearProgress
 } from './progress-system.js';
 
 
@@ -85,7 +72,6 @@ function setupEventListeners() {
     const celebrationRestartBtn = document.getElementById('celebration-restart');
     const levelSelectionContainer = document.getElementById('level-selection');
     const challengeToggleBtn = document.getElementById('challenge-toggle');
-    const cheatToggleBtn = document.getElementById('cheat-toggle');
     const cheatOverlay = document.getElementById('cheat-overlay');
     const cheatCloseBtn = document.getElementById('cheat-close');
     const cheatSearch = document.getElementById('cheat-search');
@@ -104,7 +90,6 @@ function setupEventListeners() {
     const importCode = document.getElementById('import-code');
     const copyExportBtn = document.getElementById('copy-export-btn');
     const confirmImportBtn = document.getElementById('confirm-import-btn');
-    const progressMessage = document.getElementById('progress-message');
 
     // Progress Toggle Functionality
     if (progressToggle && progressDetails) {
@@ -141,7 +126,7 @@ function setupEventListeners() {
             try {
                 await navigator.clipboard.writeText(exportCode.value);
                 showProgressMessage('Progress code copied to clipboard!', 'success');
-            } catch (error) {
+            } catch {
                 showProgressMessage('Failed to copy code', 'error');
             }
         });
@@ -222,7 +207,6 @@ function setupEventListeners() {
             // Allow VIM commands in cheat mode even if lesson overlay is visible
             if (isInPracticeMode()) {
                 // We're in cheat mode, allow VIM commands to work regardless of overlays
-                console.log('🔍 DEBUG: Practice mode detected, allowing VIM commands');
             } else {
                 // Check for lesson overlay in non-practice mode
                 const lessonOverlay = document.getElementById('lesson-overlay');
@@ -232,7 +216,6 @@ function setupEventListeners() {
                 }
             }
             
-            console.log('🔍 DEBUG: Main game keyboard handler processing key:', e.key);
             
             // Handle Ctrl+R redo before other commands
             if (getMode() === 'NORMAL' && e.key === 'r' && e.ctrlKey) {
@@ -258,7 +241,7 @@ function setupEventListeners() {
             updateUI();
             if (isInPracticeMode()) {
                 // Event-driven practice completion
-                try { checkPracticeCompletion(); } catch {}
+                try { checkPracticeCompletion(); } catch { /* completion check must never break input */ }
             } else {
                 checkWinCondition();
             }
@@ -470,22 +453,10 @@ function setupAutoSave() {
         updateProgressSummary();
     }, 30000);
     
-    // Auto-save on level completion
-    const originalCheckWinCondition = window.checkWinCondition;
-    if (originalCheckWinCondition) {
-        window.checkWinCondition = function() {
-            const result = originalCheckWinCondition();
-            if (result) {
-                // Progress was made, auto-save
-                setTimeout(() => {
-                    autoSaveProgress();
-                    updateProgressSummary();
-                }, 1000);
-            }
-            return result;
-        };
-    }
-    
+    // Auto-save on level completion happens inside checkWinCondition's win
+    // path (event-handlers.js) — a window.checkWinCondition wrapper here was
+    // dead code because the function was never assigned to window (TD-3).
+
     // Update progress summary more frequently for real-time updates
     setInterval(() => {
         updateProgressSummary();

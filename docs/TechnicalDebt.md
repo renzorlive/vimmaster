@@ -14,18 +14,22 @@ Each item is small enough to be one reviewable PR unless noted.
 `js/levels.js:259-264` calls `level.setup({ cursor: getCursor(), ... })`. `getCursor()` returns a copy; the setup mutates the copy; nothing is written back. Every level starts at `{row:0, col:0}` even though 12 of 16 levels specify another start position. (Cheat-mode lessons do write the result back — `cheat-mode.js:474-486` — which is why they behave differently.)
 **Fix:** apply `gameState.cursor`/`commandHistory` back via setters after `setup()` runs, mirroring cheat-mode.
 
-### TD-3 Auto-save-on-completion never fires
+### TD-3 Auto-save-on-completion never fires — ✅ FIXED (PR26, regression-tested)
 `js/main.js:463-476` wraps `window.checkWinCondition`, but `checkWinCondition` is an ES-module export that is never assigned to `window`. The wrapper is dead code; only the 30-second interval save works.
 **Fix:** call `autoSaveProgress()` from the actual win path in `checkWinCondition()`.
 
-### TD-4 Stale-state bounds clamp in normal mode
+### TD-4 Stale-state bounds clamp in normal mode — ✅ FIXED (PR25, regression-tested)
 `js/vim-commands.js:404-410` clamps `cursor` captured at function entry, not the post-command cursor, so the safety net evaluates stale values.
+**Confirmed consequence (found by the Golden Suite, PR24):** with the cursor past EOL after `j` onto a shorter line, pressing `0` moves to col 0 but the stale clamp then overwrites it to the line end — `0` silently fails. Golden solutions work around it by moving to col 0 *before* changing rows.
 **Fix:** re-read cursor via `getCursor()` before clamping (or fix properly during the pure-core refactor).
+
+### TD-4b Counted edits loop over a stale buffer copy — ✅ FIXED (PR25, regression-tested; also fixed: counts were wiped by the operator's first key, so `2dd`/`2dw` never worked)
+Found by the Golden Suite (PR24): the count loops for `x` (and `dw`) re-read `content[cursor.row]` from the *local copy* captured at handler entry, so each iteration re-applies the same single-char deletion to the original line — `2x` deletes **one** character. Golden solutions avoid counted `x`; fix belongs to the pure-core refactor (or re-read via `getContent()` per iteration).
 
 ### TD-5 `0` is unreachable as a motion
 `vim-commands.js:64-70` routes `0` into the count buffer unless the buffer is empty, then line 239 also treats `0` as "go to line start" — but only when the count buffer is empty, and `$`'s handler at line 240 runs even when `$` was typed during a pending count. Behavior around `10j`, `0`, `d0` is inconsistent. Verify with tests once the core is testable.
 
-### TD-6 Duplicate, divergent challenge logic
+### TD-6 Duplicate, divergent challenge logic — ✅ FIXED (PR26: dead `endChallenge`/`checkChallengeTask` deleted; scoring lives only in `challenges.js#calculateTaskPoints`, unit-tested)
 `challenges.js#checkChallengeTask` and `#endChallenge` are never called; scoring was re-implemented in `event-handlers.js#checkWinCondition` with different point values (10 + time/10 vs 100 + timeBonus). One source of truth must win.
 **Fix:** delete the dead functions or (better) move scoring back into `challenges.js` and call it.
 
@@ -50,7 +54,7 @@ There is no way to programmatically verify anything. Every other fix lands blind
 
 ## 🟡 Maintainability
 
-### TD-11 Shipped debug logging
+### TD-11 Shipped debug logging — ✅ FIXED (hygiene PR: ~110 console.logs deleted, warnings/errors routed through js/logger.js with categories, `no-console`/`no-unused-vars`/`no-empty`/`no-debugger` enforced as ESLint **errors** in CI)
 ~150 `console.log('🔍 DEBUG…')` calls across `event-handlers.js`, `challenges.js`, `progress-system.js`, `ui-components.js`, `cheat-mode.js`, `main.js` — several dump full buffer content **on every keystroke** (`updateUI`). Remove entirely; if diagnostics are wanted, gate behind a `DEBUG` flag.
 
 ### TD-12 Duplicated utility logic

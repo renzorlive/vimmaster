@@ -26,5 +26,15 @@
     "Top line.",
     "Bottom line."
   ],
-  "focusCommand": "u"
+  "focusCommand": "u",
+  "initialCursor": {
+    "row": 1,
+    "col": 0
+  },
+  "solution": [
+    "d",
+    "d",
+    "u",
+    "Ctrl+r"
+  ]
 }

@@ -96,7 +96,7 @@ class Logger {
             } else if (['localhost', '127.0.0.1'].includes(window.location.hostname)) {
                 isDev = true;
             }
-        } catch (e) {
+        } catch {
             // In case we're in an environment without window/localStorage
         }
         
@@ -121,7 +121,7 @@ class Logger {
                 // If development mode is on but no specific filter is set, show all logs.
                 this.config.debugAll = true;
             }
-        } catch (e) {
+        } catch {
             this.config.debugAll = true;
         }
     }
