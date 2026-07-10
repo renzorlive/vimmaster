@@ -7,6 +7,7 @@
     "node": ">=22"
   },
   "scripts": {
+    "start": "vite",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:contract": "node tests/contract/runner.js",
@@ -15,7 +16,7 @@
     "coverage": "vitest run --coverage",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "check": "npm run build:content && npm run lint && npm run test:contract && npm run test:golden && npm run test"
+    "check": "node scripts/build-content.js && eslint . && node tests/contract/runner.js && node tests/golden/runner.js && vitest run"
   },
   "devDependencies": {
     "@eslint/js": "^9.6.0",

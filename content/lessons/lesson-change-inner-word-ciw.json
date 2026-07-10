@@ -20,7 +20,8 @@
     "learningObjectives": [
       "Use 'ciw' to change a word completely without needing to be at its start",
       "Understand how 'c' combines with 'iw'"
-    ]
+    ],
+    "order": 18
   },
   "instructions": "Use 'ciw' to change the word 'wrong' into 'right'. Press Esc when done.",
   "initialContent": [

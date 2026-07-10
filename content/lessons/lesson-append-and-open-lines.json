@@ -13,7 +13,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 9
   },
   "instructions": "Use a to append after cursor. Use o to open a new line below, and O to open above. Add a new line between the two lines that reads 'Inserted here'.",
   "initialContent": [

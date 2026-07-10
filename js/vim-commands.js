@@ -490,7 +490,7 @@ export function handleSearchMode(e) {
         const currentQuery = getSearchQuery();
         setSearchQuery(currentQuery.slice(0, -1));
         // Update status bar to show the updated search query
-        updateStatusBar(getMode(), getSearchMode(), getSearchQuery(), getLastSearchDirection(), getSearchMatches(), getCurrentMatchIndex());
+        updateStatusBar(getMode(), getSearchMode(), getSearchQuery(), getLastSearchDirection(), getSearchMatches(), getCurrentMatchIndex(), getCommandHistory());
         return;
     }
     if (key === 'Enter') {
@@ -508,7 +508,7 @@ export function handleSearchMode(e) {
         const currentQuery = getSearchQuery();
         setSearchQuery(currentQuery + key);
         // Update status bar to show the updated search query
-        updateStatusBar(getMode(), getSearchMode(), getSearchQuery(), getLastSearchDirection(), getSearchMatches(), getCurrentMatchIndex());
+        updateStatusBar(getMode(), getSearchMode(), getSearchQuery(), getLastSearchDirection(), getSearchMatches(), getCurrentMatchIndex(), getCommandHistory());
     }
 }
 

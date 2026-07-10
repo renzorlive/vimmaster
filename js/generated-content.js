@@ -9,53 +9,53 @@ export const generatedContent = {
   "index": {
     "version": 1,
     "contentVersion": 1,
-    "generatedAt": "2026-07-09T21:57:45.934Z",
+    "generatedAt": "2026-07-09T22:15:00.192Z",
     "generator": "scripts/build-content.js",
     "regularLessons": [
-      "lesson-append-and-open-lines",
-      "lesson-basic-movement",
-      "lesson-change-inner-word-ciw",
-      "lesson-change-word-cw",
-      "lesson-counts-move-faster",
-      "lesson-delete-basics",
-      "lesson-delete-end-replace",
-      "lesson-delete-inner-word-diw",
       "lesson-how-to-exit-ex-commands",
-      "lesson-insert-mode",
-      "lesson-line-bounds-0-and",
-      "lesson-line-jumps",
-      "lesson-search-backward",
-      "lesson-search-forward",
-      "lesson-search-navigation-n-n",
-      "lesson-undo-redo",
+      "lesson-basic-movement",
       "lesson-word-movement",
-      "lesson-yank-put-copy-paste"
+      "lesson-line-jumps",
+      "lesson-insert-mode",
+      "lesson-delete-basics",
+      "lesson-yank-put-copy-paste",
+      "lesson-line-bounds-0-and",
+      "lesson-append-and-open-lines",
+      "lesson-change-word-cw",
+      "lesson-delete-end-replace",
+      "lesson-counts-move-faster",
+      "lesson-undo-redo",
+      "lesson-search-forward",
+      "lesson-search-backward",
+      "lesson-search-navigation-n-n",
+      "lesson-delete-inner-word-diw",
+      "lesson-change-inner-word-ciw"
     ],
     "practiceLessons": [
-      "lesson-practice-backward-search-practice",
       "lesson-practice-basic-movement-practice",
-      "lesson-practice-change-word-practice",
+      "lesson-practice-word-motion-practice",
+      "lesson-practice-line-jump-practice",
+      "lesson-practice-line-boundary-practice",
+      "lesson-practice-insert-mode-practice",
       "lesson-practice-delete-character-practice",
+      "lesson-practice-delete-word-practice",
       "lesson-practice-delete-line-practice",
       "lesson-practice-delete-to-end-practice",
-      "lesson-practice-delete-word-practice",
-      "lesson-practice-ex-commands-practice",
-      "lesson-practice-forward-search-practice",
-      "lesson-practice-insert-mode-practice",
-      "lesson-practice-line-boundary-practice",
-      "lesson-practice-line-jump-practice",
       "lesson-practice-replace-character-practice",
-      "lesson-practice-search-navigation-practice",
+      "lesson-practice-change-word-practice",
+      "lesson-practice-yank-and-paste-practice",
       "lesson-practice-undo-redo-practice",
-      "lesson-practice-word-motion-practice",
-      "lesson-practice-yank-and-paste-practice"
+      "lesson-practice-forward-search-practice",
+      "lesson-practice-backward-search-practice",
+      "lesson-practice-search-navigation-practice",
+      "lesson-practice-ex-commands-practice"
     ]
   },
   "lessons": {
-    "lesson-append-and-open-lines": {
-      "id": "lesson-append-and-open-lines",
+    "lesson-how-to-exit-ex-commands": {
+      "id": "lesson-how-to-exit-ex-commands",
       "version": 1,
-      "name": "Append and Open Lines",
+      "name": "How to Exit (Ex Commands)",
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
@@ -67,19 +67,20 @@ export const generatedContent = {
         ],
         "estimatedTime": 60,
         "prerequisites": [],
-        "learningObjectives": []
+        "learningObjectives": [],
+        "order": 1
       },
-      "instructions": "Use a to append after cursor. Use o to open a new line below, and O to open above. Add a new line between the two lines that reads 'Inserted here'.",
+      "instructions": "Type :q to quit, or :wq to write and quit. Press Enter after the command.",
       "initialContent": [
-        "First line.",
-        "Second line."
+        "Welcome to VIM Master!",
+        "Most searched question: how to exit Vim?",
+        "Try typing :q and press Enter (or :wq)."
       ],
-      "targetContent": [
-        "First line.",
-        "Inserted here",
-        "Second line."
+      "exCommands": [
+        "q",
+        "wq"
       ],
-      "focusCommand": "a"
+      "focusCommand": ":q"
     },
     "lesson-basic-movement": {
       "id": "lesson-basic-movement",
@@ -96,7 +97,8 @@ export const generatedContent = {
         ],
         "estimatedTime": 60,
         "prerequisites": [],
-        "learningObjectives": []
+        "learningObjectives": [],
+        "order": 2
       },
       "instructions": "Use h, j, k, l to move the cursor. Reach the target character '$'.",
       "initialContent": [
@@ -112,6 +114,473 @@ export const generatedContent = {
         "col": 39
       },
       "focusCommand": "hjkl"
+    },
+    "lesson-word-movement": {
+      "id": "lesson-word-movement",
+      "version": 1,
+      "name": "Word Movement",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 3
+      },
+      "instructions": "Use w (next word), b (back), e (end of word). Get to the end of the 'destination' word.",
+      "initialContent": [
+        "Jumping between words is much faster.",
+        "Use 'w' to jump forwards to the start of the next word.",
+        "Use 'b' to jump backwards to the start of the previous word.",
+        "Use 'e' to jump to the end of the current word.",
+        "Find the ultimate destination."
+      ],
+      "target": {
+        "row": 4,
+        "col": 28
+      },
+      "focusCommand": "w"
+    },
+    "lesson-line-jumps": {
+      "id": "lesson-line-jumps",
+      "version": 1,
+      "name": "Line Jumps",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 4
+      },
+      "instructions": "Use gg to go to the first line, and G to go to the last line. Go to the last character of the last line.",
+      "initialContent": [
+        "This is the first line. Use 'gg' to come here.",
+        "...",
+        "...",
+        "...",
+        "This is the last line. Use 'G' to jump here.",
+        "The target is on the word 'here'."
+      ],
+      "target": {
+        "row": 5,
+        "col": 30
+      },
+      "focusCommand": "gg / G"
+    },
+    "lesson-insert-mode": {
+      "id": "lesson-insert-mode",
+      "version": 1,
+      "name": "Insert Mode",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 5
+      },
+      "instructions": "Press 'a' to append after the cursor. Type ' is awesome!' and press Esc to return to NORMAL mode.",
+      "initialContent": [
+        "VIM has multiple modes. You've been in NORMAL mode.",
+        "Press 'a' to append after the cursor and start typing.",
+        "When you're done, press 'Escape' to go back.",
+        "Your task: complete the sentence below.",
+        "Learning VIM"
+      ],
+      "targetText": {
+        "line": 4,
+        "text": "Learning VIM is awesome!"
+      },
+      "focusCommand": "i"
+    },
+    "lesson-delete-basics": {
+      "id": "lesson-delete-basics",
+      "version": 1,
+      "name": "Delete Basics",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 6
+      },
+      "instructions": "Use dd to delete the full middle line. Then use dw to remove the word 'mistake' on the last line. You can use x to delete a single character if needed.",
+      "initialContent": [
+        "Keep this line.",
+        "Delete this entire line.",
+        "Fix this mistake here."
+      ],
+      "targetContent": [
+        "Keep this line.",
+        "Fix this here."
+      ],
+      "focusCommand": "x"
+    },
+    "lesson-yank-put-copy-paste": {
+      "id": "lesson-yank-put-copy-paste",
+      "version": 1,
+      "name": "Yank & Put (Copy/Paste)",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 7
+      },
+      "instructions": "Use yy to yank (copy) a line and p to put (paste) it. Duplicate the second line.",
+      "initialContent": [
+        "Let's copy and paste.",
+        "Yank this line!",
+        "And put it below this line.",
+        ""
+      ],
+      "targetContent": [
+        "Let's copy and paste.",
+        "Yank this line!",
+        "And put it below this line.",
+        "Yank this line!"
+      ],
+      "focusCommand": "p"
+    },
+    "lesson-line-bounds-0-and": {
+      "id": "lesson-line-bounds-0-and",
+      "version": 1,
+      "name": "Line Bounds (0 and $)",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 8
+      },
+      "instructions": "Use 0 to jump to start of line and $ to jump to end. Move to the last character of the first line.",
+      "initialContent": [
+        "Jump to the start and end of this line.",
+        "Practice makes perfect."
+      ],
+      "target": {
+        "row": 0,
+        "col": 38
+      },
+      "focusCommand": "0 / $"
+    },
+    "lesson-append-and-open-lines": {
+      "id": "lesson-append-and-open-lines",
+      "version": 1,
+      "name": "Append and Open Lines",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 9
+      },
+      "instructions": "Use a to append after cursor. Use o to open a new line below, and O to open above. Add a new line between the two lines that reads 'Inserted here'.",
+      "initialContent": [
+        "First line.",
+        "Second line."
+      ],
+      "targetContent": [
+        "First line.",
+        "Inserted here",
+        "Second line."
+      ],
+      "focusCommand": "a"
+    },
+    "lesson-change-word-cw": {
+      "id": "lesson-change-word-cw",
+      "version": 1,
+      "name": "Change Word (cw)",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 10
+      },
+      "instructions": "Use cw to change the word 'bad' into 'good'. Press Esc when done.",
+      "initialContent": [
+        "This is a bad example."
+      ],
+      "targetText": {
+        "line": 0,
+        "text": "This is a good example."
+      },
+      "focusCommand": "VIM"
+    },
+    "lesson-delete-end-replace": {
+      "id": "lesson-delete-end-replace",
+      "version": 1,
+      "name": "Delete End & Replace",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 11
+      },
+      "instructions": "Use D to delete from cursor to end of line, then use r to replace the 'x' with '!'.",
+      "initialContent": [
+        "Keep this → remove from here to end",
+        "Replace this x"
+      ],
+      "targetContent": [
+        "Keep this → ",
+        "Replace this !"
+      ],
+      "focusCommand": "D"
+    },
+    "lesson-counts-move-faster": {
+      "id": "lesson-counts-move-faster",
+      "version": 1,
+      "name": "Counts: Move Faster",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 12
+      },
+      "instructions": "Use a count with motions. Press 3 then w to jump three words and land on 'target'.",
+      "initialContent": [
+        "one two three target here"
+      ],
+      "target": {
+        "row": 0,
+        "col": 14
+      },
+      "focusCommand": "VIM"
+    },
+    "lesson-undo-redo": {
+      "id": "lesson-undo-redo",
+      "version": 1,
+      "name": "Undo / Redo",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 13
+      },
+      "instructions": "Delete the middle line with dd, undo it with u, then redo with Ctrl+r to finish with the line deleted.",
+      "initialContent": [
+        "Top line.",
+        "Remove me.",
+        "Bottom line."
+      ],
+      "targetContent": [
+        "Top line.",
+        "Bottom line."
+      ],
+      "focusCommand": "u"
+    },
+    "lesson-search-forward": {
+      "id": "lesson-search-forward",
+      "version": 1,
+      "name": "Search Forward (/)",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 14
+      },
+      "instructions": "Press / then type 'target' and Enter, then press n once to jump to the next occurrence.",
+      "initialContent": [
+        "find the target here",
+        "another target and another target",
+        "no match on this line"
+      ],
+      "target": {
+        "row": 1,
+        "col": 27
+      },
+      "focusCommand": "/"
+    },
+    "lesson-search-backward": {
+      "id": "lesson-search-backward",
+      "version": 1,
+      "name": "Search Backward (?)",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 15
+      },
+      "instructions": "Press ? then type 'alpha' and Enter, then press N once to jump to the previous occurrence.",
+      "initialContent": [
+        "alpha beta gamma",
+        "delta epsilon alpha",
+        "zeta eta theta"
+      ],
+      "target": {
+        "row": 0,
+        "col": 0
+      },
+      "focusCommand": "?"
+    },
+    "lesson-search-navigation-n-n": {
+      "id": "lesson-search-navigation-n-n",
+      "version": 1,
+      "name": "Search Navigation (n/N)",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 16
+      },
+      "instructions": "Search for 'foo' with /foo then press n twice to reach the third occurrence.",
+      "initialContent": [
+        "foo bar baz",
+        "qux foo quux",
+        "corge grault foo"
+      ],
+      "target": {
+        "row": 2,
+        "col": 13
+      },
+      "focusCommand": "n"
+    },
+    "lesson-delete-inner-word-diw": {
+      "id": "lesson-delete-inner-word-diw",
+      "version": 1,
+      "name": "Delete Inner Word (diw)",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-10",
+        "difficulty": "intermediate",
+        "tags": [
+          "normal",
+          "deletion",
+          "text-object"
+        ],
+        "estimatedTime": 45,
+        "prerequisites": [
+          "lesson-delete-basics"
+        ],
+        "learningObjectives": [
+          "Understand the 'iw' (inner word) text object",
+          "Use 'diw' to delete a word without needing to be at its start"
+        ],
+        "order": 17
+      },
+      "instructions": "Use 'diw' to delete the word 'mistake' from anywhere inside it.",
+      "initialContent": [
+        "This mistake is annoying."
+      ],
+      "initialCursor": {
+        "row": 0,
+        "col": 8
+      },
+      "targetContent": [
+        "This  is annoying."
+      ],
+      "solution": [
+        "d",
+        "i",
+        "w"
+      ],
+      "focusCommand": "diw"
     },
     "lesson-change-inner-word-ciw": {
       "id": "lesson-change-inner-word-ciw",
@@ -135,7 +604,8 @@ export const generatedContent = {
         "learningObjectives": [
           "Use 'ciw' to change a word completely without needing to be at its start",
           "Understand how 'c' combines with 'iw'"
-        ]
+        ],
+        "order": 18
       },
       "instructions": "Use 'ciw' to change the word 'wrong' into 'right'. Press Esc when done.",
       "initialContent": [
@@ -161,312 +631,6 @@ export const generatedContent = {
       ],
       "focusCommand": "ciw"
     },
-    "lesson-change-word-cw": {
-      "id": "lesson-change-word-cw",
-      "version": 1,
-      "name": "Change Word (cw)",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "normal"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Use cw to change the word 'bad' into 'good'. Press Esc when done.",
-      "initialContent": [
-        "This is a bad example."
-      ],
-      "targetText": {
-        "line": 0,
-        "text": "This is a good example."
-      },
-      "focusCommand": "VIM"
-    },
-    "lesson-counts-move-faster": {
-      "id": "lesson-counts-move-faster",
-      "version": 1,
-      "name": "Counts: Move Faster",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "normal"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Use a count with motions. Press 3 then w to jump three words and land on 'target'.",
-      "initialContent": [
-        "one two three target here"
-      ],
-      "target": {
-        "row": 0,
-        "col": 14
-      },
-      "focusCommand": "VIM"
-    },
-    "lesson-delete-basics": {
-      "id": "lesson-delete-basics",
-      "version": 1,
-      "name": "Delete Basics",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "normal"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Use dd to delete the full middle line. Then use dw to remove the word 'mistake' on the last line. You can use x to delete a single character if needed.",
-      "initialContent": [
-        "Keep this line.",
-        "Delete this entire line.",
-        "Fix this mistake here."
-      ],
-      "targetContent": [
-        "Keep this line.",
-        "Fix this here."
-      ],
-      "focusCommand": "x"
-    },
-    "lesson-delete-end-replace": {
-      "id": "lesson-delete-end-replace",
-      "version": 1,
-      "name": "Delete End & Replace",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "normal"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Use D to delete from cursor to end of line, then use r to replace the 'x' with '!'.",
-      "initialContent": [
-        "Keep this → remove from here to end",
-        "Replace this x"
-      ],
-      "targetContent": [
-        "Keep this → ",
-        "Replace this !"
-      ],
-      "focusCommand": "D"
-    },
-    "lesson-delete-inner-word-diw": {
-      "id": "lesson-delete-inner-word-diw",
-      "version": 1,
-      "name": "Delete Inner Word (diw)",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-10",
-        "difficulty": "intermediate",
-        "tags": [
-          "normal",
-          "deletion",
-          "text-object"
-        ],
-        "estimatedTime": 45,
-        "prerequisites": [
-          "lesson-delete-basics"
-        ],
-        "learningObjectives": [
-          "Understand the 'iw' (inner word) text object",
-          "Use 'diw' to delete a word without needing to be at its start"
-        ]
-      },
-      "instructions": "Use 'diw' to delete the word 'mistake' from anywhere inside it.",
-      "initialContent": [
-        "This mistake is annoying."
-      ],
-      "initialCursor": {
-        "row": 0,
-        "col": 8
-      },
-      "targetContent": [
-        "This  is annoying."
-      ],
-      "solution": [
-        "d",
-        "i",
-        "w"
-      ],
-      "focusCommand": "diw"
-    },
-    "lesson-how-to-exit-ex-commands": {
-      "id": "lesson-how-to-exit-ex-commands",
-      "version": 1,
-      "name": "How to Exit (Ex Commands)",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "normal"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Type :q to quit, or :wq to write and quit. Press Enter after the command.",
-      "initialContent": [
-        "Welcome to VIM Master!",
-        "Most searched question: how to exit Vim?",
-        "Try typing :q and press Enter (or :wq)."
-      ],
-      "exCommands": [
-        "q",
-        "wq"
-      ],
-      "focusCommand": ":q"
-    },
-    "lesson-insert-mode": {
-      "id": "lesson-insert-mode",
-      "version": 1,
-      "name": "Insert Mode",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "normal"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Press 'a' to append after the cursor. Type ' is awesome!' and press Esc to return to NORMAL mode.",
-      "initialContent": [
-        "VIM has multiple modes. You've been in NORMAL mode.",
-        "Press 'a' to append after the cursor and start typing.",
-        "When you're done, press 'Escape' to go back.",
-        "Your task: complete the sentence below.",
-        "Learning VIM"
-      ],
-      "targetText": {
-        "line": 4,
-        "text": "Learning VIM is awesome!"
-      },
-      "focusCommand": "i"
-    },
-    "lesson-line-bounds-0-and": {
-      "id": "lesson-line-bounds-0-and",
-      "version": 1,
-      "name": "Line Bounds (0 and $)",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "normal"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Use 0 to jump to start of line and $ to jump to end. Move to the last character of the first line.",
-      "initialContent": [
-        "Jump to the start and end of this line.",
-        "Practice makes perfect."
-      ],
-      "target": {
-        "row": 0,
-        "col": 38
-      },
-      "focusCommand": "0 / $"
-    },
-    "lesson-line-jumps": {
-      "id": "lesson-line-jumps",
-      "version": 1,
-      "name": "Line Jumps",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "normal"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Use gg to go to the first line, and G to go to the last line. Go to the last character of the last line.",
-      "initialContent": [
-        "This is the first line. Use 'gg' to come here.",
-        "...",
-        "...",
-        "...",
-        "This is the last line. Use 'G' to jump here.",
-        "The target is on the word 'here'."
-      ],
-      "target": {
-        "row": 5,
-        "col": 30
-      },
-      "focusCommand": "gg / G"
-    },
-    "lesson-practice-backward-search-practice": {
-      "id": "lesson-practice-backward-search-practice",
-      "version": 1,
-      "name": "Backward Search Practice",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "practice",
-          "search-backward"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Use ?text to search backward, N to find previous. Search backward for 'start'.",
-      "initialContent": [
-        "Search backward for 'start' in this text.",
-        "Use ?start and press Enter to search backward.",
-        "Then use 'N' to find the previous occurrence.",
-        "Navigate to the start word.",
-        "The start is here: start",
-        "Another start appears earlier: start"
-      ],
-      "target": {
-        "row": 4,
-        "col": 20
-      },
-      "focusCommand": "VIM"
-    },
     "lesson-practice-basic-movement-practice": {
       "id": "lesson-practice-basic-movement-practice",
       "version": 1,
@@ -483,7 +647,8 @@ export const generatedContent = {
         ],
         "estimatedTime": 60,
         "prerequisites": [],
-        "learningObjectives": []
+        "learningObjectives": [],
+        "order": 101
       },
       "instructions": "Use h, j, k, l to move the cursor. Navigate to the target character '$'.",
       "initialContent": [
@@ -501,10 +666,10 @@ export const generatedContent = {
       },
       "focusCommand": "hjkl"
     },
-    "lesson-practice-change-word-practice": {
-      "id": "lesson-practice-change-word-practice",
+    "lesson-practice-word-motion-practice": {
+      "id": "lesson-practice-word-motion-practice",
       "version": 1,
-      "name": "Change Word Practice",
+      "name": "Word Motion Practice",
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
@@ -513,26 +678,125 @@ export const generatedContent = {
         "difficulty": "beginner",
         "tags": [
           "practice",
-          "cw"
+          "wbe"
         ],
         "estimatedTime": 60,
         "prerequisites": [],
-        "learningObjectives": []
+        "learningObjectives": [],
+        "order": 102
       },
-      "instructions": "Use cw to change words. Replace the wrong words with correct ones.",
+      "instructions": "Use w (next word), b (back), e (end of word). Get to the end of the 'destination' word.",
       "initialContent": [
-        "The wrong animal is a elephant",
-        "I like to eat wrong food",
-        "VIM is a wrong editor",
-        "Programming is wrong activity"
+        "Jumping between words is much faster than character by character.",
+        "Use 'w' to jump forwards to the start of the next word.",
+        "Use 'b' to jump backwards to the start of the previous word.",
+        "Use 'e' to jump to the end of the current word.",
+        "Find the ultimate destination."
       ],
-      "targetContent": [
-        "The best animal is a elephant",
-        "I like to eat good food",
-        "VIM is a great editor",
-        "Programming is fun activity"
-      ],
+      "target": {
+        "row": 4,
+        "col": 28
+      },
       "focusCommand": "VIM"
+    },
+    "lesson-practice-line-jump-practice": {
+      "id": "lesson-practice-line-jump-practice",
+      "version": 1,
+      "name": "Line Jump Practice",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "practice",
+          "ggG"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 103
+      },
+      "instructions": "Use gg to go to the first line, and G to go to the last line. Go to the last character of the last line.",
+      "initialContent": [
+        "This is the first line. Use 'gg' to come here.",
+        "Second line",
+        "Third line",
+        "Fourth line",
+        "This is the last line. Use 'G' to jump here.",
+        "The target is the last character of this line."
+      ],
+      "target": {
+        "row": 5,
+        "col": 30
+      },
+      "focusCommand": "VIM"
+    },
+    "lesson-practice-line-boundary-practice": {
+      "id": "lesson-practice-line-boundary-practice",
+      "version": 1,
+      "name": "Line Boundary Practice",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "practice",
+          "0$"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 104
+      },
+      "instructions": "Use 0 to go to start of line, $ to go to end of line. Practice moving between boundaries.",
+      "initialContent": [
+        "Start here and go to end with $",
+        "Then return to start with 0",
+        "Practice moving between line boundaries",
+        "Use 0 for start, $ for end of each line"
+      ],
+      "target": {
+        "row": 0,
+        "col": 0
+      },
+      "focusCommand": "VIM"
+    },
+    "lesson-practice-insert-mode-practice": {
+      "id": "lesson-practice-insert-mode-practice",
+      "version": 1,
+      "name": "Insert Mode Practice",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "practice",
+          "ia"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 105
+      },
+      "instructions": "Press 'i' to insert before cursor, 'a' to append after cursor. Type 'INSERTED' and 'APPENDED'.",
+      "initialContent": [
+        "VIM has multiple modes. You're in NORMAL mode now.",
+        "Press 'i' to insert before cursor and type 'INSERTED'.",
+        "Press 'a' to append after cursor and type 'APPENDED'.",
+        "When done, press 'Escape' to return to NORMAL mode.",
+        "Complete the sentence: Learning VIM"
+      ],
+      "targetText": {
+        "line": 4,
+        "text": "Learning VIM INSERTED APPENDED"
+      },
+      "focusCommand": "i"
     },
     "lesson-practice-delete-character-practice": {
       "id": "lesson-practice-delete-character-practice",
@@ -550,7 +814,8 @@ export const generatedContent = {
         ],
         "estimatedTime": 60,
         "prerequisites": [],
-        "learningObjectives": []
+        "learningObjectives": [],
+        "order": 106
       },
       "instructions": "Use x to delete characters. Remove the X from 'Delete X this' and fix other typos.",
       "initialContent": [
@@ -564,6 +829,42 @@ export const generatedContent = {
         "Use x to remove the  character",
         "Also fix: 'Fix this typo'",
         "And: 'Remove extra letters'"
+      ],
+      "focusCommand": "VIM"
+    },
+    "lesson-practice-delete-word-practice": {
+      "id": "lesson-practice-delete-word-practice",
+      "version": 1,
+      "name": "Delete Word Practice",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "practice",
+          "dw"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 107
+      },
+      "instructions": "Use dw to delete words. Remove the extra words to clean up the sentences.",
+      "initialContent": [
+        "This is a very very long sentence with extra words.",
+        "Remove unnecessary extra words from this line too.",
+        "Delete unwanted unwanted repetitions here.",
+        "Clean up this messy messy text.",
+        "Final result should be clean sentences."
+      ],
+      "targetContent": [
+        "This is a very long sentence with words.",
+        "Remove unnecessary words from this line too.",
+        "Delete unwanted repetitions here.",
+        "Clean up this messy text.",
+        "Final result should be clean sentences."
       ],
       "focusCommand": "VIM"
     },
@@ -583,7 +884,8 @@ export const generatedContent = {
         ],
         "estimatedTime": 60,
         "prerequisites": [],
-        "learningObjectives": []
+        "learningObjectives": [],
+        "order": 108
       },
       "instructions": "Use dd to delete entire lines. Remove the marked lines.",
       "initialContent": [
@@ -616,7 +918,8 @@ export const generatedContent = {
         ],
         "estimatedTime": 60,
         "prerequisites": [],
-        "learningObjectives": []
+        "learningObjectives": [],
+        "order": 109
       },
       "instructions": "Use D to delete from cursor to end of line. Clean up the messy line endings.",
       "initialContent": [
@@ -631,201 +934,6 @@ export const generatedContent = {
         "Save this text",
         "Maintain this"
       ],
-      "focusCommand": "VIM"
-    },
-    "lesson-practice-delete-word-practice": {
-      "id": "lesson-practice-delete-word-practice",
-      "version": 1,
-      "name": "Delete Word Practice",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "practice",
-          "dw"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Use dw to delete words. Remove the extra words to clean up the sentences.",
-      "initialContent": [
-        "This is a very very long sentence with extra words.",
-        "Remove unnecessary extra words from this line too.",
-        "Delete unwanted unwanted repetitions here.",
-        "Clean up this messy messy text.",
-        "Final result should be clean sentences."
-      ],
-      "targetContent": [
-        "This is a very long sentence with words.",
-        "Remove unnecessary words from this line too.",
-        "Delete unwanted repetitions here.",
-        "Clean up this messy text.",
-        "Final result should be clean sentences."
-      ],
-      "focusCommand": "VIM"
-    },
-    "lesson-practice-ex-commands-practice": {
-      "id": "lesson-practice-ex-commands-practice",
-      "version": 1,
-      "name": "Ex Commands Practice",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "practice",
-          "ex"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Practice ex-commands like :q to quit and :wq to write and quit. Type :q and press Enter.",
-      "initialContent": [
-        "This is a VIM lesson for ex-commands",
-        "Ex-commands start with a colon (:)",
-        "Common commands: :q (quit), :w (write), :wq (write and quit)",
-        "Type :q and press Enter to complete this lesson"
-      ],
-      "targetText": {
-        "line": 3,
-        "text": "Type :q and press Enter to complete this lesson"
-      },
-      "focusCommand": "VIM"
-    },
-    "lesson-practice-forward-search-practice": {
-      "id": "lesson-practice-forward-search-practice",
-      "version": 1,
-      "name": "Forward Search Practice",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "practice",
-          "search-forward"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Use /text to search forward, n to find next. Search for 'target' and navigate to it.",
-      "initialContent": [
-        "Search for the word 'target' in this text.",
-        "Use /target and press Enter to search.",
-        "Then use 'n' to find the next occurrence.",
-        "Navigate to the target word.",
-        "The target is here: target",
-        "Another target appears later: target"
-      ],
-      "target": {
-        "row": 4,
-        "col": 20
-      },
-      "focusCommand": "VIM"
-    },
-    "lesson-practice-insert-mode-practice": {
-      "id": "lesson-practice-insert-mode-practice",
-      "version": 1,
-      "name": "Insert Mode Practice",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "practice",
-          "ia"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Press 'i' to insert before cursor, 'a' to append after cursor. Type 'INSERTED' and 'APPENDED'.",
-      "initialContent": [
-        "VIM has multiple modes. You're in NORMAL mode now.",
-        "Press 'i' to insert before cursor and type 'INSERTED'.",
-        "Press 'a' to append after cursor and type 'APPENDED'.",
-        "When done, press 'Escape' to return to NORMAL mode.",
-        "Complete the sentence: Learning VIM"
-      ],
-      "targetText": {
-        "line": 4,
-        "text": "Learning VIM INSERTED APPENDED"
-      },
-      "focusCommand": "i"
-    },
-    "lesson-practice-line-boundary-practice": {
-      "id": "lesson-practice-line-boundary-practice",
-      "version": 1,
-      "name": "Line Boundary Practice",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "practice",
-          "0$"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Use 0 to go to start of line, $ to go to end of line. Practice moving between boundaries.",
-      "initialContent": [
-        "Start here and go to end with $",
-        "Then return to start with 0",
-        "Practice moving between line boundaries",
-        "Use 0 for start, $ for end of each line"
-      ],
-      "target": {
-        "row": 0,
-        "col": 0
-      },
-      "focusCommand": "VIM"
-    },
-    "lesson-practice-line-jump-practice": {
-      "id": "lesson-practice-line-jump-practice",
-      "version": 1,
-      "name": "Line Jump Practice",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "practice",
-          "ggG"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Use gg to go to the first line, and G to go to the last line. Go to the last character of the last line.",
-      "initialContent": [
-        "This is the first line. Use 'gg' to come here.",
-        "Second line",
-        "Third line",
-        "Fourth line",
-        "This is the last line. Use 'G' to jump here.",
-        "The target is the last character of this line."
-      ],
-      "target": {
-        "row": 5,
-        "col": 30
-      },
       "focusCommand": "VIM"
     },
     "lesson-practice-replace-character-practice": {
@@ -844,7 +952,8 @@ export const generatedContent = {
         ],
         "estimatedTime": 60,
         "prerequisites": [],
-        "learningObjectives": []
+        "learningObjectives": [],
+        "order": 110
       },
       "instructions": "Use r to replace single characters. Fix the typos by replacing wrong characters.",
       "initialContent": [
@@ -861,10 +970,10 @@ export const generatedContent = {
       ],
       "focusCommand": "VIM"
     },
-    "lesson-practice-search-navigation-practice": {
-      "id": "lesson-practice-search-navigation-practice",
+    "lesson-practice-change-word-practice": {
+      "id": "lesson-practice-change-word-practice",
       "version": 1,
-      "name": "Search Navigation Practice",
+      "name": "Change Word Practice",
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
@@ -873,87 +982,26 @@ export const generatedContent = {
         "difficulty": "beginner",
         "tags": [
           "practice",
-          "nN"
+          "cw"
         ],
         "estimatedTime": 60,
         "prerequisites": [],
-        "learningObjectives": []
+        "learningObjectives": [],
+        "order": 111
       },
-      "instructions": "First search for 'word', then use n to go to next match, N to go to previous match. Navigate to the 3rd occurrence.",
+      "instructions": "Use cw to change words. Replace the wrong words with correct ones.",
       "initialContent": [
-        "Find the word in this text",
-        "Another word appears here",
-        "The third word is the target",
-        "More word instances follow",
-        "Final word at the end"
+        "The wrong animal is a elephant",
+        "I like to eat wrong food",
+        "VIM is a wrong editor",
+        "Programming is wrong activity"
       ],
-      "target": {
-        "row": 2,
-        "col": 10
-      },
-      "focusCommand": "n"
-    },
-    "lesson-practice-undo-redo-practice": {
-      "id": "lesson-practice-undo-redo-practice",
-      "version": 1,
-      "name": "Undo Redo Practice",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "practice",
-          "undo-redo"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Make some changes, then use u to undo them, and Ctrl+r to redo. Practice the undo/redo cycle.",
-      "initialContent": [
-        "Original text that will be modified",
-        "Change this line and then undo it",
-        "Practice undoing and redoing changes",
-        "Master the undo/redo workflow"
+      "targetContent": [
+        "The best animal is a elephant",
+        "I like to eat good food",
+        "VIM is a great editor",
+        "Programming is fun activity"
       ],
-      "target": {
-        "row": 0,
-        "col": 0
-      },
-      "focusCommand": "u"
-    },
-    "lesson-practice-word-motion-practice": {
-      "id": "lesson-practice-word-motion-practice",
-      "version": 1,
-      "name": "Word Motion Practice",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "practice",
-          "wbe"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Use w (next word), b (back), e (end of word). Get to the end of the 'destination' word.",
-      "initialContent": [
-        "Jumping between words is much faster than character by character.",
-        "Use 'w' to jump forwards to the start of the next word.",
-        "Use 'b' to jump backwards to the start of the previous word.",
-        "Use 'e' to jump to the end of the current word.",
-        "Find the ultimate destination."
-      ],
-      "target": {
-        "row": 4,
-        "col": 28
-      },
       "focusCommand": "VIM"
     },
     "lesson-practice-yank-and-paste-practice": {
@@ -972,7 +1020,8 @@ export const generatedContent = {
         ],
         "estimatedTime": 60,
         "prerequisites": [],
-        "learningObjectives": []
+        "learningObjectives": [],
+        "order": 112
       },
       "instructions": "Use yy to yank (copy) a line, then p to paste it. Duplicate the important lines.",
       "initialContent": [
@@ -993,10 +1042,10 @@ export const generatedContent = {
       ],
       "focusCommand": "VIM"
     },
-    "lesson-search-backward": {
-      "id": "lesson-search-backward",
+    "lesson-practice-undo-redo-practice": {
+      "id": "lesson-practice-undo-redo-practice",
       "version": 1,
-      "name": "Search Backward (?)",
+      "name": "Undo Redo Practice",
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
@@ -1004,115 +1053,31 @@ export const generatedContent = {
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
-          "normal"
+          "practice",
+          "undo-redo"
         ],
         "estimatedTime": 60,
         "prerequisites": [],
-        "learningObjectives": []
+        "learningObjectives": [],
+        "order": 113
       },
-      "instructions": "Press ? then type 'alpha' and Enter, then press N once to jump to the previous occurrence.",
+      "instructions": "Make some changes, then use u to undo them, and Ctrl+r to redo. Practice the undo/redo cycle.",
       "initialContent": [
-        "alpha beta gamma",
-        "delta epsilon alpha",
-        "zeta eta theta"
+        "Original text that will be modified",
+        "Change this line and then undo it",
+        "Practice undoing and redoing changes",
+        "Master the undo/redo workflow"
       ],
       "target": {
         "row": 0,
         "col": 0
       },
-      "focusCommand": "?"
-    },
-    "lesson-search-forward": {
-      "id": "lesson-search-forward",
-      "version": 1,
-      "name": "Search Forward (/)",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "normal"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Press / then type 'target' and Enter, then press n once to jump to the next occurrence.",
-      "initialContent": [
-        "find the target here",
-        "another target and another target",
-        "no match on this line"
-      ],
-      "target": {
-        "row": 1,
-        "col": 27
-      },
-      "focusCommand": "/"
-    },
-    "lesson-search-navigation-n-n": {
-      "id": "lesson-search-navigation-n-n",
-      "version": 1,
-      "name": "Search Navigation (n/N)",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "normal"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Search for 'foo' with /foo then press n twice to reach the third occurrence.",
-      "initialContent": [
-        "foo bar baz",
-        "qux foo quux",
-        "corge grault foo"
-      ],
-      "target": {
-        "row": 2,
-        "col": 13
-      },
-      "focusCommand": "n"
-    },
-    "lesson-undo-redo": {
-      "id": "lesson-undo-redo",
-      "version": 1,
-      "name": "Undo / Redo",
-      "metadata": {
-        "revision": 1,
-        "author": "VIM Master Team",
-        "githubUsername": "vimmaster",
-        "created": "2026-07-09",
-        "difficulty": "beginner",
-        "tags": [
-          "normal"
-        ],
-        "estimatedTime": 60,
-        "prerequisites": [],
-        "learningObjectives": []
-      },
-      "instructions": "Delete the middle line with dd, undo it with u, then redo with Ctrl+r to finish with the line deleted.",
-      "initialContent": [
-        "Top line.",
-        "Remove me.",
-        "Bottom line."
-      ],
-      "targetContent": [
-        "Top line.",
-        "Bottom line."
-      ],
       "focusCommand": "u"
     },
-    "lesson-word-movement": {
-      "id": "lesson-word-movement",
+    "lesson-practice-forward-search-practice": {
+      "id": "lesson-practice-forward-search-practice",
       "version": 1,
-      "name": "Word Movement",
+      "name": "Forward Search Practice",
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
@@ -1120,30 +1085,33 @@ export const generatedContent = {
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
-          "normal"
+          "practice",
+          "search-forward"
         ],
         "estimatedTime": 60,
         "prerequisites": [],
-        "learningObjectives": []
+        "learningObjectives": [],
+        "order": 114
       },
-      "instructions": "Use w (next word), b (back), e (end of word). Get to the end of the 'destination' word.",
+      "instructions": "Use /text to search forward, n to find next. Search for 'target' and navigate to it.",
       "initialContent": [
-        "Jumping between words is much faster.",
-        "Use 'w' to jump forwards to the start of the next word.",
-        "Use 'b' to jump backwards to the start of the previous word.",
-        "Use 'e' to jump to the end of the current word.",
-        "Find the ultimate destination."
+        "Search for the word 'target' in this text.",
+        "Use /target and press Enter to search.",
+        "Then use 'n' to find the next occurrence.",
+        "Navigate to the target word.",
+        "The target is here: target",
+        "Another target appears later: target"
       ],
       "target": {
         "row": 4,
-        "col": 28
+        "col": 20
       },
-      "focusCommand": "w"
+      "focusCommand": "VIM"
     },
-    "lesson-yank-put-copy-paste": {
-      "id": "lesson-yank-put-copy-paste",
+    "lesson-practice-backward-search-practice": {
+      "id": "lesson-practice-backward-search-practice",
       "version": 1,
-      "name": "Yank & Put (Copy/Paste)",
+      "name": "Backward Search Practice",
       "metadata": {
         "revision": 1,
         "author": "VIM Master Team",
@@ -1151,26 +1119,93 @@ export const generatedContent = {
         "created": "2026-07-09",
         "difficulty": "beginner",
         "tags": [
-          "normal"
+          "practice",
+          "search-backward"
         ],
         "estimatedTime": 60,
         "prerequisites": [],
-        "learningObjectives": []
+        "learningObjectives": [],
+        "order": 115
       },
-      "instructions": "Use yy to yank (copy) a line and p to put (paste) it. Duplicate the second line.",
+      "instructions": "Use ?text to search backward, N to find previous. Search backward for 'start'.",
       "initialContent": [
-        "Let's copy and paste.",
-        "Yank this line!",
-        "And put it below this line.",
-        ""
+        "Search backward for 'start' in this text.",
+        "Use ?start and press Enter to search backward.",
+        "Then use 'N' to find the previous occurrence.",
+        "Navigate to the start word.",
+        "The start is here: start",
+        "Another start appears earlier: start"
       ],
-      "targetContent": [
-        "Let's copy and paste.",
-        "Yank this line!",
-        "And put it below this line.",
-        "Yank this line!"
+      "target": {
+        "row": 4,
+        "col": 20
+      },
+      "focusCommand": "VIM"
+    },
+    "lesson-practice-search-navigation-practice": {
+      "id": "lesson-practice-search-navigation-practice",
+      "version": 1,
+      "name": "Search Navigation Practice",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "practice",
+          "nN"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 116
+      },
+      "instructions": "First search for 'word', then use n to go to next match, N to go to previous match. Navigate to the 3rd occurrence.",
+      "initialContent": [
+        "Find the word in this text",
+        "Another word appears here",
+        "The third word is the target",
+        "More word instances follow",
+        "Final word at the end"
       ],
-      "focusCommand": "p"
+      "target": {
+        "row": 2,
+        "col": 10
+      },
+      "focusCommand": "n"
+    },
+    "lesson-practice-ex-commands-practice": {
+      "id": "lesson-practice-ex-commands-practice",
+      "version": 1,
+      "name": "Ex Commands Practice",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-09",
+        "difficulty": "beginner",
+        "tags": [
+          "practice",
+          "ex"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [],
+        "learningObjectives": [],
+        "order": 117
+      },
+      "instructions": "Practice ex-commands like :q to quit and :wq to write and quit. Type :q and press Enter.",
+      "initialContent": [
+        "This is a VIM lesson for ex-commands",
+        "Ex-commands start with a colon (:)",
+        "Common commands: :q (quit), :w (write), :wq (write and quit)",
+        "Type :q and press Enter to complete this lesson"
+      ],
+      "targetText": {
+        "line": 3,
+        "text": "Type :q and press Enter to complete this lesson"
+      },
+      "focusCommand": "VIM"
     }
   }
 };

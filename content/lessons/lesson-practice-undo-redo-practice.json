@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 113
   },
   "instructions": "Make some changes, then use u to undo them, and Ctrl+r to redo. Practice the undo/redo cycle.",
   "initialContent": [

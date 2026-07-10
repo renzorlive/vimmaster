@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 115
   },
   "instructions": "Use ?text to search backward, N to find previous. Search backward for 'start'.",
   "initialContent": [

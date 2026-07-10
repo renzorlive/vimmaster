@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 116
   },
   "instructions": "First search for 'word', then use n to go to next match, N to go to previous match. Navigate to the 3rd occurrence.",
   "initialContent": [

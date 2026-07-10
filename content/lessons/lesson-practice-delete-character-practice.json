@@ -14,7 +14,8 @@
     ],
     "estimatedTime": 60,
     "prerequisites": [],
-    "learningObjectives": []
+    "learningObjectives": [],
+    "order": 106
   },
   "instructions": "Use x to delete characters. Remove the X from 'Delete X this' and fix other typos.",
   "initialContent": [

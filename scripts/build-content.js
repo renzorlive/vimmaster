@@ -74,6 +74,13 @@ function bundleLessons(normalizedLessons) {
     
     const lessonsDict = {};
 
+    // Sort the lessons by their metadata.order (defaulting to 999 if missing)
+    normalizedLessons.sort((a, b) => {
+        const orderA = a.metadata && a.metadata.order !== undefined ? a.metadata.order : 999;
+        const orderB = b.metadata && b.metadata.order !== undefined ? b.metadata.order : 999;
+        return orderA - orderB;
+    });
+
     for (const lesson of normalizedLessons) {
         lessonsDict[lesson.id] = lesson;
         // Temporary logic for splitting, assuming we tag cheat-mode as "practice"
