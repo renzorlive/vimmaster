@@ -20,8 +20,8 @@
 | TD-1 | ~~Progress save rejected & deleted after the final level~~ ✅ fixed — [PM-0001](docs/postmortems/PM-0001-save-corruption.md), regression-tested | ✅ |
 | TD-2 | ~~Per-level cursor start positions silently ignored~~ ✅ fixed — [ADR-0005](docs/adr/0005-lesson-initialization-pipeline.md), regression-tested | ✅ |
 | TD-3 | Auto-save on level completion never fires (dead `window` hook) | 🔴 |
-| TD-4 | Stale cursor clamp — confirmed: `0` silently fails when cursor is past EOL after `j` | 🔴 |
-| TD-4b | Counted edits loop over a stale buffer — `2x` deletes one char | 🔴 |
+| TD-4 | ~~Stale cursor clamp (`0` failed past EOL after `j`)~~ ✅ fixed — PR25, regression-tested | ✅ |
+| TD-4b | ~~Counted edits stale/broken (`2x`→1 char; `2dd`/`2dw` never worked)~~ ✅ fixed — PR25, regression-tested | ✅ |
 | TD-6 | Duplicate, divergent challenge scoring implementations | 🔴 |
 | TD-11 | Debug `console.log`s ship to production | 🟡 |
 

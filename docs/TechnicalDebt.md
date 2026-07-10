@@ -18,12 +18,12 @@ Each item is small enough to be one reviewable PR unless noted.
 `js/main.js:463-476` wraps `window.checkWinCondition`, but `checkWinCondition` is an ES-module export that is never assigned to `window`. The wrapper is dead code; only the 30-second interval save works.
 **Fix:** call `autoSaveProgress()` from the actual win path in `checkWinCondition()`.
 
-### TD-4 Stale-state bounds clamp in normal mode
+### TD-4 Stale-state bounds clamp in normal mode — ✅ FIXED (PR25, regression-tested)
 `js/vim-commands.js:404-410` clamps `cursor` captured at function entry, not the post-command cursor, so the safety net evaluates stale values.
 **Confirmed consequence (found by the Golden Suite, PR24):** with the cursor past EOL after `j` onto a shorter line, pressing `0` moves to col 0 but the stale clamp then overwrites it to the line end — `0` silently fails. Golden solutions work around it by moving to col 0 *before* changing rows.
 **Fix:** re-read cursor via `getCursor()` before clamping (or fix properly during the pure-core refactor).
 
-### TD-4b Counted edits loop over a stale buffer copy
+### TD-4b Counted edits loop over a stale buffer copy — ✅ FIXED (PR25, regression-tested; also fixed: counts were wiped by the operator's first key, so `2dd`/`2dw` never worked)
 Found by the Golden Suite (PR24): the count loops for `x` (and `dw`) re-read `content[cursor.row]` from the *local copy* captured at handler entry, so each iteration re-applies the same single-char deletion to the original line — `2x` deletes **one** character. Golden solutions avoid counted `x`; fix belongs to the pure-core refactor (or re-read via `getContent()` per iteration).
 
 ### TD-5 `0` is unreachable as a motion

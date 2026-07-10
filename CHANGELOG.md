@@ -5,6 +5,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: se
 
 ## [Unreleased]
 
+### Fixed (PR25 — stale-state normal mode)
+- **Numeric counts now work as promised.** `2x` deleted a single character (counted edits looped over a stale buffer snapshot — TD-4b), and `2dd`/`2dw` never worked at all (the operator's first key wiped the pending count). Counts survive multi-key commands and each loop iteration reads fresh state. 8 new regression tests.
+- **`0` no longer silently fails after `j` onto a shorter line** (TD-4): the end-of-handler bounds clamp evaluated the cursor captured at handler entry and overwrote valid motions; it now clamps fresh state, and `j` onto a shorter line clamps the column into the line.
+- The Golden solution for `lesson-practice-delete-character-practice` no longer works around these engine bugs (uses counted `x` and natural `j`-then-`0` order).
+
 ### Added
 - **Every lesson is now provably solvable (PR24):** all 35 lessons carry a `solution` key sequence; the Golden Suite auto-verifies every lesson with a solution (35/35 passing), and contract rule L007 is promoted from warning to **error** — a lesson without a working solution cannot be merged.
 - Lesson start positions restored as declarative `initialCursor` in every lesson JSON (they were lost in the content extraction; the engine ignored the field entirely, so all lessons started at `{0,0}` — caught by the ADR-0005 consumption invariant).
