@@ -5,7 +5,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: se
 
 ## [Unreleased]
 
-_Nothing yet._
+### Added
+- **Two-tier content validator** (issue #26): per-lesson schema rules now also check `initialCursor` within buffer bounds and validate every `solution` key token; a new repository-wide semantic pass catches what per-file validation can't — duplicate lesson IDs (S001), dangling `prerequisites` references (S002), duplicate curriculum order (S003), and index/content drift in both directions (S004). Every violation is reported with `file path → schema location`, all in one run. 14 new tests cover every violation class.
+
+### Fixed
+- **Practice lessons are validated again**: the contract runner iterated the `vimLessons` Map with `Object.entries()` (always empty), silently skipping all 17 practice lessons — the suite now checks all 35 lessons instead of 18. Same Map-migration bug family as the dead Practice buttons fixed in v3.0.0.
 
 ## [3.0.0] - 2026-07-10 — Community Alpha
 
