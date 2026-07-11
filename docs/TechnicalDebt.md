@@ -49,7 +49,7 @@ This makes adding content require engine edits — the opposite of the data-driv
 ### TD-9 No package.json / build / lint / tests / CI
 There is no way to programmatically verify anything. Every other fix lands blind. Bootstrap: `package.json`, Vite, ESLint + Prettier, vitest, one GitHub Action running `build + lint + test`. (See ContributingVision.md for workflow.)
 
-### TD-10 Tailwind via CDN
+### TD-10 Tailwind via CDN — ✅ FIXED (build-time Tailwind v3: 32 KB static `css/tailwind.css` replaces the ~300 KB runtime script; `build:css` wired into `check`/CI; unblocks PWA/offline)
 `<script src="https://cdn.tailwindcss.com">` is a ~300 KB render-blocking script that Tailwind explicitly says is not for production, generates styles at runtime, and logs a console warning. Replace with build-time Tailwind (or a small hand-rolled CSS file) during the Vite step. Also an offline/PWA blocker.
 
 ## 🟡 Maintainability

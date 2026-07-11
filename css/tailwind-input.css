@@ -1,0 +1,5 @@
+/* Source for the generated css/tailwind.css — build with `npm run build:css`.
+   Replaces the cdn.tailwindcss.com runtime script (TD-10). */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
