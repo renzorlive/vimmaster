@@ -5,7 +5,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: se
 
 ## [Unreleased]
 
-_Nothing yet._
+### Changed
+- **Tailwind is now built, not fetched** (TD-10): the ~300 KB render-blocking `cdn.tailwindcss.com` script (explicitly not for production) is replaced by a 32 KB static `css/tailwind.css` generated at build time from the classes actually used (`npm run build:css`, Tailwind v3 — same major as the CDN, guaranteeing visual parity). Wired into `npm run check`/CI; the last third-party console warning is gone, and offline/PWA work is unblocked.
 
 ## [3.0.0] - 2026-07-10 — Community Alpha
 
