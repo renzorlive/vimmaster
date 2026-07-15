@@ -18,11 +18,12 @@ export const levels = loadRegularLessons();
 // specified in docs/architecture/level-lifecycle.md (ADR-0005); parallel
 // initialization code paths are not accepted.
 //
-// TODO(validateLessonSchema, issue #26): when the JSON content system lands
-// (docs/ContentSystem.md, Phase 2), replace these runtime guards with a
-// schema validator run in CI over every content file: cursor within buffer,
-// buffer shape, objective validity, solution replay.
-// https://github.com/renzorlive/vimmaster/issues/26
+// Schema validation is enforced in CI by the content validator
+// (tests/contract/: per-lesson rules + semantic-rules.js — issue #26):
+// cursor within buffer, buffer shape, objective validity, solution key
+// tokens, unique IDs, resolvable prerequisites, index consistency; the
+// Golden Suite replays every solution. The guards below remain as
+// runtime defense-in-depth for content loaded outside CI.
 
 // Exactly one of these must be present on every lesson — it is the objective.
 const WIN_CONDITION_PROPS = ['target', 'targetText', 'targetContent', 'exCommands'];
