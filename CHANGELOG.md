@@ -8,6 +8,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: se
 ### Added
 - **Two-tier content validator** (issue #26): per-lesson schema rules now also check `initialCursor` within buffer bounds and validate every `solution` key token; a new repository-wide semantic pass catches what per-file validation can't — duplicate lesson IDs (S001), dangling `prerequisites` references (S002), duplicate curriculum order (S003), and index/content drift in both directions (S004). Every violation is reported with `file path → schema location`, all in one run. 14 new tests cover every violation class.
 
+### Changed
+- **Tailwind is now built, not fetched** (TD-10): the ~300 KB render-blocking `cdn.tailwindcss.com` script (explicitly not for production) is replaced by a 32 KB static `css/tailwind.css` generated at build time from the classes actually used (`npm run build:css`, Tailwind v3 — same major as the CDN, guaranteeing visual parity). Wired into `npm run check`/CI; the last third-party console warning is gone, and offline/PWA work is unblocked.
+
 ### Fixed
 - **Practice lessons are validated again**: the contract runner iterated the `vimLessons` Map with `Object.entries()` (always empty), silently skipping all 17 practice lessons — the suite now checks all 35 lessons instead of 18. Same Map-migration bug family as the dead Practice buttons fixed in v3.0.0.
 

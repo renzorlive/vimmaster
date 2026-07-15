@@ -13,10 +13,11 @@
     "test:contract": "node tests/contract/runner.js",
     "test:golden": "node tests/golden/runner.js",
     "build:content": "node scripts/build-content.js",
+    "build:css": "tailwindcss -c tailwind.config.js -i css/tailwind-input.css -o css/tailwind.css --minify",
     "coverage": "vitest run --coverage",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "check": "node scripts/build-content.js && eslint . && node tests/contract/runner.js && node tests/golden/runner.js && vitest run"
+    "check": "node scripts/build-content.js && tailwindcss -c tailwind.config.js -i css/tailwind-input.css -o css/tailwind.css --minify && eslint . && node tests/contract/runner.js && node tests/golden/runner.js && vitest run"
   },
   "devDependencies": {
     "@eslint/js": "^9.6.0",
@@ -24,6 +25,7 @@
     "globals": "^15.8.0",
     "happy-dom": "^14.12.3",
     "prettier": "^3.3.2",
+    "tailwindcss": "^3.4.19",
     "vite": "^5.3.3",
     "vitest": "^2.0.2"
   }
