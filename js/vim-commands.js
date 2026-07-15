@@ -257,6 +257,13 @@ export function handleNormalMode(e) {
     }
     if (key === '0') { setCursorCol(0); }
     if (key === '$') { const line = content[cursor.row]; setCursorCol(Math.max(0, line.length - 1)); }
+    if (key === '^') {
+        // First non-blank character of the line (issue #5)
+        addPracticedCommand('caret_first_nonblank');
+        const line = content[cursor.row];
+        const idx = line.search(/\S/);
+        setCursorCol(idx === -1 ? 0 : idx);
+    }
 
     // Word movement
     // Avoid moving on 'w' when it's part of operators like 'dw' or 'cw'
@@ -294,6 +301,49 @@ export function handleNormalMode(e) {
             while (i < line.length && !isWordChar(line[i])) { i++; }
             while (i < line.length - 1 && isWordChar(line[i + 1])) { i++; }
             if (isWordChar(line[i])) { setCursorCol(i); }
+        });
+    }
+
+    // WORD movement (whitespace-delimited — capital W/B/E, issue #7).
+    // WORDs break only on whitespace, so punctuation stays attached, unlike
+    // lowercase w/b/e above.
+    const isSpace = (ch) => ch === undefined || /\s/.test(ch);
+    if (key === 'W') {
+        addPracticedCommand('W_WORD_forward');
+        repeat(count, () => {
+            const c = getCursor();
+            const line = content[c.row];
+            let i = c.col;
+            while (i < line.length && !isSpace(line[i])) i++;   // past current WORD
+            while (i < line.length && isSpace(line[i])) i++;    // past whitespace
+            if (i < line.length) {
+                setCursorCol(i);
+            } else if (c.row < content.length - 1) {
+                setCursorRow(c.row + 1);
+                setCursorCol(0);
+            }
+        });
+    }
+    if (key === 'B') {
+        addPracticedCommand('B_WORD_backward');
+        repeat(count, () => {
+            const c = getCursor();
+            const line = content[c.row];
+            let i = c.col - 1;
+            while (i >= 0 && isSpace(line[i])) i--;              // back over whitespace
+            while (i > 0 && !isSpace(line[i - 1])) i--;          // to start of WORD
+            setCursorCol(Math.max(0, i));
+        });
+    }
+    if (key === 'E') {
+        addPracticedCommand('E_WORD_end');
+        repeat(count, () => {
+            const c = getCursor();
+            const line = content[c.row];
+            let i = c.col + 1;
+            while (i < line.length && isSpace(line[i])) i++;     // forward to next WORD
+            while (i < line.length - 1 && !isSpace(line[i + 1])) i++; // to end of WORD
+            if (i < line.length) setCursorCol(Math.min(i, line.length - 1));
         });
     }
 
