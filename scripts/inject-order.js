@@ -7,11 +7,13 @@ const orderedRegular = [
     "lesson-how-to-exit-ex-commands",
     "lesson-basic-movement",
     "lesson-word-movement",
+    "lesson-word-motion-w",
     "lesson-line-jumps",
     "lesson-insert-mode",
     "lesson-delete-basics",
     "lesson-yank-put-copy-paste",
     "lesson-line-bounds-0-and",
+    "lesson-first-non-blank",
     "lesson-append-and-open-lines",
     "lesson-change-word-cw",
     "lesson-delete-end-replace",
@@ -50,7 +52,7 @@ function processList(list, startIndex) {
         if (fs.existsSync(filePath)) {
             const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
             data.metadata.order = startIndex + idx;
-            fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+            fs.writeFileSync(filePath, JSON.stringify(data, null, 2) + '\n', 'utf8');
             console.log(`Updated ${slug} with order ${startIndex + idx}`);
         } else {
             console.warn(`File not found: ${filePath}`);

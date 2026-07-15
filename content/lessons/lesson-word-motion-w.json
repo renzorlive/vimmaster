@@ -1,0 +1,41 @@
+{
+  "id": "lesson-word-motion-w",
+  "version": 1,
+  "name": "WORD Motion (W)",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-15",
+    "difficulty": "intermediate",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": [
+      "lesson-word-movement"
+    ],
+    "learningObjectives": [
+      "Use W to move forward by WORDs",
+      "Understand that a WORD is whitespace-delimited, so punctuation stays attached"
+    ],
+    "order": 4
+  },
+  "instructions": "Lowercase w stops at punctuation; uppercase W jumps by WORDs, which break only on whitespace. So 'foo.bar' is a single WORD. Press W twice to land on 'end'.",
+  "initialContent": [
+    "foo.bar baz.qux end"
+  ],
+  "target": {
+    "row": 0,
+    "col": 16
+  },
+  "focusCommand": "W",
+  "initialCursor": {
+    "row": 0,
+    "col": 0
+  },
+  "solution": [
+    "W",
+    "W"
+  ]
+}

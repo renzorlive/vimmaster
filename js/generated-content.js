@@ -9,17 +9,19 @@ export const generatedContent = {
   "index": {
     "version": 1,
     "contentVersion": 1,
-    "generatedAt": "2026-07-15T19:07:07.737Z",
+    "generatedAt": "2026-07-15T19:25:05.995Z",
     "generator": "scripts/build-content.js",
     "regularLessons": [
       "lesson-how-to-exit-ex-commands",
       "lesson-basic-movement",
       "lesson-word-movement",
+      "lesson-word-motion-w",
       "lesson-line-jumps",
       "lesson-insert-mode",
       "lesson-delete-basics",
       "lesson-yank-put-copy-paste",
       "lesson-line-bounds-0-and",
+      "lesson-first-non-blank",
       "lesson-append-and-open-lines",
       "lesson-change-word-cw",
       "lesson-delete-end-replace",
@@ -180,6 +182,47 @@ export const generatedContent = {
         "e"
       ]
     },
+    "lesson-word-motion-w": {
+      "id": "lesson-word-motion-w",
+      "version": 1,
+      "name": "WORD Motion (W)",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-15",
+        "difficulty": "intermediate",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 60,
+        "prerequisites": [
+          "lesson-word-movement"
+        ],
+        "learningObjectives": [
+          "Use W to move forward by WORDs",
+          "Understand that a WORD is whitespace-delimited, so punctuation stays attached"
+        ],
+        "order": 4
+      },
+      "instructions": "Lowercase w stops at punctuation; uppercase W jumps by WORDs, which break only on whitespace. So 'foo.bar' is a single WORD. Press W twice to land on 'end'.",
+      "initialContent": [
+        "foo.bar baz.qux end"
+      ],
+      "target": {
+        "row": 0,
+        "col": 16
+      },
+      "focusCommand": "W",
+      "initialCursor": {
+        "row": 0,
+        "col": 0
+      },
+      "solution": [
+        "W",
+        "W"
+      ]
+    },
     "lesson-line-jumps": {
       "id": "lesson-line-jumps",
       "version": 1,
@@ -196,7 +239,7 @@ export const generatedContent = {
         "estimatedTime": 60,
         "prerequisites": [],
         "learningObjectives": [],
-        "order": 4
+        "order": 5
       },
       "instructions": "Use gg to go to the first line, and G to go to the last line. Go to the last character of the last line.",
       "initialContent": [
@@ -239,7 +282,7 @@ export const generatedContent = {
         "estimatedTime": 60,
         "prerequisites": [],
         "learningObjectives": [],
-        "order": 5
+        "order": 6
       },
       "instructions": "Press 'a' to append after the cursor. Type ' is awesome!' and press Esc to return to NORMAL mode.",
       "initialContent": [
@@ -291,7 +334,7 @@ export const generatedContent = {
         "estimatedTime": 60,
         "prerequisites": [],
         "learningObjectives": [],
-        "order": 6
+        "order": 7
       },
       "instructions": "Use dd to delete the full middle line. Then use dw to remove the word 'mistake' on the last line. You can use x to delete a single character if needed.",
       "initialContent": [
@@ -334,7 +377,7 @@ export const generatedContent = {
         "estimatedTime": 60,
         "prerequisites": [],
         "learningObjectives": [],
-        "order": 7
+        "order": 8
       },
       "instructions": "Use yy to yank (copy) a line and p to put (paste) it. Duplicate the second line.",
       "initialContent": [
@@ -377,7 +420,7 @@ export const generatedContent = {
         "estimatedTime": 60,
         "prerequisites": [],
         "learningObjectives": [],
-        "order": 8
+        "order": 9
       },
       "instructions": "Use 0 to jump to start of line and $ to jump to end. Move to the last character of the first line.",
       "initialContent": [
@@ -397,6 +440,46 @@ export const generatedContent = {
         "$"
       ]
     },
+    "lesson-first-non-blank": {
+      "id": "lesson-first-non-blank",
+      "version": 1,
+      "name": "First Non-Blank (^)",
+      "metadata": {
+        "revision": 1,
+        "author": "VIM Master Team",
+        "githubUsername": "vimmaster",
+        "created": "2026-07-15",
+        "difficulty": "beginner",
+        "tags": [
+          "normal"
+        ],
+        "estimatedTime": 45,
+        "prerequisites": [
+          "lesson-line-bounds-0-and"
+        ],
+        "learningObjectives": [
+          "Use ^ to jump to the first non-blank character of the line",
+          "Understand how ^ differs from 0, which goes to the very start"
+        ],
+        "order": 10
+      },
+      "instructions": "0 jumps to the very start of the line; ^ jumps to the first non-blank character, skipping leading indentation. Press ^ to land on the 'I' of 'Indented'.",
+      "initialContent": [
+        "    Indented text: press ^ to skip the spaces."
+      ],
+      "target": {
+        "row": 0,
+        "col": 4
+      },
+      "focusCommand": "^",
+      "initialCursor": {
+        "row": 0,
+        "col": 20
+      },
+      "solution": [
+        "^"
+      ]
+    },
     "lesson-append-and-open-lines": {
       "id": "lesson-append-and-open-lines",
       "version": 1,
@@ -413,7 +496,7 @@ export const generatedContent = {
         "estimatedTime": 60,
         "prerequisites": [],
         "learningObjectives": [],
-        "order": 9
+        "order": 11
       },
       "instructions": "Use a to append after cursor. Use o to open a new line below, and O to open above. Add a new line between the two lines that reads 'Inserted here'.",
       "initialContent": [
@@ -464,7 +547,7 @@ export const generatedContent = {
         "estimatedTime": 60,
         "prerequisites": [],
         "learningObjectives": [],
-        "order": 10
+        "order": 12
       },
       "instructions": "Use cw to change the word 'bad' into 'good'. Press Esc when done.",
       "initialContent": [
@@ -505,7 +588,7 @@ export const generatedContent = {
         "estimatedTime": 60,
         "prerequisites": [],
         "learningObjectives": [],
-        "order": 11
+        "order": 13
       },
       "instructions": "Use D to delete from cursor to end of line, then use r to replace the 'x' with '!'.",
       "initialContent": [
@@ -545,7 +628,7 @@ export const generatedContent = {
         "estimatedTime": 60,
         "prerequisites": [],
         "learningObjectives": [],
-        "order": 12
+        "order": 14
       },
       "instructions": "Use a count with motions. Press 3 then w to jump three words and land on 'target'.",
       "initialContent": [
@@ -581,7 +664,7 @@ export const generatedContent = {
         "estimatedTime": 60,
         "prerequisites": [],
         "learningObjectives": [],
-        "order": 13
+        "order": 15
       },
       "instructions": "Delete the middle line with dd, undo it with u, then redo with Ctrl+r to finish with the line deleted.",
       "initialContent": [
@@ -621,7 +704,7 @@ export const generatedContent = {
         "estimatedTime": 60,
         "prerequisites": [],
         "learningObjectives": [],
-        "order": 14
+        "order": 16
       },
       "instructions": "Press / then type 'target' and Enter, then press n once to jump to the next occurrence.",
       "initialContent": [
@@ -667,7 +750,7 @@ export const generatedContent = {
         "estimatedTime": 60,
         "prerequisites": [],
         "learningObjectives": [],
-        "order": 15
+        "order": 17
       },
       "instructions": "Press ? then type 'alpha' and Enter, then press N once to jump to the previous occurrence.",
       "initialContent": [
@@ -711,7 +794,7 @@ export const generatedContent = {
         "estimatedTime": 60,
         "prerequisites": [],
         "learningObjectives": [],
-        "order": 16
+        "order": 18
       },
       "instructions": "Search for 'foo' with /foo then press n twice to reach the third occurrence.",
       "initialContent": [
@@ -761,7 +844,7 @@ export const generatedContent = {
           "Understand the 'iw' (inner word) text object",
           "Use 'diw' to delete a word without needing to be at its start"
         ],
-        "order": 17
+        "order": 19
       },
       "instructions": "Use 'diw' to delete the word 'mistake' from anywhere inside it.",
       "initialContent": [
@@ -804,7 +887,7 @@ export const generatedContent = {
           "Use 'ciw' to change a word completely without needing to be at its start",
           "Understand how 'c' combines with 'iw'"
         ],
-        "order": 18
+        "order": 20
       },
       "instructions": "Use 'ciw' to change the word 'wrong' into 'right'. Press Esc when done.",
       "initialContent": [

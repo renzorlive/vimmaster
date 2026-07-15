@@ -1,0 +1,40 @@
+{
+  "id": "lesson-first-non-blank",
+  "version": 1,
+  "name": "First Non-Blank (^)",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-15",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 45,
+    "prerequisites": [
+      "lesson-line-bounds-0-and"
+    ],
+    "learningObjectives": [
+      "Use ^ to jump to the first non-blank character of the line",
+      "Understand how ^ differs from 0, which goes to the very start"
+    ],
+    "order": 10
+  },
+  "instructions": "0 jumps to the very start of the line; ^ jumps to the first non-blank character, skipping leading indentation. Press ^ to land on the 'I' of 'Indented'.",
+  "initialContent": [
+    "    Indented text: press ^ to skip the spaces."
+  ],
+  "target": {
+    "row": 0,
+    "col": 4
+  },
+  "focusCommand": "^",
+  "initialCursor": {
+    "row": 0,
+    "col": 20
+  },
+  "solution": [
+    "^"
+  ]
+}

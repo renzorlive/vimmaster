@@ -14,7 +14,7 @@
     "estimatedTime": 60,
     "prerequisites": [],
     "learningObjectives": [],
-    "order": 10
+    "order": 12
   },
   "instructions": "Use cw to change the word 'bad' into 'good'. Press Esc when done.",
   "initialContent": [

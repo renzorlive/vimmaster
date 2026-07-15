@@ -14,7 +14,7 @@
     "estimatedTime": 60,
     "prerequisites": [],
     "learningObjectives": [],
-    "order": 12
+    "order": 14
   },
   "instructions": "Use a count with motions. Press 3 then w to jump three words and land on 'target'.",
   "initialContent": [
