@@ -9,6 +9,7 @@ import './rules/solution.js';
 import './rules/objective.js';
 import './rules/unknown-fields.js';
 import './rules/metadata.js';
+import './rules/initial-state.js';
 
 // Import content to validate
 import { levels } from '../../js/levels.js';
