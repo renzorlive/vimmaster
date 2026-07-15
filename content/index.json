@@ -1,13 +1,14 @@
 {
   "version": 1,
   "contentVersion": 1,
-  "generatedAt": "2026-07-15T19:25:05.995Z",
+  "generatedAt": "2026-07-15T20:38:01.266Z",
   "generator": "scripts/build-content.js",
   "regularLessons": [
     "lesson-how-to-exit-ex-commands",
     "lesson-basic-movement",
     "lesson-word-movement",
     "lesson-word-motion-w",
+    "lesson-word-end-e",
     "lesson-line-jumps",
     "lesson-insert-mode",
     "lesson-delete-basics",

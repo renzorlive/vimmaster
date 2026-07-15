@@ -1,0 +1,41 @@
+{
+  "id": "lesson-word-end-e",
+  "version": 1,
+  "name": "WORD End (E)",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-15",
+    "difficulty": "intermediate",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": [
+      "lesson-word-motion-w"
+    ],
+    "learningObjectives": [
+      "Use E to jump to the end of a WORD",
+      "Understand how E differs from e: E treats punctuation as part of the WORD"
+    ],
+    "order": 5
+  },
+  "instructions": "Lowercase e stops at the end of each word, breaking on punctuation; uppercase E jumps to the end of the whole WORD. Press E twice to land on the last character of 'baz.qux'.",
+  "initialContent": [
+    "foo.bar baz.qux end"
+  ],
+  "target": {
+    "row": 0,
+    "col": 14
+  },
+  "focusCommand": "E",
+  "initialCursor": {
+    "row": 0,
+    "col": 0
+  },
+  "solution": [
+    "E",
+    "E"
+  ]
+}

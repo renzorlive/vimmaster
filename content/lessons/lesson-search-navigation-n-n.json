@@ -14,7 +14,7 @@
     "estimatedTime": 60,
     "prerequisites": [],
     "learningObjectives": [],
-    "order": 18
+    "order": 19
   },
   "instructions": "Search for 'foo' with /foo then press n twice to reach the third occurrence.",
   "initialContent": [

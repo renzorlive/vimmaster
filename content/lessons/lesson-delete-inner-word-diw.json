@@ -21,7 +21,7 @@
       "Understand the 'iw' (inner word) text object",
       "Use 'diw' to delete a word without needing to be at its start"
     ],
-    "order": 19
+    "order": 20
   },
   "instructions": "Use 'diw' to delete the word 'mistake' from anywhere inside it.",
   "initialContent": [

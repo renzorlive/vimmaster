@@ -19,7 +19,7 @@
       "Use ^ to jump to the first non-blank character of the line",
       "Understand how ^ differs from 0, which goes to the very start"
     ],
-    "order": 10
+    "order": 11
   },
   "instructions": "0 jumps to the very start of the line; ^ jumps to the first non-blank character, skipping leading indentation. Press ^ to land on the 'I' of 'Indented'.",
   "initialContent": [
