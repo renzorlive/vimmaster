@@ -14,7 +14,7 @@
     "estimatedTime": 60,
     "prerequisites": [],
     "learningObjectives": [],
-    "order": 15
+    "order": 17
   },
   "instructions": "Press ? then type 'alpha' and Enter, then press N once to jump to the previous occurrence.",
   "initialContent": [
