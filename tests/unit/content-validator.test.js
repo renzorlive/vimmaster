@@ -19,6 +19,7 @@ import '../../tests/contract/rules/solution.js';
 import '../../tests/contract/rules/objective.js';
 import '../../tests/contract/rules/unknown-fields.js';
 import '../../tests/contract/rules/metadata.js';
+import '../../tests/contract/rules/initial-state.js';
 
 const validMeta = {
     revision: 1,
@@ -66,6 +67,24 @@ describe('Tier 1 — per-lesson schema rules', () => {
     it('rejects unknown fields (typo protection)', () => {
         const violations = validateLesson(validLesson({ taget: { row: 0, col: 1 } }), 'fixture');
         expect(ruleIds(violations)).toContain('L010');
+    });
+
+    it('L013: rejects a win condition already satisfied by the initial state (issue #14)', () => {
+        // cursor already on target
+        const cursorTrivial = validLesson({ initialCursor: { row: 0, col: 6 }, target: { row: 0, col: 6 } });
+        expect(ruleIds(validateLesson(cursorTrivial, 'fixture'))).toContain('L013');
+
+        // target text already present in the starting buffer (the exact #14 shape)
+        const textTrivial = validLesson();
+        delete textTrivial.target;
+        textTrivial.targetText = { line: 0, text: 'hello world' };
+        expect(ruleIds(validateLesson(textTrivial, 'fixture'))).toContain('L013');
+
+        // an exCommands lesson is NOT trivially satisfied (nothing run at start)
+        const exLesson = validLesson();
+        delete exLesson.target;
+        exLesson.exCommands = ['q'];
+        expect(ruleIds(validateLesson(exLesson, 'fixture'))).not.toContain('L013');
     });
 
     it('rejects zero and multiple win conditions', () => {

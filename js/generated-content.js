@@ -9,7 +9,7 @@ export const generatedContent = {
   "index": {
     "version": 1,
     "contentVersion": 1,
-    "generatedAt": "2026-07-10T17:17:01.536Z",
+    "generatedAt": "2026-07-15T19:07:07.737Z",
     "generator": "scripts/build-content.js",
     "regularLessons": [
       "lesson-how-to-exit-ex-commands",
@@ -1711,11 +1711,11 @@ export const generatedContent = {
         "Common commands: :q (quit), :w (write), :wq (write and quit)",
         "Type :q and press Enter to complete this lesson"
       ],
-      "targetText": {
-        "line": 3,
-        "text": "Type :q and press Enter to complete this lesson"
-      },
-      "focusCommand": "VIM",
+      "exCommands": [
+        "q",
+        "wq"
+      ],
+      "focusCommand": ":q",
       "initialCursor": {
         "row": 0,
         "col": 0

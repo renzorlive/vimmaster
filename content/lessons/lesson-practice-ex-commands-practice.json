@@ -24,11 +24,11 @@
     "Common commands: :q (quit), :w (write), :wq (write and quit)",
     "Type :q and press Enter to complete this lesson"
   ],
-  "targetText": {
-    "line": 3,
-    "text": "Type :q and press Enter to complete this lesson"
-  },
-  "focusCommand": "VIM",
+  "exCommands": [
+    "q",
+    "wq"
+  ],
+  "focusCommand": ":q",
   "initialCursor": {
     "row": 0,
     "col": 0
