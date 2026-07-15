@@ -119,7 +119,14 @@ export const startChallenge = (gameState, challengeIndex = null) => {
     if (gameState.currentChallenge) {
         return;
     }
-    
+
+    // Fresh editing session: clear undo/redo (and search/command state) so
+    // pressing `u` in a challenge can't restore the buffer the player was on
+    // before entering it (issue #6).
+    if (gameState.resetLevelState) {
+        gameState.resetLevelState();
+    }
+
     // Select a random challenge if none specified
     if (challengeIndex === null) {
         challengeIndex = Math.floor(Math.random() * challenges.length);
