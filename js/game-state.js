@@ -273,6 +273,11 @@ export const resetLevelState = () => {
     _commandHistory = '';
     _commandLog = [];
     _yankedLine = null;
+    // Undo/redo history belongs to a single editing session. Without this,
+    // pressing `u` on a freshly-loaded level (or challenge task) restored
+    // the PREVIOUS level's buffer while the UI stayed put (issues #12, #6).
+    _undoStack = [];
+    _redoStack = [];
 };
 
 // Content manipulation functions
