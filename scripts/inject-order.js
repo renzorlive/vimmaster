@@ -8,6 +8,7 @@ const orderedRegular = [
     "lesson-basic-movement",
     "lesson-word-movement",
     "lesson-line-jumps",
+    "lesson-find-char",
     "lesson-insert-mode",
     "lesson-delete-basics",
     "lesson-yank-put-copy-paste",

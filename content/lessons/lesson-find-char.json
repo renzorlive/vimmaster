@@ -1,0 +1,36 @@
+{
+  "id": "lesson-find-char",
+  "version": 1,
+  "name": "Find Character (f / F)",
+  "metadata": {
+    "revision": 1,
+    "author": "VIM Master Team",
+    "githubUsername": "vimmaster",
+    "created": "2026-07-15",
+    "difficulty": "beginner",
+    "tags": [
+      "normal"
+    ],
+    "estimatedTime": 60,
+    "prerequisites": [],
+    "learningObjectives": [],
+    "order": 5
+  },
+  "instructions": "Use f<char> to jump forward to the next occurrence of a character on the current line, and F<char> to jump backward. A count repeats it, so 3fx lands on the 3rd 'x'. Move to the 'x' with fx.",
+  "initialContent": [
+    "Find the x on this line using the f motion."
+  ],
+  "target": {
+    "row": 0,
+    "col": 9
+  },
+  "focusCommand": "f / F",
+  "initialCursor": {
+    "row": 0,
+    "col": 0
+  },
+  "solution": [
+    "f",
+    "x"
+  ]
+}

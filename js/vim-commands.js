@@ -2,12 +2,12 @@
 
 import {
     getContent, getCursor, getMode, getCurrentLevel,
-    getCommandHistory, getYankedLine, getReplacePending, getCountBuffer,
+    getCommandHistory, getYankedLine, getReplacePending, getPendingFind, getCountBuffer,
     getRedoStack, getLevel12Undo, getSearchMode, getSearchQuery,
     getLastSearchQuery, getLastSearchDirection, getSearchMatches, getCurrentMatchIndex,
     getNavCountSinceSearch, getXp, getCombo, pushUndo, isEscapeKey, setMode,
     setSearchMode, setCursorRow, setCursorCol, setContent,
-    setYankedLine, setReplacePending, setLevel12Undo, setLevel12RedoAfterUndo,
+    setYankedLine, setReplacePending, setPendingFind, setLevel12Undo, setLevel12RedoAfterUndo,
     setUsedSearchInLevel, setNavCountSinceSearch, setCurrentMatchIndex, setSearchMatches,
     setLastSearchQuery, setLastSearchDirection, setSearchQuery, updateContentLine,
     removeContentLine, insertContentLine, addContentLine, appendCommandHistory,
@@ -28,6 +28,20 @@ const repeat = (count, action) => {
 
 // Check if character is a word character
 const isWordChar = (char) => /\w/.test(char);
+
+// Find the column of the Nth occurrence of `target` on a single line,
+// searching from `col` in `direction` (1 = forward / f, -1 = backward / F).
+// The current column is excluded, matching Vim; returns -1 when not found
+// so the caller leaves the cursor where it is.
+const findCharColumn = (line, col, target, direction, count) => {
+    let remaining = count;
+    for (let i = col + direction; i >= 0 && i < line.length; i += direction) {
+        if (line[i] === target && --remaining === 0) {
+            return i;
+        }
+    }
+    return -1;
+};
 
 // Handle Normal Mode Commands
 export function handleNormalMode(e) {
@@ -52,6 +66,37 @@ export function handleNormalMode(e) {
     let level12Undo = getLevel12Undo();
     let currentLevel = getCurrentLevel();
     
+    // Consume the target of a pending find-character motion (f/F). This runs
+    // before the count-buffer handling so a digit target (e.g. `f3`) is taken
+    // as the character to find rather than as a count.
+    let pendingFind = getPendingFind();
+    if (pendingFind) {
+        // Ignore modifier keys while waiting for the target character.
+        if (key === 'Shift' || key === 'Control' || key === 'Alt' || key === 'Meta') {
+            return;
+        }
+        // Escape cancels the pending motion without moving the cursor.
+        if (isEscapeKey(e)) {
+            setPendingFind(null);
+            return;
+        }
+        if (key.length === 1) {
+            const line = content[cursor.row] || '';
+            const findCount = countBuffer ? Math.max(1, parseInt(countBuffer, 10)) : 1;
+            const targetCol = findCharColumn(line, cursor.col, key, pendingFind.direction, findCount);
+            if (targetCol !== -1) {
+                setCursorCol(targetCol);
+                addPracticedCommand(pendingFind.direction === 1 ? 'f_find_forward' : 'F_find_backward');
+            }
+            setPendingFind(null);
+            setCountBuffer('');
+            clearCommandLog();
+            return;
+        }
+        // Any other non-printable key: keep waiting for a target.
+        return;
+    }
+
     // Count buffer
     if (/^[0-9]$/.test(key)) {
         if (!(key === '0' && countBuffer === '')) {
@@ -123,6 +168,14 @@ export function handleNormalMode(e) {
     // Start single-char replace immediately so it doesn't get logged in command history
     if (key === 'r' && !replacePending) {
         setReplacePending(true);
+        clearCommandLog();
+        return;
+    }
+
+    // Start a find-character motion (f/F) immediately so the trigger key is
+    // not logged in command history; the next key is consumed as the target.
+    if ((key === 'f' || key === 'F') && !pendingFind) {
+        setPendingFind({ direction: key === 'f' ? 1 : -1 });
         clearCommandLog();
         return;
     }
