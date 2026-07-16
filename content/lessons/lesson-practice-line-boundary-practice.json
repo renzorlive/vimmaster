@@ -28,7 +28,7 @@
     "row": 0,
     "col": 0
   },
-  "focusCommand": "VIM",
+  "focusCommand": "0 / $",
   "initialCursor": {
     "row": 0,
     "col": 10

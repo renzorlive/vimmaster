@@ -30,7 +30,7 @@
     "Save this text",
     "Maintain this"
   ],
-  "focusCommand": "VIM",
+  "focusCommand": "D",
   "initialCursor": {
     "row": 0,
     "col": 15

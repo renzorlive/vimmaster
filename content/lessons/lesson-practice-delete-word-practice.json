@@ -32,7 +32,7 @@
     "Clean up this messy text.",
     "Final result should be clean sentences."
   ],
-  "focusCommand": "VIM",
+  "focusCommand": "dw",
   "initialCursor": {
     "row": 0,
     "col": 15

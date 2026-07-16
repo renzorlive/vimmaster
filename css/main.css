@@ -95,6 +95,75 @@ body {
     animation: logoGlow 3s ease-in-out infinite alternate;
 }
 
+/* Crisp typographic wordmark (replaces the tiny ASCII art, which rendered
+   wavy at small sizes). Always straight, sharp, and compact. */
+.wordmark {
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-weight: 800;
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    line-height: 1;
+    letter-spacing: 0.12em;
+    margin: 0;
+    background: linear-gradient(90deg, #facc15 0%, #fb923c 55%, #f87171 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 14px rgba(250, 204, 21, 0.22));
+    white-space: nowrap;
+    user-select: none;
+}
+
+.wordmark-accent {
+    margin-left: 0.35em;
+    font-weight: 800;
+}
+
+/* Shell-prompt prefix: the "this is a terminal" signal */
+.wordmark-prompt {
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    background: none;
+    color: #4ade80;
+    margin-right: 0.4em;
+    filter: none;
+}
+
+/* Blinking block caret, exactly like a terminal cursor */
+.wordmark-caret {
+    display: inline-block;
+    width: 0.55ch;
+    height: 0.95em;
+    margin-left: 0.25em;
+    vertical-align: text-bottom;
+    background: #4ade80;
+    animation: caretBlink 1.1s steps(1) infinite;
+}
+
+@keyframes caretBlink {
+    0%, 55% { opacity: 1; }
+    56%, 100% { opacity: 0; }
+}
+
+/* Elements kept in the DOM only for script compatibility — the block meter
+   (#minimal-progress) replaced them visually. JS toggling the `hidden`
+   class cannot re-show these. */
+.hidden-by-design {
+    display: none !important;
+}
+
+/* The block meter is now THE progress readout — give it presence */
+#minimal-progress {
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-shadow: 0 0 10px rgba(234, 179, 8, 0.35);
+    white-space: nowrap;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+    .wordmark-caret { animation: none; }
+}
+
 .ascii-logo-brand {
     display: block;
     margin-bottom: 0;
@@ -498,7 +567,8 @@ input:focus {
     border: 1px solid rgba(75, 85, 99, 0.85);
     background: rgba(31, 41, 55, 0.78);
     color: #e5e7eb;
-    padding: 0.5rem 0.9rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
     font-weight: 700;
     transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
@@ -519,12 +589,67 @@ input:focus {
 }
 
 .goal-card {
-    padding: 0.9rem 1rem;
+    padding: 0.55rem 0.9rem;
     margin-top: 0.25rem;
 }
 
 .goal-card #instructions {
-    line-height: 1.15;
+    line-height: 1.3;
+}
+
+/* Compact single-line goal: [GOAL] instruction ······ [:q] */
+.goal-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.85rem;
+    text-align: left;
+}
+
+.goal-tag {
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #facc15;
+    border: 1px solid rgba(250, 204, 21, 0.35);
+    border-radius: 0.375rem;
+    padding: 0.18rem 0.5rem;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.goal-text {
+    flex: 1 1 14rem;
+    min-width: 12rem;
+    font-size: 0.92rem;
+    color: #d1d5db;
+}
+
+/* The focus command as a keycap chip instead of a giant centered block */
+.goal-cmd {
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #4ade80;
+    background: rgba(3, 7, 18, 0.55);
+    border: 1px solid rgba(74, 222, 128, 0.35);
+    border-bottom-width: 2px;
+    border-radius: 0.45rem;
+    padding: 0.18rem 0.65rem;
+    margin-left: auto;
+    white-space: nowrap;
+    box-shadow: 0 0 14px rgba(74, 222, 128, 0.12);
+}
+
+.goal-author {
+    width: 100%;
+    text-align: right;
+    font-size: 0.65rem;
+    font-style: italic;
+    color: rgba(147, 197, 253, 0.55);
+    margin-top: 0.1rem;
 }
 
 .goal-card #instructions > div {

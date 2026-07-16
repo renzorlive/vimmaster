@@ -28,7 +28,7 @@
     "line": 3,
     "text": "Type :q and press Enter to complete this lesson"
   },
-  "focusCommand": "VIM",
+  "focusCommand": ":q",
   "initialCursor": {
     "row": 0,
     "col": 0

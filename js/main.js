@@ -401,7 +401,7 @@ function setupEventListeners() {
 
     // Add cheat toggle button if it doesn't exist
     if (challengeToggleBtn && !document.getElementById('cheat-toggle')) {
-        challengeToggleBtn.insertAdjacentHTML('afterend', '<button id="cheat-toggle" class="ml-3 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">📘 Cheat Mode</button>');
+        challengeToggleBtn.insertAdjacentHTML('afterend', '<button id="cheat-toggle" class="hud-action" title="Ctrl+/">Cheat Mode</button>');
     }
     
     // Re-get the cheat toggle button after creating it

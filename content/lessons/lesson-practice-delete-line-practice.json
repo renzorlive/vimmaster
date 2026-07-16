@@ -30,7 +30,7 @@
     "Keep this line too",
     "Keep this final line"
   ],
-  "focusCommand": "VIM",
+  "focusCommand": "dd",
   "initialCursor": {
     "row": 1,
     "col": 0

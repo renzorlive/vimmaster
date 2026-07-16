@@ -30,7 +30,7 @@
     "VIM is a great editor",
     "Programming is fun activity"
   ],
-  "focusCommand": "VIM",
+  "focusCommand": "cw",
   "initialCursor": {
     "row": 0,
     "col": 4

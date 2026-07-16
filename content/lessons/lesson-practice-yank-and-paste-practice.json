@@ -34,7 +34,7 @@
     "",
     "Don't duplicate this line"
   ],
-  "focusCommand": "VIM",
+  "focusCommand": "yy / p",
   "initialCursor": {
     "row": 0,
     "col": 0
