@@ -228,14 +228,13 @@ export function updateInstructions(customText) {
                 if (currentLevel !== undefined && levelsModule.levels && levelsModule.levels[currentLevel]) {
                     const level = levelsModule.levels[currentLevel];
                     const focusCmd = level.focusCommand ? level.focusCommand : (level.solution ? level.solution.join('') : '');
+                    // Compact single-line goal: tag + instruction + keycap chip,
+                    // so the editor stays the visual center of the page.
                     instructionsEl.innerHTML = `
-                        <div class="text-center">
-                            <div class="text-yellow-400 font-bold text-lg mb-2 uppercase tracking-widest">🎯 Goal</div>
-                            <div class="text-gray-300 text-sm mb-4">${level.instructions || ''}</div>
-                            <div class="border-t border-b border-gray-700/50 py-3 my-3">
-                                <div class="text-5xl md:text-6xl font-mono text-green-400 font-bold tracking-tight">${focusCmd}</div>
-                            </div>
-                            <div class="text-gray-500 text-xs mt-2">Type exactly as shown</div>
+                        <div class="goal-line">
+                            <span class="goal-tag">Goal</span>
+                            <span class="goal-text">${level.instructions || ''}</span>
+                            <code class="goal-cmd" title="Type exactly as shown">${focusCmd}</code>
                         </div>
                     `;
                     if (level.metadata && level.metadata.githubUsername && authorEl) {
@@ -287,7 +286,7 @@ export function updateLevelIndicator(currentLevel, totalLevels) {
         for (let i = 0; i < blocksToShow; i++) {
             blocks += (i <= currentLevel) ? '█' : '□';
         }
-        minimalProgress.textContent = `Lesson ${currentLevel + 1} / ${totalLevels}   ${blocks}`;
+        minimalProgress.textContent = `${currentLevel + 1}/${totalLevels} ${blocks}`;
     }
     
     progressiveUnlocking(currentLevel);

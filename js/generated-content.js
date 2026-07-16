@@ -9,7 +9,7 @@ export const generatedContent = {
   "index": {
     "version": 1,
     "contentVersion": 1,
-    "generatedAt": "2026-07-10T17:17:01.536Z",
+    "generatedAt": "2026-07-16T07:43:02.505Z",
     "generator": "scripts/build-content.js",
     "regularLessons": [
       "lesson-how-to-exit-ex-commands",
@@ -474,7 +474,7 @@ export const generatedContent = {
         "line": 0,
         "text": "This is a good example."
       },
-      "focusCommand": "VIM",
+      "focusCommand": "cw",
       "initialCursor": {
         "row": 0,
         "col": 10
@@ -555,7 +555,7 @@ export const generatedContent = {
         "row": 0,
         "col": 14
       },
-      "focusCommand": "VIM",
+      "focusCommand": "3w",
       "initialCursor": {
         "row": 0,
         "col": 0
@@ -906,7 +906,7 @@ export const generatedContent = {
         "row": 4,
         "col": 28
       },
-      "focusCommand": "VIM",
+      "focusCommand": "w",
       "initialCursor": {
         "row": 0,
         "col": 0
@@ -952,7 +952,7 @@ export const generatedContent = {
         "row": 5,
         "col": 30
       },
-      "focusCommand": "VIM",
+      "focusCommand": "gg / G",
       "initialCursor": {
         "row": 2,
         "col": 0
@@ -994,7 +994,7 @@ export const generatedContent = {
         "row": 0,
         "col": 0
       },
-      "focusCommand": "VIM",
+      "focusCommand": "0 / $",
       "initialCursor": {
         "row": 0,
         "col": 10
@@ -1094,7 +1094,7 @@ export const generatedContent = {
         "Also fix: 'Fix this typo'",
         "And: 'Remove extra letters'"
       ],
-      "focusCommand": "VIM",
+      "focusCommand": "x",
       "initialCursor": {
         "row": 0,
         "col": 7
@@ -1164,7 +1164,7 @@ export const generatedContent = {
         "Clean up this messy text.",
         "Final result should be clean sentences."
       ],
-      "focusCommand": "VIM",
+      "focusCommand": "dw",
       "initialCursor": {
         "row": 0,
         "col": 15
@@ -1232,7 +1232,7 @@ export const generatedContent = {
         "Keep this line too",
         "Keep this final line"
       ],
-      "focusCommand": "VIM",
+      "focusCommand": "dd",
       "initialCursor": {
         "row": 1,
         "col": 0
@@ -1277,7 +1277,7 @@ export const generatedContent = {
         "Save this text",
         "Maintain this"
       ],
-      "focusCommand": "VIM",
+      "focusCommand": "D",
       "initialCursor": {
         "row": 0,
         "col": 15
@@ -1336,7 +1336,7 @@ export const generatedContent = {
         "Replace characters",
         "Fix typos quickly"
       ],
-      "focusCommand": "VIM",
+      "focusCommand": "r",
       "initialCursor": {
         "row": 0,
         "col": 2
@@ -1394,7 +1394,7 @@ export const generatedContent = {
         "VIM is a great editor",
         "Programming is fun activity"
       ],
-      "focusCommand": "VIM",
+      "focusCommand": "cw",
       "initialCursor": {
         "row": 0,
         "col": 4
@@ -1480,7 +1480,7 @@ export const generatedContent = {
         "",
         "Don't duplicate this line"
       ],
-      "focusCommand": "VIM",
+      "focusCommand": "yy / p",
       "initialCursor": {
         "row": 0,
         "col": 0
@@ -1571,7 +1571,7 @@ export const generatedContent = {
         "row": 4,
         "col": 20
       },
-      "focusCommand": "VIM",
+      "focusCommand": "/",
       "initialCursor": {
         "row": 0,
         "col": 0
@@ -1623,7 +1623,7 @@ export const generatedContent = {
         "row": 4,
         "col": 19
       },
-      "focusCommand": "VIM",
+      "focusCommand": "?",
       "initialCursor": {
         "row": 5,
         "col": 0
@@ -1715,7 +1715,7 @@ export const generatedContent = {
         "line": 3,
         "text": "Type :q and press Enter to complete this lesson"
       },
-      "focusCommand": "VIM",
+      "focusCommand": ":q",
       "initialCursor": {
         "row": 0,
         "col": 0

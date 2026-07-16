@@ -22,59 +22,35 @@
     </div>
 
     <div class="w-full max-w-6xl mx-auto space-y-2 md:space-y-3">
-        <div class="flex justify-center pt-0.5 md:pt-1">
-            <pre class="ascii-logo ascii-logo-brand text-[6px] leading-[1.02] md:text-[7px] md:leading-[1.02] text-yellow-400 text-center font-mono whitespace-pre">
-██╗   ██╗██╗███╗   ███╗    ███╗   ███╗ █████╗ ███████╗████████╗███████╗██████╗
-██║   ██║██║████╗ ████║    ████╗ ████║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
-██║   ██║██║██╔████╔██║    ██╔████╔██║███████║███████╗   ██║   █████╗  ██████╔╝
-╚██╗ ██╔╝██║██║╚██╔╝██║    ██║╚██╔╝██║██╔══██║╚════██║   ██║   ██╔══╝  ██╔══██╗
- ╚████╔╝ ██║██║ ╚═╝ ██║    ██║ ╚═╝ ██║██║  ██║███████║   ██║   ███████╗██║  ██║
-  ╚═══╝  ╚═╝╚═╝     ╚═╝    ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
-            </pre>
-        </div>
-        <div class="goal-card bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-3 md:p-4 mb-3 md:mb-4 border border-blue-700/50 backdrop-blur-sm relative">
-            <p id="instructions" class="text-lg text-center text-blue-100 font-medium">Welcome! Let's learn VIM together.</p>
-            <div id="lesson-author" class="absolute bottom-1 right-2 text-xs text-blue-300 opacity-70 italic hidden"></div>
-        </div>
         <div class="mt-1">
-            <div class="hud-shell rounded-2xl border border-gray-700/60 shadow-2xl px-4 py-3 md:px-5 md:py-4">
-                <div class="flex flex-col gap-3">
-                    <div class="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                        <div>
-                            <p class="text-xs md:text-sm text-gray-400">Master the Art of Text Editing</p>
-                        </div>
-                        <div class="text-left md:text-right">
-                            <div id="level-indicator" class="hud-pill text-sm md:text-base font-semibold text-gray-200"></div>
-                            <div id="session-progress" class="mt-2 h-2 w-40 md:w-52 overflow-hidden rounded-full border border-gray-700/80 bg-gray-800/80 ml-0 md:ml-auto">
-                                <div id="session-progress-fill" class="h-full w-0 rounded-full bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 transition-all duration-300 ease-out"></div>
-                            </div>
-                            <div id="streak-pill" class="hud-chip hidden text-xs md:text-sm mt-2 ml-0 md:ml-auto"></div>
-                            <div id="minimal-progress" class="text-[10px] md:text-xs text-yellow-500/90 mt-1 font-mono hidden tracking-[0.25em]"></div>
-                        </div>
+            <div class="hud-shell rounded-2xl border border-gray-700/60 shadow-2xl px-4 py-2.5 md:px-5 md:py-3">
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                    <h1 class="wordmark"><span class="wordmark-prompt">❯</span>VIM<span class="wordmark-accent">MASTER</span><span class="wordmark-caret" aria-hidden="true"></span></h1>
+
+                    <div id="stats-bar" class="hidden hud-chip text-xs md:text-sm font-bold">
+                        <span class="text-orange-400 mr-2">🔥 <span id="combo-display">0</span></span>
+                        <span class="text-gray-500 mx-1">|</span>
+                        <span class="text-yellow-300">⭐ <span id="xp-display">0</span></span>
                     </div>
 
-                    <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                        <div class="flex flex-wrap items-center gap-2">
-                            <div id="stats-bar" class="hidden hud-chip text-xs md:text-sm font-bold">
-                                <span class="text-orange-400 mr-2">🔥 <span id="combo-display">0</span> Combo</span>
-                                <span class="text-gray-500 mx-2">|</span>
-                                <span class="text-yellow-300">⭐ <span id="xp-display">0</span> XP</span>
-                            </div>
-                            <div id="feature-level-count" class="hud-chip text-xs md:text-sm text-gray-300">Progressive Levels</div>
-                        </div>
+                    <div class="flex-1 min-w-[1rem]"></div>
 
-                        <div class="flex flex-wrap items-center gap-2">
-                            <button id="challenge-toggle" class="hud-action hidden">
-                                Practice Arena
-                            </button>
-                            <a href="profile.html" id="profile-btn" class="hud-link hidden">
-                                Profile
-                            </a>
-                            <div id="cheat-hints" class="hud-hint hidden">
-                                <kbd class="hud-kbd">Ctrl+/</kbd> cheat mode
-                            </div>
-                        </div>
+                    <div id="minimal-progress" class="text-xs md:text-sm text-yellow-500/90 font-mono hidden tracking-[0.2em]"></div>
+                    <div id="streak-pill" class="hud-chip hidden text-xs md:text-sm"></div>
+
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button id="challenge-toggle" class="hud-action hidden">
+                            Practice Arena
+                        </button>
+                        <a href="profile.html" id="profile-btn" class="hud-link hidden">
+                            Profile
+                        </a>
                     </div>
+
+                    <!-- Kept for script compatibility; visually replaced by the block meter above -->
+                    <div id="level-indicator" class="hidden-by-design"></div>
+                    <div id="session-progress" class="hidden-by-design"><div id="session-progress-fill"></div></div>
+                    <div id="feature-level-count" class="hidden-by-design"></div>
                 </div>
             </div>
         </div>
@@ -173,6 +149,12 @@
         </div>
 
 
+
+        <!-- Goal (kept adjacent to the editor for focus) -->
+        <div class="goal-card bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl border border-blue-700/50 backdrop-blur-sm relative">
+            <p id="instructions" class="text-blue-100 font-medium">Welcome! Let's learn VIM together.</p>
+            <div id="lesson-author" class="goal-author hidden"></div>
+        </div>
 
         <!-- Main Editor Container -->
         <div id="editor-container" class="bg-gradient-to-br from-[#1a1a1a] to-[#2d2d2d] rounded-xl shadow-2xl p-4 md:p-5 border border-gray-600/50 relative backdrop-blur-sm transition-all duration-300">

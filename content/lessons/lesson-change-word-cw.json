@@ -24,7 +24,7 @@
     "line": 0,
     "text": "This is a good example."
   },
-  "focusCommand": "VIM",
+  "focusCommand": "cw",
   "initialCursor": {
     "row": 0,
     "col": 10

@@ -24,7 +24,7 @@
     "row": 0,
     "col": 14
   },
-  "focusCommand": "VIM",
+  "focusCommand": "3w",
   "initialCursor": {
     "row": 0,
     "col": 0

@@ -29,7 +29,7 @@
     "row": 4,
     "col": 28
   },
-  "focusCommand": "VIM",
+  "focusCommand": "w",
   "initialCursor": {
     "row": 0,
     "col": 0

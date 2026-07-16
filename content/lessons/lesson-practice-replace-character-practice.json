@@ -30,7 +30,7 @@
     "Replace characters",
     "Fix typos quickly"
   ],
-  "focusCommand": "VIM",
+  "focusCommand": "r",
   "initialCursor": {
     "row": 0,
     "col": 2

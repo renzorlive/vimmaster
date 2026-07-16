@@ -30,7 +30,7 @@
     "Also fix: 'Fix this typo'",
     "And: 'Remove extra letters'"
   ],
-  "focusCommand": "VIM",
+  "focusCommand": "x",
   "initialCursor": {
     "row": 0,
     "col": 7
