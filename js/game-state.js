@@ -9,6 +9,7 @@ let _commandHistory = '';
 let _commandLog = [];
 let _yankedLine = null;
 let _replacePending = false;
+let _pendingFind = null;
 let _countBuffer = '';
 let _undoStack = [];
 let _redoStack = [];
@@ -46,6 +47,7 @@ export const getCommandHistory = () => _commandHistory;
 export const getCommandLog = () => [..._commandLog];
 export const getYankedLine = () => _yankedLine;
 export const getReplacePending = () => _replacePending;
+export const getPendingFind = () => _pendingFind;
 export const getCountBuffer = () => _countBuffer;
 export const getUndoStack = () => [..._undoStack];
 export const getRedoStack = () => [..._redoStack];
@@ -111,6 +113,10 @@ export const setYankedLine = (newYankedLine) => {
 
 export const setReplacePending = (newReplacePending) => {
     _replacePending = newReplacePending;
+};
+
+export const setPendingFind = (newPendingFind) => {
+    _pendingFind = newPendingFind;
 };
 
 export const setCountBuffer = (newCountBuffer) => {
@@ -226,6 +232,7 @@ export const resetGameState = () => {
     _commandLog = [];
     _yankedLine = null;
     _replacePending = false;
+    _pendingFind = null;
     _countBuffer = '';
     _undoStack = [];
     _redoStack = [];
@@ -259,6 +266,7 @@ export const resetChallengeState = () => {
 };
 
 export const resetLevelState = () => {
+    _pendingFind = null;
     _level12Undo = false;
     _level12RedoAfterUndo = false;
     _lastExCommand = null;

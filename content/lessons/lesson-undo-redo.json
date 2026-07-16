@@ -14,7 +14,7 @@
     "estimatedTime": 60,
     "prerequisites": [],
     "learningObjectives": [],
-    "order": 13
+    "order": 14
   },
   "instructions": "Delete the middle line with dd, undo it with u, then redo with Ctrl+r to finish with the line deleted.",
   "initialContent": [

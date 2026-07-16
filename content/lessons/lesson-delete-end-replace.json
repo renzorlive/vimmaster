@@ -14,7 +14,7 @@
     "estimatedTime": 60,
     "prerequisites": [],
     "learningObjectives": [],
-    "order": 11
+    "order": 12
   },
   "instructions": "Use D to delete from cursor to end of line, then use r to replace the 'x' with '!'.",
   "initialContent": [
